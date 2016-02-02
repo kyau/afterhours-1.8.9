@@ -1,0 +1,124 @@
+import java.util.regex.Pattern
+import org.gradle.logging.StyledTextOutput
+import org.gradle.logging.StyledTextOutputFactory
+import static org.gradle.logging.StyledTextOutput.Style
+
+System.setProperty("org.gradle.color.failure", "RED")
+System.setProperty("org.gradle.color.progressstatus", "YELLOW")
+System.setProperty("org.gradle.color.success", "GREEN")
+
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
+    }
+}
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+// filename
+version = version_major + '.' + version_minor + '.' + version_patch + '-' + build_number
+group = "net.kyau.afterhours" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "afterhours_" + mcversion
+
+// java version
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+  //maven {
+  //  url "http://dvs1.progwml6.com/files/maven"
+  //}
+}
+
+minecraft {
+    version = "1.8.9-11.15.1.1722"
+    runDir = "run"
+    replace '@VERSION@', project.version
+    // the mappings can be changed at any time, and must be in the following format.
+    // snapshot_YYYYMMDD   snapshot are built nightly.
+    // stable_#            stables are built at the discretion of the MCP team.
+    // Use non-default mappings at your own risk. they may not allways work.
+    // simply re-run your setup task after changing the mappings to update your workspace.
+    mappings = "stable_20"
+    makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+    //useDepAts = true
+}
+
+dependencies {
+  //deobfCompile "mezz.jei:jei_1.8.9:2.24.2.126"
+}
+
+processResources {
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+
+    // copy everything else, thats not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+// prevent java 8's strict doclint for javadocs from failing builds
+allprojects {
+  tasks.withType(Javadoc) {
+    options.addStringOption('Xdoclint:none', '-quiet')
+  }
+}
+
+// create a javadoc jar
+task javadocJar(type: Jar, dependsOn: 'javadoc') {
+  from javadoc.destinationDir
+  classifier = 'javadoc'
+}
+
+// create a source jar
+task sourcesJar(type: Jar) {
+  from sourceSets.main.allJava
+  classifier = 'sources'
+}
+
+// create a deobfuscated jar
+task deobfJar(type: Jar, dependsOn: 'jar') {
+  from "build/source/main"
+  classifier "dev"
+}
+
+artifacts {
+  archives javadocJar
+  archives sourcesJar
+  archives deobfJar
+}
+
+task increment << {
+  def gradlePropertiesFile = file("gradle.properties")
+  def patternBuildNumber = Pattern.compile("build_number=(\\d+)")
+  def gradlePropertiesFileText = gradlePropertiesFile.getText()
+  def matcherBuildNumber = patternBuildNumber.matcher(gradlePropertiesFileText)
+  matcherBuildNumber.find()
+  def mBuildNumber = Integer.parseInt(matcherBuildNumber.group(1))
+  def mNextBuildNumber = mBuildNumber + 1
+  def manifestContent = matcherBuildNumber.replaceAll("build_number=" + mNextBuildNumber)
+  def out = services.get(StyledTextOutputFactory).create("colored-test-output")
+  out.style(Style.Normal)
+  // Style.ProgressStatus, Style.Failure, Style.Success
+  def style = Style.Failure
+  out.text('').withStyle(style).println('>build_number='+mNextBuildNumber)
+  gradlePropertiesFile.write(manifestContent)
+}
+
+build.finalizedBy(increment)
