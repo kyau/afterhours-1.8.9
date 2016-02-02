@@ -22,5 +22,4 @@ public class ProxyCommon {
   public void restartAfterHours() {
 
   }
-
 }

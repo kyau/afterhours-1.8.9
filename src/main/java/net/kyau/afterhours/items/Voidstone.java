@@ -2,6 +2,8 @@ package net.kyau.afterhours.items;
 
 import java.util.List;
 
+import org.lwjgl.input.Keyboard;
+
 import net.kyau.afterhours.AfterHours;
 import net.kyau.afterhours.ModInfo;
 import net.kyau.afterhours.references.ItemTypes;
@@ -71,14 +73,15 @@ public class Voidstone extends Item {
 
     if (!world.isRemote) {
       // set a new owner if none exists
-      if (owner.contains("###")) {
+      if (owner.equals("###")) {
         if (ModInfo.DEBUG) player.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.LIGHT_PURPLE + "> DEBUG: " + EnumChatFormatting.GREEN + "ownership set!"));
+        player.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.LIGHT_PURPLE + "Soulbound!"));
         setOwner(stack, player.getDisplayNameString());
         setLastUseTime(stack, (player.worldObj.getTotalWorldTime() - cooldown));
         return super.onItemRightClick(stack, world, player);
       } else {
         // invalid ownership
-        if (!owner.contains(player.getDisplayNameString())) {
+        if (!owner.equals(player.getDisplayNameString())) {
           if (ModInfo.DEBUG) player.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.LIGHT_PURPLE + "> DEBUG: " + EnumChatFormatting.RED + "ownership invalid!"));
           if (ModInfo.DEBUG) player.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.LIGHT_PURPLE + "> DEBUG: " + EnumChatFormatting.GRAY + "owner: '" + owner + "'"));
           player.playSound("afterhours:error", 0.5F, 1.0F);
@@ -137,7 +140,7 @@ public class Voidstone extends Item {
         return super.onItemRightClick(stack, world, player);
       }
     } else {
-      if (owner != "###" && (ticksSinceLastUse > 0 && ticksSinceLastUse < cooldown)) {
+      if (!owner.equals("###") && (ticksSinceLastUse > 0 && ticksSinceLastUse < cooldown)) {
         player.playSound("afterhours:error", 0.5F, 1.0F);
       }
     }
@@ -147,10 +150,25 @@ public class Voidstone extends Item {
   @Override
   @SideOnly(Side.CLIENT)
   public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean advanced) {
-    super.addInformation(stack, player, list, advanced);
     String owner = getOwner(stack);
-    if (!owner.contains("###")) {
-      if (owner.contains(player.getDisplayNameString())) {
+    // Soulbound status / item types 
+    if (!owner.equals("###")) {
+      list.add(EnumChatFormatting.DARK_PURPLE + "Soulbound, Limited");
+    } else {
+      list.add(EnumChatFormatting.DARK_PURPLE + "Right-click to soulbind item!");
+    }
+    // Description
+    if (Keyboard.isKeyDown(0x2A) || Keyboard.isKeyDown(0x36)) {
+      list.add(EnumChatFormatting.GRAY + "You may only own one instance of");
+      list.add(EnumChatFormatting.GRAY + "a limited item. Attempts to craft or");
+      list.add(EnumChatFormatting.GRAY + "obtain more will feed the void.");
+    } else {
+      list.add(EnumChatFormatting.GRAY + "Hold " + EnumChatFormatting.WHITE + "SHIFT" + EnumChatFormatting.GRAY + " for more information.");
+    }
+    // Owner information
+    if (!owner.equals("###")) {
+      //list.add(EnumChatFormatting.DARK_PURPLE + "Soulbound, Limited");
+      if (owner.equals(player.getDisplayNameString())) {
         list.add(EnumChatFormatting.GREEN + "Owner: " + owner);
         if (getLastUseTime(stack) != -1) {
           long ticksSinceLastUse = player.worldObj.getTotalWorldTime() - getLastUseTime(stack);
@@ -169,6 +187,7 @@ public class Voidstone extends Item {
         }
       }
     }
+    super.addInformation(stack, player, list, advanced);
   }
 
   @Override

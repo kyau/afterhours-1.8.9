@@ -7,6 +7,7 @@ import net.kyau.afterhours.items.ModItems;
 import net.kyau.afterhours.items.RecipeChanges;
 import net.kyau.afterhours.network.PacketHandler;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -40,6 +41,7 @@ public class AfterHours {
     event.getModMetadata().description = ModInfo.MOD_DESC;
     event.getModMetadata().url = ModInfo.MOD_URL;
     event.getModMetadata().logoFile = ModInfo.MOD_LOGO;
+    FMLCommonHandler.instance().bus().register(new FMLEventHandler());
     proxy.preInit(event);
     ModItems.init(event);
     if (event.getSide() == Side.CLIENT) {
