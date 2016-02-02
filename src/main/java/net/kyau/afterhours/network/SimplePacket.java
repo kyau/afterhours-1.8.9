@@ -17,7 +17,7 @@ public class SimplePacket implements IMessageHandler<SimpleMessage, IMessage> {
       System.out.println("AfterHours: recieved packet from server! (" + message.text + ")");
       String text = message.text;
       if (text == "voidstone_activate") {
-        Voidstone.cooldown = 1200;
+        //Voidstone.cooldown = 1200;
       }
     }
     return null;

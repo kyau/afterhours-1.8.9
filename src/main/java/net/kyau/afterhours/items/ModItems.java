@@ -22,7 +22,7 @@ public class ModItems {
     voidstone = new Voidstone(ItemTypes.VOIDSTONE);
     registerItem(event, voidstone);
     // GameRegistry.registerItem(voidstone, "voidstone");
-    GameRegistry.addRecipe(new ItemStack(ModItems.voidstone), " s ", "rer", " s ", 's', Blocks.stone, 'r', Items.redstone, 'e', Items.ender_pearl);
+    GameRegistry.addRecipe(new ItemStack(ModItems.voidstone), " s ", "geg", " s ", 's', Blocks.stone_slab, 'g', Items.glowstone_dust, 'e', Items.ender_pearl);
   }
 
   public static void registerModels() {
