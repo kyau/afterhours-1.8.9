@@ -4,9 +4,10 @@ import javax.annotation.Nonnull;
 
 import net.kyau.afterhours.config.AfterHoursTab;
 import net.kyau.afterhours.items.ModItems;
-import net.kyau.afterhours.items.RecipeChanges;
+import net.kyau.afterhours.items.RecipeManager;
 import net.kyau.afterhours.network.PacketHandler;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -42,10 +43,11 @@ public class AfterHours {
     event.getModMetadata().url = ModInfo.MOD_URL;
     event.getModMetadata().logoFile = ModInfo.MOD_LOGO;
     FMLCommonHandler.instance().bus().register(new FMLEventHandler());
+    MinecraftForge.EVENT_BUS.register(new ServerEventHandler());
     proxy.preInit(event);
     ModItems.init(event);
     if (event.getSide() == Side.CLIENT) {
-      ModItems.registerModels();
+      // client-side
     }
   }
 
@@ -57,7 +59,7 @@ public class AfterHours {
 
   @Mod.EventHandler
   public void postInit(@Nonnull FMLPostInitializationEvent event) {
-    RecipeChanges.init();
+    RecipeManager.init();
   }
 
   @Mod.EventHandler

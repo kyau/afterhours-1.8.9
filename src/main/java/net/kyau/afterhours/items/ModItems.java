@@ -16,19 +16,23 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class ModItems {
 
+  public static Item antenna;
+  public static Item dough;
   public static Item voidstone;
+  public static Item vrad;
 
   public static void init(@Nonnull FMLPreInitializationEvent event) {
+    antenna = new Antenna(ItemTypes.ANTENNA);
+    dough = new Dough(ItemTypes.DOUGH);
     voidstone = new Voidstone(ItemTypes.VOIDSTONE);
+    vrad = new VRAD(ItemTypes.VRAD);
+    registerItem(event, antenna);
+    registerItem(event, dough);
     registerItem(event, voidstone);
-    // GameRegistry.registerItem(voidstone, "voidstone");
-    GameRegistry.addRecipe(new ItemStack(ModItems.voidstone), " s ", "geg", " s ", 's', Blocks.stone_slab, 'g', Items.glowstone_dust, 'e', Items.ender_pearl);
-  }
-
-  public static void registerModels() {
-    // ModelLoader.registerItemVariants(voidstone);
-    // ModelLoader.setCustomModelResourceLocation(voidstone, 0, new
-    // ModelResourceLocation(ModInfo.MOD_ID + ":voidstone", "inventory"));
+    registerItem(event, vrad);
+    if (event.getSide() == Side.SERVER) {
+      RecipeManager.init();
+    }
   }
 
   public static void registerItem(@Nonnull FMLPreInitializationEvent event, Item item) {
