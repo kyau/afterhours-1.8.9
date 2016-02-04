@@ -39,21 +39,12 @@ public class ServerEventHandler {
             if (ModInfo.DEBUG)
               event.entity.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.LIGHT_PURPLE + "> DEBUG: " + EnumChatFormatting.RED + "owner invalid!"));
           }
-          int count = 0;
-          for (int i = 0; i < event.entityPlayer.inventory.mainInventory.length; ++i) {
-            ItemStack stack = event.entityPlayer.inventory.mainInventory[i];
-            if (stack != null) {
-              if (stack.getUnlocalizedName() == ModItems.voidstone.getUnlocalizedName()) {
-                count += stack.stackSize;
-              }
-            }
-          }
+          int count = Utils.countItems(event.entityPlayer, ModItems.voidstone.getUnlocalizedName());
           if (count > 0) {
             if (ModInfo.DEBUG)
               event.entity.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.LIGHT_PURPLE + "> DEBUG: " + EnumChatFormatting.RED + "itemPickup canceled!"));
             event.setCanceled(true);
           }
-          // }
         }
       }
     }
@@ -66,9 +57,9 @@ public class ServerEventHandler {
       World world = player.worldObj;
       if (!world.isRemote) {
         ItemStack item = new ItemStack(ModItems.voidstone);
-        int count = FMLEventHandler.countItems(player, ModItems.voidstone.getUnlocalizedName());
+        int count = Utils.countItems(player, ModItems.voidstone.getUnlocalizedName());
         if (count > 1) {
-          FMLEventHandler.removeLimitedItem(player, item);
+          Utils.removeLimitedItem(player, item);
         }
       }
     }
