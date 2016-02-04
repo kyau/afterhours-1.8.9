@@ -1,8 +1,9 @@
-package net.kyau.afterhours;
+package net.kyau.afterhours.event;
 
 import javax.annotation.Nonnull;
 
-import net.kyau.afterhours.items.ModItems;
+import net.kyau.afterhours.init.ModItems;
+import net.kyau.afterhours.utils.InventoryHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -32,7 +33,7 @@ public class GuiEventHandler extends Gui {
 
     FontRenderer fontRenderer = minecraft.fontRendererObj;
     EntityPlayer player = minecraft.thePlayer;
-    int count = Utils.countItems(player, ModItems.vrad.getUnlocalizedName());
+    int count = InventoryHandler.countItems(player, ModItems.vrad);
     if (count > 0) {
       if ((minecraft.inGameHasFocus || (minecraft.currentScreen != null && (minecraft.currentScreen instanceof GuiChat))) && !minecraft.gameSettings.showDebugInfo && !minecraft.ingameGUI.getChatGUI().getChatOpen()) {
         String msg = player.getDisplayNameString();

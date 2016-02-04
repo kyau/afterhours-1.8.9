@@ -40,6 +40,7 @@ minecraft {
     version = "1.8.9-11.15.1.1722"
     runDir = "run"
     replace '@VERSION@', project.version
+    replace '@MCVERSION@', project.minecraft.version
     // the mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   snapshot are built nightly.
     // stable_#            stables are built at the discretion of the MCP team.
@@ -48,6 +49,18 @@ minecraft {
     mappings = "stable_20"
     makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     //useDepAts = true
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs += 'src/main/java/'
+        }
+        resources {
+            srcDir "src/main/resources/"
+            include "mcmod.info"
+        }
+    }
 }
 
 dependencies {
@@ -96,15 +109,25 @@ task sourcesJar(type: Jar) {
 }
 
 // create a deobfuscated jar
-task deobfJar(type: Jar, dependsOn: 'jar') {
-  from "build/source/main"
-  classifier "dev"
+task devJar(type: Jar) {
+    from(sourceSets.main.output) {
+        include "com/**"
+        include "assets/**"
+        include 'mcmod.info'
+    }
+    classifier = 'dev'
 }
 
 artifacts {
   archives javadocJar
   archives sourcesJar
-  archives deobfJar
+  archives devJar
+}
+
+allprojects {
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
+    }
 }
 
 task increment << {

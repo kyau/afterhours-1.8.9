@@ -1,7 +1,6 @@
 package net.kyau.afterhours.network;
 
 import io.netty.buffer.ByteBuf;
-import net.kyau.afterhours.items.Voidstone;
 import net.kyau.afterhours.network.SimplePacket.SimpleMessage;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -17,7 +16,7 @@ public class SimplePacket implements IMessageHandler<SimpleMessage, IMessage> {
       System.out.println("AfterHours: recieved packet from server! (" + message.text + ")");
       String text = message.text;
       if (text == "test_packet") {
-        //do this clientside;
+        // do this clientside;
       }
     }
     return null;

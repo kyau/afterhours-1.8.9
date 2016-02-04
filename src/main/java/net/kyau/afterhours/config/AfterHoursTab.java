@@ -1,6 +1,6 @@
 package net.kyau.afterhours.config;
 
-import net.kyau.afterhours.items.ModItems;
+import net.kyau.afterhours.init.ModItems;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 

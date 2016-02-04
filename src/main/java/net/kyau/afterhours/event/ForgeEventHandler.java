@@ -1,23 +1,23 @@
-package net.kyau.afterhours;
+package net.kyau.afterhours.event;
 
-import net.kyau.afterhours.items.ModItems;
-import net.minecraft.client.Minecraft;
+import javax.annotation.Nonnull;
+
+import net.kyau.afterhours.init.ModItems;
+import net.kyau.afterhours.references.ModInfo;
+import net.kyau.afterhours.utils.InventoryHandler;
+import net.kyau.afterhours.utils.LogHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
-public class ServerEventHandler {
+public class ForgeEventHandler {
 
   @SubscribeEvent
-  public void onItemPickup(EntityItemPickupEvent event) {
+  public void onItemPickup(@Nonnull EntityItemPickupEvent event) {
     if (event.entity instanceof EntityPlayer) {
       ItemStack itemCurrent = event.item.getEntityItem();
       World world = event.entity.worldObj;
@@ -31,18 +31,18 @@ public class ServerEventHandler {
             itemOwner = itemCurrent.getTagCompound().getString("Owner");
           }
           if (ModInfo.DEBUG)
-            event.entity.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.LIGHT_PURPLE + "> DEBUG: " + EnumChatFormatting.GRAY + "itemPickup: " + itemCurrent.getUnlocalizedName().substring(11) + EnumChatFormatting.DARK_GRAY + " (owner=" + itemOwner + ")"));
+            LogHelper.info("> DEBUG: itemPickup: " + itemCurrent.getUnlocalizedName().substring(11) + " (owner=" + itemOwner + ")");
           if (playerName.equals(itemOwner)) {
             if (ModInfo.DEBUG)
-              event.entity.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.LIGHT_PURPLE + "> DEBUG: " + EnumChatFormatting.GREEN + "owner valid!"));
+              LogHelper.info("> DEBUG: owner valid!");
           } else {
             if (ModInfo.DEBUG)
-              event.entity.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.LIGHT_PURPLE + "> DEBUG: " + EnumChatFormatting.RED + "owner invalid!"));
+              LogHelper.info("> DEBUG: owner invalid!");
           }
-          int count = Utils.countItems(event.entityPlayer, ModItems.voidstone.getUnlocalizedName());
+          int count = InventoryHandler.countItems(event.entityPlayer, ModItems.voidstone);
           if (count > 0) {
             if (ModInfo.DEBUG)
-              event.entity.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.LIGHT_PURPLE + "> DEBUG: " + EnumChatFormatting.RED + "itemPickup canceled!"));
+              LogHelper.info("> DEBUG: itemPickup canceled!");
             event.setCanceled(true);
           }
         }
@@ -57,9 +57,9 @@ public class ServerEventHandler {
       World world = player.worldObj;
       if (!world.isRemote) {
         ItemStack item = new ItemStack(ModItems.voidstone);
-        int count = Utils.countItems(player, ModItems.voidstone.getUnlocalizedName());
+        int count = InventoryHandler.countItems(player, ModItems.voidstone);
         if (count > 1) {
-          Utils.removeLimitedItem(player, item);
+          InventoryHandler.removeLimitedItem(player, item);
         }
       }
     }

@@ -2,18 +2,16 @@ package net.kyau.afterhours.items;
 
 import java.util.List;
 
-import org.lwjgl.input.Keyboard;
-
 import net.kyau.afterhours.AfterHours;
-import net.kyau.afterhours.ModInfo;
-import net.kyau.afterhours.references.ItemTypes;
+import net.kyau.afterhours.references.ModInfo;
+import net.kyau.afterhours.references.Names;
+import net.kyau.afterhours.utils.LogHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagLong;
@@ -28,38 +26,19 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class Voidstone extends Item {
+import org.lwjgl.input.Keyboard;
 
-  //int cooldown = 1200; // 1 minute
+public class Voidstone extends BaseItem {
+
+  // int cooldown = 1200; // 1 minute
   int cooldown = 36000; // 30 minutes
-  //int cooldown = 72000; // 1 hour
-  ItemTypes type;
 
-  public Voidstone(ItemTypes type) {
+  // int cooldown = 72000; // 1 hour
+
+  public Voidstone() {
     super();
-    setUnlocalizedName("afterhours.voidstone");
-    maxStackSize = 1;
+    this.setUnlocalizedName(Names.Items.VOIDSTONE);
     setCreativeTab(AfterHours.AfterHoursTab);
-    this.type = type;
-  }
-
-  public ItemTypes getType() {
-    return type;
-  }
-
-  @Override
-  public String getUnlocalizedName() {
-    return "afterhours.voidstone";
-  }
-
-  @Override
-  public String getUnlocalizedName(ItemStack itemStack) {
-    return "afterhours.voidstone";
-  }
-
-  @Override
-  public boolean getShareTag() {
-    return true;
   }
 
   @Override
@@ -74,7 +53,8 @@ public class Voidstone extends Item {
     if (!world.isRemote) {
       // set a new owner if none exists
       if (owner.equals("###")) {
-        if (ModInfo.DEBUG) player.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.LIGHT_PURPLE + "> DEBUG: " + EnumChatFormatting.GREEN + "ownership set!"));
+        if (ModInfo.DEBUG)
+          LogHelper.info("> DEBUG: ownership set!");
         player.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.LIGHT_PURPLE + "Soulbound!"));
         setOwner(stack, player.getDisplayNameString());
         setLastUseTime(stack, (player.worldObj.getTotalWorldTime() - cooldown));
@@ -82,60 +62,62 @@ public class Voidstone extends Item {
       } else {
         // invalid ownership
         if (!owner.equals(player.getDisplayNameString())) {
-          if (ModInfo.DEBUG) player.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.LIGHT_PURPLE + "> DEBUG: " + EnumChatFormatting.RED + "ownership invalid!"));
-          if (ModInfo.DEBUG) player.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.LIGHT_PURPLE + "> DEBUG: " + EnumChatFormatting.GRAY + "owner: '" + owner + "'"));
+          if (ModInfo.DEBUG)
+            LogHelper.info("> DEBUG: ownership invalid!");
+          if (ModInfo.DEBUG)
+            LogHelper.info("> DEBUG: owner: '" + owner + "'");
           player.playSound("afterhours:error", 0.5F, 1.0F);
           return super.onItemRightClick(stack, world, player);
         }
       }
-      if (ModInfo.DEBUG) player.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.LIGHT_PURPLE + "> DEBUG: " + EnumChatFormatting.GRAY + "ticksSinceLastUse: " + ticksSinceLastUse + EnumChatFormatting.WHITE + "." + EnumChatFormatting.DARK_GRAY + cooldown));
+      if (ModInfo.DEBUG)
+        LogHelper.info("> DEBUG: ticksSinceLastUse: " + ticksSinceLastUse + "." + cooldown);
       if (ticksSinceLastUse > cooldown || ticksSinceLastUse < 0) {
-          // get the overworld world object
-          DimensionManager dm = new DimensionManager();
-          World overworld = dm.getWorld(0);
-          BlockPos playerHome = player.getBedLocation(0);
-          boolean spawnpoint = false;
-  
-          // if player has no bed location, set to warp location to server
-          // spawn
-          if (playerHome == null) {
-            spawnpoint = true;
-            playerHome = world.getSpawnPoint();
-          }
-  
-          IBlockState state = world.getBlockState(playerHome);
-          Block block = (state == null) ? null : world.getBlockState(playerHome).getBlock();
-          if (block != null && !spawnpoint) {
-            if (block.equals(Blocks.bed) || block.isBed(world, playerHome, player)) {
-              // reposition player according to where bed wants the
-              // player to spawn
-              playerHome = block.getBedSpawnPosition(world, playerHome, null);
-            } else {
-              player.addChatMessage(new ChatComponentTranslation("Your bed was missing or obstructed."));
-              return super.onItemRightClick(stack, world, player);
-            }
-          } else if (block == null) {
-            player.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.RED + "ERROR: No spawn or bed location found!"));
+        // get the overworld world object
+        DimensionManager dm = new DimensionManager();
+        World overworld = dm.getWorld(0);
+        BlockPos playerHome = player.getBedLocation(0);
+        boolean spawnpoint = false;
+
+        // if player has no bed location, set to warp location to server
+        // spawn
+        if (playerHome == null) {
+          spawnpoint = true;
+          playerHome = world.getSpawnPoint();
+        }
+
+        IBlockState state = world.getBlockState(playerHome);
+        Block block = (state == null) ? null : world.getBlockState(playerHome).getBlock();
+        if (block != null && !spawnpoint) {
+          if (block.equals(Blocks.bed) || block.isBed(world, playerHome, player)) {
+            // reposition player according to where bed wants the
+            // player to spawn
+            playerHome = block.getBedSpawnPosition(world, playerHome, null);
+          } else {
+            player.addChatMessage(new ChatComponentTranslation("Your bed was missing or obstructed."));
             return super.onItemRightClick(stack, world, player);
           }
-  
-          // trigger item cooldown
-          setLastUseTime(stack, world.getTotalWorldTime());
-          // spawn exists, teleport the player
-          EntityPlayerMP playerMP = (EntityPlayerMP) player;
-          MinecraftServer.getServer().worldServerForDimension(0).playSoundEffect(player.posX, player.posY, player.posZ, "mob.endermen.portal", 1.0F, 1.0F);
-          if (playerMP.dimension != 0) {
-            MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension(playerMP, 0, new Teleporter(playerMP.mcServer.worldServerForDimension(0)));
-          }
-          player.setPositionAndUpdate(playerHome.getX(), playerHome.getY(), playerHome.getZ());
-          while (player.getEntityBoundingBox() != null && world.getCollidingBoundingBoxes(player, player.getEntityBoundingBox()) != null && !world.getCollidingBoundingBoxes(player, player.getEntityBoundingBox()).isEmpty()) {
-            player.setPositionAndUpdate(player.posX, player.posY + 1.0D, player.posZ);
-          }
-          /*
-           * Server->Client Packet Example if (player instanceof EntityPlayerMP) {
-           * IMessage msg = new SimplePacket.SimpleMessage("voidstone_activate");
-           * PacketHandler.net.sendTo(msg, (EntityPlayerMP)player); }
-           */
+        } else if (block == null) {
+          player.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.RED + "ERROR: No spawn or bed location found!"));
+          return super.onItemRightClick(stack, world, player);
+        }
+
+        // trigger item cooldown
+        setLastUseTime(stack, world.getTotalWorldTime());
+        // spawn exists, teleport the player
+        EntityPlayerMP playerMP = (EntityPlayerMP) player;
+        MinecraftServer.getServer().worldServerForDimension(0).playSoundEffect(player.posX, player.posY, player.posZ, "mob.endermen.portal", 1.0F, 1.0F);
+        if (playerMP.dimension != 0) {
+          MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension(playerMP, 0, new Teleporter(playerMP.mcServer.worldServerForDimension(0)));
+        }
+        player.setPositionAndUpdate(playerHome.getX(), playerHome.getY(), playerHome.getZ());
+        while (player.getEntityBoundingBox() != null && world.getCollidingBoundingBoxes(player, player.getEntityBoundingBox()) != null && !world.getCollidingBoundingBoxes(player, player.getEntityBoundingBox()).isEmpty()) {
+          player.setPositionAndUpdate(player.posX, player.posY + 1.0D, player.posZ);
+        }
+        /*
+         * Server->Client Packet Example if (player instanceof EntityPlayerMP) { IMessage msg = new
+         * SimplePacket.SimpleMessage("voidstone_activate"); PacketHandler.net.sendTo(msg, (EntityPlayerMP)player); }
+         */
         world.playSoundAtEntity(player, "mob.endermen.portal", 1.0F, 1.0F);
         return super.onItemRightClick(stack, world, player);
       }
@@ -149,45 +131,45 @@ public class Voidstone extends Item {
 
   @Override
   @SideOnly(Side.CLIENT)
-  public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean advanced) {
+  public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
     String owner = getOwner(stack);
-    // Soulbound status / item types 
+    // Soulbound status / item types
     if (!owner.equals("###")) {
-      list.add(EnumChatFormatting.DARK_PURPLE + "Soulbound, Limited");
+      tooltip.add(EnumChatFormatting.DARK_PURPLE + "Soulbound, Limited");
     } else {
-      list.add(EnumChatFormatting.DARK_PURPLE + "Right-click to soulbind item!");
+      tooltip.add(EnumChatFormatting.DARK_PURPLE + "Right-click to soulbind item!");
     }
     // Description
     if (Keyboard.isKeyDown(0x2A) || Keyboard.isKeyDown(0x36)) {
-      list.add(EnumChatFormatting.GRAY + "You may only own one instance of");
-      list.add(EnumChatFormatting.GRAY + "a limited item. Attempts to craft or");
-      list.add(EnumChatFormatting.GRAY + "obtain more will feed the void.");
+      tooltip.add(EnumChatFormatting.GRAY + "You may only own one instance of");
+      tooltip.add(EnumChatFormatting.GRAY + "a limited item. Attempts to craft or");
+      tooltip.add(EnumChatFormatting.GRAY + "obtain more will feed the void.");
     } else {
-      list.add(EnumChatFormatting.GRAY + "Hold " + EnumChatFormatting.WHITE + "SHIFT" + EnumChatFormatting.GRAY + " for more information.");
+      tooltip.add(EnumChatFormatting.GRAY + "Hold " + EnumChatFormatting.WHITE + "SHIFT" + EnumChatFormatting.GRAY + " for more information.");
     }
     // Owner information
     if (!owner.equals("###")) {
-      //list.add(EnumChatFormatting.DARK_PURPLE + "Soulbound, Limited");
+      // list.add(EnumChatFormatting.DARK_PURPLE + "Soulbound, Limited");
       if (owner.equals(player.getDisplayNameString())) {
-        list.add(EnumChatFormatting.GREEN + "Owner: " + owner);
+        tooltip.add(EnumChatFormatting.GREEN + "Owner: " + owner);
         if (getLastUseTime(stack) != -1) {
           long ticksSinceLastUse = player.worldObj.getTotalWorldTime() - getLastUseTime(stack);
           long current = (cooldown / 20) - (ticksSinceLastUse / 20);
           String currentCooldown = formatCooldown(current);
-          list.add("Cooldown: " + currentCooldown);
+          tooltip.add("Cooldown: " + currentCooldown);
           if (ticksSinceLastUse > cooldown) {
-            list.remove(list.size()-1);
+            tooltip.remove(tooltip.size() - 1);
           }
         }
       } else {
         if (ModInfo.DEBUG) {
-          list.add(EnumChatFormatting.RED + "Owner: " + owner);
+          tooltip.add(EnumChatFormatting.RED + "Owner: " + owner);
         } else {
-          list.add(EnumChatFormatting.RED + "Owner: " + EnumChatFormatting.OBFUSCATED + owner);
+          tooltip.add(EnumChatFormatting.RED + "Owner: " + EnumChatFormatting.OBFUSCATED + owner);
         }
       }
     }
-    super.addInformation(stack, player, list, advanced);
+    super.addInformation(stack, player, tooltip, advanced);
   }
 
   @Override
@@ -198,7 +180,7 @@ public class Voidstone extends Item {
     }
   }
 
-  public String formatCooldown(long time) {
+  private String formatCooldown(long time) {
     long hours = time / 3600;
     long minutes = (time % 3600) / 60;
     long seconds = time % 60;
@@ -213,16 +195,16 @@ public class Voidstone extends Item {
     return currentCooldown;
   }
 
-  public void registerTags(ItemStack stack) {
+  private void registerTags(ItemStack stack) {
     stack.setTagCompound(new NBTTagCompound());
     stack.getTagCompound().setLong("LastUse", -1);
     stack.getTagCompound().setString("Owner", "###");
   }
-  
+
   private String getOwner(ItemStack stack) {
     return stack.hasTagCompound() ? stack.getTagCompound().getString("Owner") : "###";
   }
-  
+
   private void setOwner(ItemStack stack, String owner) {
     stack.setTagInfo("Owner", new NBTTagString(owner));
   }

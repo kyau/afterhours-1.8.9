@@ -2,49 +2,23 @@ package net.kyau.afterhours.items;
 
 import java.util.List;
 
-import org.lwjgl.input.Keyboard;
-
-import net.kyau.afterhours.AfterHours;
-import net.kyau.afterhours.references.ItemTypes;
+import net.kyau.afterhours.references.Names;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryEnderChest;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import org.lwjgl.input.Keyboard;
 
-public class VRAD extends Item {
+public class VRAD extends BaseItem {
 
-  ItemTypes type;
-
-  public VRAD(ItemTypes type) {
+  public VRAD() {
     super();
-    setUnlocalizedName("afterhours.vrad");
-    maxStackSize = 1;
-    setCreativeTab(AfterHours.AfterHoursTab);
-    this.type = type;
-  }
-
-  public ItemTypes getType() {
-    return type;
-  }
-
-  @Override
-  public String getUnlocalizedName() {
-    return "afterhours.vrad";
-  }
-
-  @Override
-  public String getUnlocalizedName(ItemStack itemStack) {
-    return "afterhours.vrad";
-  }
-
-  @Override
-  public boolean getShareTag() {
-    return true;
+    this.setUnlocalizedName(Names.Items.VRAD);
+    this.maxStackSize = 1;
   }
 
   @Override
@@ -53,23 +27,23 @@ public class VRAD extends Item {
       if (player.isSneaking()) {
         InventoryEnderChest inventoryenderchest = player.getInventoryEnderChest();
         if (inventoryenderchest != null)
-            player.displayGUIChest(inventoryenderchest);
+          player.displayGUIChest(inventoryenderchest);
       }
     }
     return super.onItemRightClick(stack, world, player);
   }
-  
+
   @Override
   @SideOnly(Side.CLIENT)
-  public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean advanced) {
+  public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
     // Description
     if (Keyboard.isKeyDown(0x2A) || Keyboard.isKeyDown(0x36)) {
-      list.add(EnumChatFormatting.GRAY + "The VRAD or Void Remote Access Device");
-      list.add(EnumChatFormatting.GRAY + "is used to remotely connect through");
-      list.add(EnumChatFormatting.GRAY + "the void to secure storage containers.");
+      tooltip.add(EnumChatFormatting.GRAY + "The VRAD or Void Remote Access Device");
+      tooltip.add(EnumChatFormatting.GRAY + "is used to remotely connect through");
+      tooltip.add(EnumChatFormatting.GRAY + "the void to secure storage containers.");
     } else {
-      list.add(EnumChatFormatting.GRAY + "Hold " + EnumChatFormatting.WHITE + "SHIFT" + EnumChatFormatting.GRAY + " for more information.");
+      tooltip.add(EnumChatFormatting.GRAY + "Hold " + EnumChatFormatting.WHITE + "SHIFT" + EnumChatFormatting.GRAY + " for more information.");
     }
-    super.addInformation(stack, player, list, advanced);
+    super.addInformation(stack, player, tooltip, advanced);
   }
 }
