@@ -13,6 +13,13 @@ import net.minecraft.network.play.server.S2FPacketSetSlot;
 
 public class InventoryHandler {
 
+  private static int ownerCount = 0;
+  private static int unboundCount = 0;
+  private static ArrayList<Integer> owner = new ArrayList<Integer>();
+  private static ArrayList<IInventory> ownerInv = new ArrayList<IInventory>();
+  private static ArrayList<Integer> unbound = new ArrayList<Integer>();
+  private static ArrayList<IInventory> unboundInv = new ArrayList<IInventory>();
+
   public static int countItems(EntityPlayer player, Item item) {
     String itemName = item.getUnlocalizedName();
     int count = 0;
@@ -20,8 +27,6 @@ public class InventoryHandler {
       ItemStack stack = player.inventory.mainInventory[i];
       if (stack != null) {
         if (stack.getUnlocalizedName().equals(itemName)) {
-          // if (stack.getUnlocalizedName().equals("afterhours.voidstone"))
-          // System.out.println("inventory slot: " + i);
           count += stack.stackSize;
         }
       }
@@ -30,21 +35,21 @@ public class InventoryHandler {
       for (int i = 0; i < player.getInventoryEnderChest().getSizeInventory(); ++i) {
         ItemStack stack = player.getInventoryEnderChest().getStackInSlot(i);
         if (stack != null) {
-          if (stack.getUnlocalizedName().equals(item)) {
+          if (stack.getUnlocalizedName().equals(itemName)) {
             count += stack.stackSize;
           }
         }
       }
     }
-    // very spammy due to playertick handler
-    // if (ModInfo.DEBUG)
-    // player.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.LIGHT_PURPLE + "> DEBUG: " +
-    // EnumChatFormatting.GRAY + item + " found: " + count));
     return count;
   }
 
   // remove limited items that do not belong to the player
   public static void removeLimitedItem(EntityPlayer player, ItemStack stack) {
+    ownerCount = 0;
+    unboundCount = 0;
+    owner.clear();
+    unbound.clear();
     // check player inventory
     IInventory inv = player.inventory;
     searchInventory(inv, player, stack, 0);
@@ -56,36 +61,44 @@ public class InventoryHandler {
   }
 
   public static void searchInventory(IInventory inv, EntityPlayer player, ItemStack stack, int chest) {
-    ArrayList<Integer> owner = new ArrayList<Integer>();
-    int ownerCount = 0;
-    ArrayList<Integer> unboundOwner = new ArrayList<Integer>();
-    int unboundCount = 0;
+    // ArrayList<Integer> owner = new ArrayList<Integer>();
+    // ArrayList<Integer> unboundOwner = new ArrayList<Integer>();
+    // int ownerCount = 0;
+    // int unboundCount = 0;
     for (int i = 0; i < inv.getSizeInventory(); i++) {
       if (inv.getStackInSlot(i) != null) {
         ItemStack j = inv.getStackInSlot(i);
-        if (j.getItem() != null && j.getItem() == stack.getItem()) {
+        if (j.getItem() != null && j.getItem().getUnlocalizedName().equals(stack.getItem().getUnlocalizedName())) {
           if (j.getTagCompound() != null) {
             // if the voidstone belongs to the player
             if (j.getTagCompound().getString("Owner").equals(player.getDisplayNameString()) && ownerCount < 1) {
               if (ModInfo.DEBUG)
                 LogHelper.info("> DEBUG: item found (" + j.getTagCompound().getString("Owner") + "), saved!");
               owner.add(ownerCount, i);
+              ownerInv.add(ownerCount, inv);
               ownerCount++;
               if (unboundCount > 0) {
                 for (int z = 0; z < unboundCount; z++) {
-                  ItemStack tmpItem = inv.getStackInSlot(unboundOwner.get(z));
-                  removeItemFromSlot(inv, player, chest, unboundOwner.get(z), tmpItem);
+                  ItemStack tmpItem = unboundInv.get(z).getStackInSlot(unbound.get(z));
+                  removeItemFromSlot(unboundInv.get(z), player, chest, unbound.get(z), tmpItem);
                 }
               }
             } else if (j.getTagCompound().getString("Owner").equals(player.getDisplayNameString()) && ownerCount == 1) {
               // remove the voidstone with the lowest cooldown
               if (ModInfo.DEBUG)
                 LogHelper.info("> DEBUG: removing...");
-              ItemStack prev = inv.getStackInSlot(owner.get(0));
+              ItemStack prev = ownerInv.get(0).getStackInSlot(owner.get(0));
               if (j.getTagCompound().getLong("LastUse") > prev.getTagCompound().getLong("LastUse")) {
-                removeItemFromSlot(inv, player, chest, owner.get(0), prev);
+                removeItemFromSlot(ownerInv.get(0), player, chest, owner.get(0), prev);
               } else {
                 removeItemFromSlot(inv, player, chest, i, stack);
+              }
+              // remove the unbound voidstone
+              if (unboundCount > 0) {
+                for (int z = 0; z < unboundCount; z++) {
+                  ItemStack tmpItem = unboundInv.get(z).getStackInSlot(unbound.get(z));
+                  removeItemFromSlot(unboundInv.get(z), player, chest, unbound.get(z), tmpItem);
+                }
               }
             } else {
               if (unboundCount > 0 || ownerCount > 0) {
@@ -93,7 +106,8 @@ public class InventoryHandler {
                   LogHelper.info("> DEBUG: removing...");
                 removeItemFromSlot(inv, player, chest, i, stack);
               }
-              unboundOwner.add(unboundCount, i);
+              unbound.add(unboundCount, i);
+              unboundInv.add(unboundCount, inv);
               unboundCount++;
             }
           } else {
@@ -102,9 +116,11 @@ public class InventoryHandler {
                 LogHelper.info("> DEBUG: removing...");
               removeItemFromSlot(inv, player, chest, i, stack);
             }
-            unboundOwner.add(unboundCount, i);
+            unbound.add(unboundCount, i);
+            unboundInv.add(unboundCount, inv);
             unboundCount++;
           }
+          LogHelper.info("> DEBUG: ownerCount =  " + ownerCount + ", unboundCount = " + unboundCount);
         }
       }
     }

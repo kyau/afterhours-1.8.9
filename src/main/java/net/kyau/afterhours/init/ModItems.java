@@ -2,6 +2,7 @@ package net.kyau.afterhours.init;
 
 import javax.annotation.Nonnull;
 
+import net.kyau.afterhours.AfterHours;
 import net.kyau.afterhours.items.Antenna;
 import net.kyau.afterhours.items.BaseItem;
 import net.kyau.afterhours.items.Dough;
@@ -31,13 +32,13 @@ public class ModItems {
   public static void init(@Nonnull FMLPreInitializationEvent event) {
 
     GameRegistry.registerItem(antenna, Names.Items.ANTENNA);
-    registerModel(antenna, Names.Items.ANTENNA);
+    AfterHours.proxy.registerModel(antenna, Names.Items.ANTENNA);
     GameRegistry.registerItem(dough, Names.Items.DOUGH);
-    registerModel(dough, Names.Items.DOUGH);
+    AfterHours.proxy.registerModel(dough, Names.Items.DOUGH);
     GameRegistry.registerItem(voidstone, Names.Items.VOIDSTONE);
-    registerModel(voidstone, Names.Items.VOIDSTONE);
+    AfterHours.proxy.registerModel(voidstone, Names.Items.VOIDSTONE);
     GameRegistry.registerItem(vrad, Names.Items.VRAD);
-    registerModel(vrad, Names.Items.VRAD);
+    AfterHours.proxy.registerModel(vrad, Names.Items.VRAD);
   }
 
   @SideOnly(Side.CLIENT)
