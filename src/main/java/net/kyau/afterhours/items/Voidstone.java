@@ -186,11 +186,11 @@ public class Voidstone extends BaseItem {
     long seconds = time % 60;
     String currentCooldown = "";
     if (hours > 0) {
-      currentCooldown = String.format("%02dh %02dm %02ds", hours, minutes, seconds);
+      currentCooldown = String.format("%dh %dm %ds", hours, minutes, seconds);
     } else if (minutes > 0) {
-      currentCooldown = String.format("%02dm %02ds", minutes, seconds);
+      currentCooldown = String.format("%dm %ds", minutes, seconds);
     } else {
-      currentCooldown = String.format("%02ds", seconds);
+      currentCooldown = String.format("%ds", seconds);
     }
     return currentCooldown;
   }
