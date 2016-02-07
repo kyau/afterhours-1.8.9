@@ -7,6 +7,7 @@ import net.kyau.afterhours.items.Antenna;
 import net.kyau.afterhours.items.BaseItem;
 import net.kyau.afterhours.items.Dough;
 import net.kyau.afterhours.items.VRAD;
+import net.kyau.afterhours.items.VoidJournal;
 import net.kyau.afterhours.items.Voidstone;
 import net.kyau.afterhours.references.ModInfo;
 import net.kyau.afterhours.references.Names;
@@ -28,6 +29,7 @@ public class ModItems {
   public static final BaseItem dough = new Dough();
   public static final BaseItem voidstone = new Voidstone();
   public static final BaseItem vrad = new VRAD();
+  public static final BaseItem voidjournal = new VoidJournal();
 
   public static void init(@Nonnull FMLPreInitializationEvent event) {
 
@@ -39,6 +41,8 @@ public class ModItems {
     AfterHours.proxy.registerModel(voidstone, Names.Items.VOIDSTONE);
     GameRegistry.registerItem(vrad, Names.Items.VRAD);
     AfterHours.proxy.registerModel(vrad, Names.Items.VRAD);
+    GameRegistry.registerItem(voidjournal, Names.Items.VOIDJOURNAL);
+    AfterHours.proxy.registerModel(voidjournal, Names.Items.VOIDJOURNAL);
   }
 
   @SideOnly(Side.CLIENT)

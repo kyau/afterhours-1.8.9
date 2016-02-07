@@ -12,5 +12,6 @@ public class Names {
     public static final String DOUGH = "dough";
     public static final String VOIDSTONE = "voidstone";
     public static final String VRAD = "vrad";
+    public static final String VOIDJOURNAL = "voidjournal";
   }
 }

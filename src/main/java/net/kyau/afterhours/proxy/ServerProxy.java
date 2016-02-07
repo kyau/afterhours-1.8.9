@@ -25,4 +25,14 @@ public class ServerProxy extends CommonProxy {
     // NOOP
   }
 
+  @Override
+  public boolean isSinglePlayer() {
+    return false;
+  }
+
+  @Override
+  public void openJournal() {
+    // NOOP
+  }
+
 }

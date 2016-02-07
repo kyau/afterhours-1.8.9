@@ -22,6 +22,7 @@ So many people to thank for this mod actually coming to fruition. Without the us
 * [Pahimar's IProxy and LogHelper concepts](https://github.com/pahimar/Equivalent-Exchange-3)
 * [Jabelar's Minecraft Forge Modding Tutorials](http://jabelarminecraft.blogspot.com/)
 * [coolAlias's Tutorial-Demo 1.8 Mod](https://github.com/coolAlias/Tutorial-Demo)
+* [diesieben07's Modjam-4 Mod](https://github.com/diesieben07/Modjam-4)
 
 ### Attribution
 

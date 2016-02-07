@@ -1,6 +1,7 @@
 package net.kyau.afterhours.proxy;
 
 import net.kyau.afterhours.client.gui.GuiHUD;
+import net.kyau.afterhours.client.gui.GuiVoidJournal;
 import net.kyau.afterhours.references.ModInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -42,6 +43,16 @@ public class ClientProxy extends CommonProxy {
     ModelLoader.registerItemVariants(item);
     ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(ModInfo.MOD_ID + ":" + name, "inventory"));
     LogManager.getLogger(ModInfo.MOD_ID).log(Level.INFO, "ClientProxy: registerModel(): " + name + " SUCCESS!");
+  }
+
+  @Override
+  public boolean isSinglePlayer() {
+    return Minecraft.getMinecraft().isSingleplayer();
+  }
+
+  @Override
+  public void openJournal() {
+    Minecraft.getMinecraft().displayGuiScreen(new GuiVoidJournal());
   }
 
 }

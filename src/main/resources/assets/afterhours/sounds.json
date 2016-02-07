@@ -1,3 +1,4 @@
 {
-    "error": {"category": "master","sounds": [{"name": "error","stream": false}]}
+    "error": {"category": "master", "sounds": [{"name": "error","stream": false}]},
+    "poof": {"category": "master", "sounds": [{"name": "poof","stream": false}]}
 }

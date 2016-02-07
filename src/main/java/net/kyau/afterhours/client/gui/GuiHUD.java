@@ -1,13 +1,17 @@
 package net.kyau.afterhours.client.gui;
 
+import java.awt.Color;
 import java.text.DateFormat;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
 import java.util.Random;
+import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
+import net.kyau.afterhours.AfterHours;
 import net.kyau.afterhours.init.ModItems;
 import net.kyau.afterhours.utils.InventoryHandler;
 import net.minecraft.client.Minecraft;
@@ -17,13 +21,9 @@ import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.network.NetworkPlayerInfo;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
@@ -31,7 +31,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -49,6 +48,7 @@ public class GuiHUD extends Gui {
 
   private static Minecraft minecraft;
   private static EntityPlayer player;
+  private static UUID uuid;
   private static World world;
   private static ScaledResolution scaled;
   private static FontRenderer fontRenderer;
@@ -69,6 +69,26 @@ public class GuiHUD extends Gui {
   private static int posZ;
   private static BlockPos playerPos;
   private static Chunk chunk;
+  // player armour offset
+  private static int armourPosX = 20;
+  private static int armourIconSize = 22;
+
+  public static void setArmourIconSize(int size) {
+    armourIconSize = size;
+  }
+
+  // player armour
+  private static Object[][] lastArmourSet = new Object[][] {
+      new String[] {
+          "",
+          "",
+          "",
+          "" },
+      new Integer[] {
+          0,
+          0,
+          0,
+          0 } };
 
   public GuiHUD(Minecraft minecraft) {
     super();
@@ -100,6 +120,7 @@ public class GuiHUD extends Gui {
 
     // assign
     this.inv = minecraft.thePlayer.inventory;
+    this.uuid = player.getGameProfile().getId();
     this.scaled = new ScaledResolution(minecraft);
     this.fixedY = getScreenCoordinates()[1] - hudYOffset;
     this.centerLeftX = (getScreenCoordinates()[0] / 2) - 112;
@@ -119,36 +140,39 @@ public class GuiHUD extends Gui {
         // render character
         renderCharacterOnScreen("LEFT", 14, scaled, minecraft.thePlayer);
         // player name
-        renderShadowText(player.getDisplayNameString(), 48, 15, 0x3ffefe, 1);
+        RenderUtils.renderText(player.getDisplayNameString(), 48, 15, 0x3ffefe, 1, true);
         // ingame time + light level
-        renderShadowText(getMinecraftTime() + " " + getLightLevel(), 48, 25, 0xffffff, 1);
+        RenderUtils.renderText(getMinecraftTime() + " " + getLightLevel(), 48, 25, 0xffffff, 1, true);
         // biome
-        String[] biomeInfo = getCurrentBiome();
+        ArrayList<Object> biomeInfo = getCurrentBiome();
+        String biome = (String) biomeInfo.get(0);
         if (isSlimeChunk()) {
-          biomeInfo[0] += EnumChatFormatting.GREEN + " (S)";
+          biome = (String) biomeInfo.get(0) + EnumChatFormatting.GREEN + " (S)";
         }
-        renderShadowText(biomeInfo[0], 48, 35, 0xbebebe, 1);
+        RenderUtils.renderText(biome, 48, 35, 0xbebebe, 1, true);
 
         // temperature
-        String biome = biomeInfo[1] + "°";
-        renderShadowText(biome, getScreenCoordinates()[0] - (fontRenderer.getStringWidth(biome)) - 7, 8, 0xffaa00, 1);
+        String temperature = String.format("%.0f°", biomeInfo.get(1));
+        RenderUtils.renderText(temperature, getScreenCoordinates()[0] - (fontRenderer.getStringWidth(temperature)) - 7, 8, (int) biomeInfo.get(3), 1, true);
 
         // inventory
         int invTotals[] = getInventorySize(inv);
-        renderShadowText("" + (invTotals[0] - invTotals[1]), getScreenCoordinates()[0] - 16, fixedY, invTotals[2], 1);
+        RenderUtils.renderText("" + (invTotals[0] - invTotals[1]), getScreenCoordinates()[0] - 16, fixedY, invTotals[2], 1, true);
         // drawTexture("afterhours", "textures/gui/afterhours_icons.png", getScreenCoordinates()[0] - 34, fixedY - 5, 0,
         // 0, 15, 16);
-        RenderHelper.enableGUIStandardItemLighting();
-        itemRenderer.renderItemIntoGUI(new ItemStack(Blocks.chest), getScreenCoordinates()[0] - 34, fixedY - 5);
+        RenderUtils.renderItem(Blocks.chest, getScreenCoordinates()[0] - 34, fixedY - 5);
 
         // fps / ping
-        renderShadowText(getFPS(), centerLeftX, fixedY, 0xdcdcdc, 1);
-        drawTexture("minecraft", "textures/gui/icons.png", centerLeftX - 12, fixedY - 1, 0, 176 + getPingIndex() * 8, 10, 8);
+        RenderUtils.renderText(getFPS(), centerLeftX, fixedY, 0xdcdcdc, 1, true);
+        RenderUtils.renderTexture("minecraft", "textures/gui/icons.png", centerLeftX - 12, fixedY - 1, 0, 176 + getPingIndex() * 8, 10, 8);
 
         // real clock
-        itemRenderer.renderItemIntoGUI(new ItemStack(Items.clock), centerRightX, fixedY - 4);
-        renderShadowText(getRealTime(), centerRightX + 18, fixedY, 0xdcdcdc, 1);
+        RenderUtils.renderItem(new ItemStack(Items.clock), centerRightX, fixedY - 4);
+        RenderUtils.renderText(getRealTime(), centerRightX + 18, fixedY, 0xdcdcdc, 1, true);
         // drawTexture("afterhours", "textures/gui/afterhours_icons.png", centerRightX, fixedY - 4, 16, 0, 16, 16);
+
+        // render current armor and held item
+        renderArmour();
       }
     }
   }
@@ -159,53 +183,6 @@ public class GuiHUD extends Gui {
     return new int[] {
         x,
         y };
-  }
-
-  private void renderShadowText(String text, long posX, long posY, int color, int textSize) {
-    glPush();
-    if (textSize < 1) {
-      GlStateManager.scale(0.50F, 0.50F, 0.50F);
-      posX = posX * 2;
-      posY = posY * 2;
-    } else if (textSize > 1) {
-      GlStateManager.scale(2.00F, 2.00F, 2.00F);
-      posX = posX / 2;
-      posY = posY / 2;
-    }
-    fontRenderer.drawStringWithShadow(text, posX, posY, color);
-    glPop();
-  }
-
-  private void drawTexture(String resourceDomainIn, String resourcePathIn, int posX, int posY, int textureX, int textureY, int width, int height) {
-    glPush();
-    minecraft.renderEngine.bindTexture(new ResourceLocation(resourceDomainIn, resourcePathIn));
-    float f = 0.00390625F;
-    float f1 = 0.00390625F;
-    Tessellator tessellator = Tessellator.getInstance();
-    WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-    worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-    worldrenderer.pos((double) (posX + 0), (double) (posY + height), (double) this.zLevel).tex((double) ((float) (textureX + 0) * f), (double) ((float) (textureY + height) * f1)).endVertex();
-    worldrenderer.pos((double) (posX + width), (double) (posY + height), (double) this.zLevel).tex((double) ((float) (textureX + width) * f), (double) ((float) (textureY + height) * f1)).endVertex();
-    worldrenderer.pos((double) (posX + width), (double) (posY + 0), (double) this.zLevel).tex((double) ((float) (textureX + width) * f), (double) ((float) (textureY + 0) * f1)).endVertex();
-    worldrenderer.pos((double) (posX + 0), (double) (posY + 0), (double) this.zLevel).tex((double) ((float) (textureX + 0) * f), (double) ((float) (textureY + 0) * f1)).endVertex();
-    tessellator.draw();
-    glPop();
-  }
-
-  private void glPush() {
-    GlStateManager.pushMatrix();
-    GlStateManager.enableAlpha();
-    GlStateManager.enableBlend();
-    GlStateManager.disableLighting();
-  }
-
-  private void glPop() {
-    GlStateManager.scale(1.00F, 1.00F, 1.00F);
-    GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-    GlStateManager.disableAlpha();
-    GlStateManager.disableBlend();
-    GlStateManager.enableLighting();
-    GlStateManager.popMatrix();
   }
 
   private static void renderCharacterOnScreen(String side, int posX, ScaledResolution scaled, EntityPlayer player) {
@@ -250,7 +227,7 @@ public class GuiHUD extends Gui {
     return df1.format(dateobj) + suffix;
   }
 
-  public static String getMinecraftTime() {
+  private static String getMinecraftTime() {
     String message;
     long time = minecraft.theWorld.getWorldTime();
     int day = (int) (time / 24000);
@@ -283,11 +260,44 @@ public class GuiHUD extends Gui {
     return message;
   }
 
-  private static String[] getCurrentBiome() {
-    return new String[] {
-        chunk.getBiome(new BlockPos(posX & 15, 0, posZ & 15), world.getWorldChunkManager()).biomeName,
-        String.format(Locale.ENGLISH, "%.0f", world.getBiomeGenForCoords(playerPos).getFloatTemperature(playerPos) * 100),
-        String.format(Locale.ENGLISH, "%.0f", world.getBiomeGenForCoords(playerPos).rainfall * 100) };
+  private static ArrayList<Object> getCurrentBiome() {
+    ArrayList<Object> weather = new ArrayList<Object>();
+    weather.add((String) chunk.getBiome(new BlockPos(posX & 15, 0, posZ & 15), world.getWorldChunkManager()).biomeName);
+    weather.add((float) world.getBiomeGenForCoords(playerPos).getFloatTemperature(playerPos) * 100);
+    weather.add((float) world.getBiomeGenForCoords(playerPos).rainfall * 100);
+    weather.add((int) getTempColor((float) weather.get(1)));
+    return weather;
+  }
+
+  private static int getTempColor(float temperature) {
+    int color = 0x000000;
+    if (temperature >= 100)
+      color = 0xa90303;
+    else if (temperature >= 90)
+      color = 0xcc0000;
+    else if (temperature >= 80)
+      color = 0xff4f00;
+    else if (temperature >= 70)
+      color = 0xff9900;
+    else if (temperature >= 60)
+      color = 0xffcc00;
+    else if (temperature >= 50)
+      color = 0xf7f705;
+    else if (temperature >= 40)
+      color = 0x7fff00;
+    else if (temperature >= 30)
+      color = 0x05f7f7;
+    else if (temperature >= 20)
+      color = 0x00ccff;
+    else if (temperature >= 10)
+      color = 0x007eff;
+    else if (temperature >= 0)
+      color = 0x0000ff;
+    else if (temperature >= -10)
+      color = 0x9e00ff;
+    else if (temperature >= -20)
+      color = 0xff00ff;
+    return color;
   }
 
   private static boolean isSlimeChunk() {
@@ -307,21 +317,142 @@ public class GuiHUD extends Gui {
   }
 
   private static int getPingIndex() {
-    NetworkPlayerInfo playerInfo = minecraft.getNetHandler().getPlayerInfo(player.getGameProfile().getId());
-    int pingIndex = 5;
-    if (playerInfo.getResponseTime() != 0) {
-      if (playerInfo.getResponseTime() < 0) {
-        pingIndex = 5;
-      } else if (playerInfo.getResponseTime() < 150) {
-        pingIndex = 0;
-      } else if (playerInfo.getResponseTime() < 300) {
-        pingIndex = 1;
-      } else if (playerInfo.getResponseTime() < 600) {
-        pingIndex = 2;
-      } else if (playerInfo.getResponseTime() < 1000) {
-        pingIndex = 3;
-      }
+    if (AfterHours.proxy.isSinglePlayer()) {
+      return 5;
+    }
+    NetworkPlayerInfo playerInfo = minecraft.getMinecraft().getNetHandler().getPlayerInfo(uuid);
+    int pingIndex = 0;
+    if (playerInfo.getResponseTime() < 0) {
+      pingIndex = 5;
+    } else if (playerInfo.getResponseTime() < 150) {
+      pingIndex = 0;
+    } else if (playerInfo.getResponseTime() < 300) {
+      pingIndex = 1;
+    } else if (playerInfo.getResponseTime() < 600) {
+      pingIndex = 2;
+    } else if (playerInfo.getResponseTime() < 1000) {
+      pingIndex = 3;
+    } else {
+      pingIndex = 4;
     }
     return pingIndex;
   }
+
+  private static void renderArmour() {
+    InventoryPlayer inv = player.inventory;
+    // int overrideRenderCharacterTime = 0;
+    ItemStack currentItem = inv.getCurrentItem();
+    ItemStack boots = inv.armorInventory[0];
+    ItemStack leggings = inv.armorInventory[1];
+    ItemStack chestplate = inv.armorInventory[2];
+    ItemStack helmet = inv.armorInventory[3];
+    // Armour - Compare to Last Set
+    String curHelmetName = "";
+    String curChestplateName = "";
+    String curLeggingsName = "";
+    String curBootsName = "";
+    Integer curHelmetDur = 0;
+    Integer curChestplateDur = 0;
+    Integer curLeggingsDur = 0;
+    Integer curBootsDur = 0;
+    if (helmet != null) {
+      curHelmetName = helmet.getUnlocalizedName();
+      curHelmetDur = helmet.getItemDamage();
+    }
+    if (chestplate != null) {
+      curChestplateName = chestplate.getUnlocalizedName();
+      curChestplateDur = chestplate.getItemDamage();
+    }
+    if (leggings != null) {
+      curLeggingsName = leggings.getUnlocalizedName();
+      curLeggingsDur = leggings.getItemDamage();
+    }
+    if (boots != null) {
+      curBootsName = boots.getUnlocalizedName();
+      curBootsDur = boots.getItemDamage();
+    }
+    String lastHelmetName = (String) lastArmourSet[0][0];
+    String lastChestplateName = (String) lastArmourSet[0][1];
+    String lastLeggingsName = (String) lastArmourSet[0][2];
+    String lastBootsName = (String) lastArmourSet[0][3];
+    lastArmourSet[0][0] = curHelmetName;
+    lastArmourSet[0][1] = curChestplateName;
+    lastArmourSet[0][2] = curLeggingsName;
+    lastArmourSet[0][3] = curBootsName;
+    lastArmourSet[1][0] = curHelmetDur;
+    lastArmourSet[1][1] = curChestplateDur;
+    lastArmourSet[1][2] = curLeggingsDur;
+    lastArmourSet[1][3] = curBootsDur;
+
+    int armorOffset = 16;
+    int width = scaled.getScaledWidth() + armourPosX;
+    int height = scaled.getScaledHeight();
+    boolean armourAllNull = isArmourNull(boots, leggings, chestplate, helmet);
+
+    int[] params = new int[] {
+        width,
+        height,
+        armorOffset,
+        armourAllNull ? 1 : 0 };
+
+    if (!armourAllNull) {
+      renderArmourSet(boots, 2, params, 2);
+      renderArmourSet(leggings, 3, params, 2);
+      renderArmourSet(chestplate, 4, params, 2);
+      renderArmourSet(helmet, 5, params, 2);
+    }
+    renderArmourSet(currentItem, 1, params, 1);
+  }
+
+  public static boolean isArmourNull(ItemStack... stacks) {
+    for (ItemStack s : stacks) {
+      if (s != null)
+        return false;
+    }
+    return true;
+  }
+
+  private static void renderArmourSet(ItemStack stack, int type, int[] params, int turn) {
+    int width = params[0];
+    int height = params[1];
+    int armourOffset = params[2];
+    if (stack != null) {
+      int iconSize = 14; // height for each slot
+      int x = 0 + (armourOffset - 16) - armourPosX;
+      int y = (int) (((scaled.getScaledHeight() / 2 - ((5 * iconSize) / 2)) + ((5 - type) * iconSize)) + Math.round(scaled.getScaledHeight() * 0.1));
+      String damage = String.valueOf(stack.getMaxDamage() - stack.getItemDamage());
+      String damageText = "";
+      if (stack.getMaxDamage() > 0) {
+        int currentDamage = stack.getMaxDamage() - stack.getItemDamage();
+        float percent = (float) currentDamage / (float) stack.getMaxDamage();
+        damageText = MessageFormat.format("{0,number,#%}", percent);
+        // DEBUG
+        // System.out.println("float: " + String.valueOf(percent) + ", string: " + damage);
+      } else {
+        // Item does not have durability, show item count instead
+        if (stack.stackSize > 1) {
+          damageText = String.valueOf(stack.stackSize);
+        }
+      }
+      int damageStringWidth = Math.max(fontRenderer.getStringWidth(damage) + 2, fontRenderer.getStringWidth("9999") + 2);
+      x += damageStringWidth;
+      RenderUtils.renderItemDurability(stack, x, y);
+      if (minecraft.gameSettings.guiScale < 3) {
+        if (stack.getMaxDamage() > 0) {
+          int currentDamage = stack.getMaxDamage() - stack.getItemDamage();
+          float percent = (float) currentDamage / (float) stack.getMaxDamage();
+          if (percent > 0.65) {
+            RenderUtils.renderText(String.valueOf(damageText), x + (damageStringWidth - 6), y + (fontRenderer.FONT_HEIGHT / 2) + 1, Color.GREEN.getRGB(), 1, true);
+          } else if (percent > 0.45) {
+            RenderUtils.renderText(String.valueOf(damageText), x + (damageStringWidth - 6), y + (fontRenderer.FONT_HEIGHT / 2) + 1, Color.YELLOW.getRGB(), 1, true);
+          } else if (percent > 0.25) {
+            RenderUtils.renderText(String.valueOf(damageText), x + (damageStringWidth - 6), y + (fontRenderer.FONT_HEIGHT / 2) + 1, Color.ORANGE.getRGB(), 1, true);
+          } else {
+            RenderUtils.renderText(String.valueOf(damageText), x + (damageStringWidth - 6), y + (fontRenderer.FONT_HEIGHT / 2) + 1, Color.RED.getRGB(), 1, true);
+          }
+        }
+      }
+    }
+  }
+
 }

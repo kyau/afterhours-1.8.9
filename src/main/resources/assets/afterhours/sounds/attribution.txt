@@ -1,2 +1,4 @@
 error.ogg
 * https://www.freesound.org/people/Autistic%20Lucario/sounds/142608/
+poof.ogg
+* https://www.freesound.org/people/michael_kur95/sounds/254545/

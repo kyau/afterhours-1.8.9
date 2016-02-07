@@ -25,9 +25,9 @@ public class VRAD extends BaseItem {
   public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
     if (!world.isRemote) {
       if (player.isSneaking()) {
-        InventoryEnderChest inventoryenderchest = player.getInventoryEnderChest();
-        if (inventoryenderchest != null)
-          player.displayGUIChest(inventoryenderchest);
+        InventoryEnderChest invEnderChest = player.getInventoryEnderChest();
+        if (invEnderChest != null)
+          player.displayGUIChest(invEnderChest);
       }
     }
     return super.onItemRightClick(stack, world, player);

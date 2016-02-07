@@ -13,4 +13,8 @@ public interface IProxy {
   public abstract void initRenderingAndTextures();
 
   public abstract void registerModel(Item item, String name);
+
+  public abstract boolean isSinglePlayer();
+
+  public abstract void openJournal();
 }
