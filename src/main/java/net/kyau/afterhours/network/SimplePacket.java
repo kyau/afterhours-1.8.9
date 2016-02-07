@@ -2,6 +2,8 @@ package net.kyau.afterhours.network;
 
 import io.netty.buffer.ByteBuf;
 import net.kyau.afterhours.network.SimplePacket.SimpleMessage;
+import net.kyau.afterhours.utils.LogHelper;
+import net.kyau.afterhours.utils.SoundUtil;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -13,10 +15,10 @@ public class SimplePacket implements IMessageHandler<SimpleMessage, IMessage> {
   public IMessage onMessage(SimpleMessage message, MessageContext ctx) {
     // just to make sure that the side is correct
     if (ctx.side.isClient()) {
-      System.out.println("AfterHours: recieved packet from server! (" + message.text + ")");
-      String text = message.text;
-      if (text == "test_packet") {
-        // do this clientside;
+      LogHelper.info("recieved packet from server! (" + message.type + ": " + message.text + ")");
+
+      if (message.type == 1) {
+        SoundUtil.playSound(message.text);
       }
     }
     return null;
@@ -25,6 +27,7 @@ public class SimplePacket implements IMessageHandler<SimpleMessage, IMessage> {
   public static class SimpleMessage implements IMessage {
 
     private String text;
+    private int type;
     private String simpleString;
     private boolean simpleBool;
 
@@ -33,17 +36,20 @@ public class SimplePacket implements IMessageHandler<SimpleMessage, IMessage> {
     public SimpleMessage() {
     }
 
-    public SimpleMessage(String text) {
+    public SimpleMessage(int type, String text) {
       this.text = text;
+      this.type = type;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-      this.text = ByteBufUtils.readUTF8String(buf);
+      type = buf.readInt();
+      text = ByteBufUtils.readUTF8String(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
+      buf.writeInt(this.type);
       ByteBufUtils.writeUTF8String(buf, this.text);
     }
   }

@@ -23,6 +23,7 @@ So many people to thank for this mod actually coming to fruition. Without the us
 * [Jabelar's Minecraft Forge Modding Tutorials](http://jabelarminecraft.blogspot.com/)
 * [coolAlias's Tutorial-Demo 1.8 Mod](https://github.com/coolAlias/Tutorial-Demo)
 * [diesieben07's Modjam-4 Mod](https://github.com/diesieben07/Modjam-4)
+* [BloodMagic's ChatUtil Class](https://github.com/WayofTime/BloodMagic)
 
 ### Attribution
 

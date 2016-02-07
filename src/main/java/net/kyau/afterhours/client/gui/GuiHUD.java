@@ -152,7 +152,7 @@ public class GuiHUD extends Gui {
         RenderUtils.renderText(biome, 48, 35, 0xbebebe, 1, true);
 
         // temperature
-        String temperature = String.format("%.0f°", biomeInfo.get(1));
+        String temperature = String.format("%.0f\u00b0", biomeInfo.get(1));
         RenderUtils.renderText(temperature, getScreenCoordinates()[0] - (fontRenderer.getStringWidth(temperature)) - 7, 8, (int) biomeInfo.get(3), 1, true);
 
         // inventory

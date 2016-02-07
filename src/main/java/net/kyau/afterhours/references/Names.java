@@ -10,8 +10,9 @@ public class Names {
 
     public static final String ANTENNA = "antenna";
     public static final String DOUGH = "dough";
-    public static final String VOIDSTONE = "voidstone";
-    public static final String VRAD = "vrad";
     public static final String VOIDJOURNAL = "voidjournal";
+    public static final String VOIDSTONE = "voidstone";
+    public static final String VOIDWELL = "voidwell";
+    public static final String VRAD = "vrad";
   }
 }

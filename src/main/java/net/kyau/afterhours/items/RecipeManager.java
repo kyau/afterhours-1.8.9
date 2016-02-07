@@ -35,6 +35,7 @@ public class RecipeManager {
     GameRegistry.addRecipe(new ItemStack(ModItems.dough, 1), "www", 'w', Items.wheat);
     GameRegistry.addSmelting(ModItems.dough, new ItemStack(Items.bread, 1), 0.35F);
     GameRegistry.addRecipe(new ItemStack(ModItems.voidstone, 1), " s ", "geg", " s ", 's', new ItemStack(Blocks.stone_slab, 1, 0), 'g', Items.glowstone_dust, 'e', Items.ender_pearl);
+    GameRegistry.addRecipe(new ItemStack(ModItems.voidwell, 1), "ege", "cmp", "ege", 'c', Items.clock, 'e', Items.ender_pearl, 'g', Items.glowstone_dust, 'm', Items.map, 'p', Items.compass);
     GameRegistry.addRecipe(new ItemStack(ModItems.vrad, 1), "lal", "ses", "lcl", 'l', new ItemStack(Blocks.stone_slab, 1, 0), 'a', ModItems.antenna, 's', Items.stick, 'e', Blocks.ender_chest, 'c', Blocks.chest);
   }
 
