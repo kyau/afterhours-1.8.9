@@ -21,7 +21,13 @@ public class RecipeManager {
 
   public static void init() {
     // Item recipes to remove from the game
-    Collections.addAll(removeSet, new Item[] { Items.bread, });
+    Collections.addAll(removeSet, new Item[] {
+        Items.bread,
+        Items.stone_axe,
+        Items.stone_hoe,
+        Items.stone_pickaxe,
+        Items.stone_shovel,
+        Items.stone_sword });
     removeRecipes();
     addRecipes();
   }
@@ -31,6 +37,13 @@ public class RecipeManager {
   }
 
   private static void addRecipes() {
+    // vanilla
+    GameRegistry.addRecipe(new ItemStack(Items.stone_axe, 1), "ss ", "st ", " t ", 's', new ItemStack(Blocks.stone, 1, 0), 't', Items.stick);
+    GameRegistry.addRecipe(new ItemStack(Items.stone_hoe, 1), "ss ", " t ", " t ", 's', new ItemStack(Blocks.stone, 1, 0), 't', Items.stick);
+    GameRegistry.addRecipe(new ItemStack(Items.stone_pickaxe, 1), "sss", " t ", " t ", 's', new ItemStack(Blocks.stone, 1, 0), 't', Items.stick);
+    GameRegistry.addRecipe(new ItemStack(Items.stone_shovel, 1), " s ", " t ", " t ", 's', new ItemStack(Blocks.stone, 1, 0), 't', Items.stick);
+    GameRegistry.addRecipe(new ItemStack(Items.stone_sword, 1), " s ", " s ", " t ", 's', new ItemStack(Blocks.stone, 1, 0), 't', Items.stick);
+    // afterhours
     GameRegistry.addRecipe(new ItemStack(ModItems.antenna, 1), "g", "s", 'g', Items.glowstone_dust, 's', Items.stick);
     GameRegistry.addRecipe(new ItemStack(ModItems.dough, 1), "www", 'w', Items.wheat);
     GameRegistry.addSmelting(ModItems.dough, new ItemStack(Items.bread, 1), 0.35F);

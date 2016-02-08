@@ -73,7 +73,7 @@ public class GuiVoidJournal extends GuiScreen {
     drawTexturedModalRect(bookXStart, 2, 0, 0, 192, 192);
     String page = pages.get(this.pageIndex);
     // Journal Title
-    RenderUtils.renderText("§n§5Void Journal", (long) bookXStart + 40 + 4 + 16, (long) 17, 0x000000, 1, false);
+    RenderUtils.renderText("\u00A7n\u00A75Void Journal", (long) bookXStart + 40 + 4 + 16, (long) 17, 0x000000, 1, false);
     // Render the current page
     RenderUtils.renderSplitText(page, bookXStart + 40, 17 + 15, 220, 0x000000, 0);
 
