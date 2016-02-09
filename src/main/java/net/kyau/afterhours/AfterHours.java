@@ -3,6 +3,7 @@ package net.kyau.afterhours;
 import javax.annotation.Nonnull;
 
 import net.kyau.afterhours.config.AfterHoursTab;
+import net.kyau.afterhours.event.GuiHandler;
 import net.kyau.afterhours.init.ModItems;
 import net.kyau.afterhours.items.RecipeManager;
 import net.kyau.afterhours.network.PacketHandler;
@@ -14,6 +15,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 @Mod(modid = ModInfo.MOD_ID,
      name = ModInfo.MOD_NAME,
@@ -30,6 +32,10 @@ public class AfterHours {
   public static IProxy proxy;
 
   public static CreativeTabs AfterHoursTab = new AfterHoursTab(CreativeTabs.getNextID(), "AfterHours");
+
+  public static int guiIndex = 0;
+  public static final int GUI_VOIDJOURNAL = guiIndex++;
+  public static final int GUI_VRAD = guiIndex++;
 
   @Mod.EventHandler
   public void preInit(@Nonnull FMLPreInitializationEvent event) {
@@ -52,6 +58,8 @@ public class AfterHours {
     // LogManager.getLogger(ModInfo.MOD_ID).log(Level.INFO, "init() START");
     proxy.initRenderingAndTextures();
     RecipeManager.init();
+
+    NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
     // LogManager.getLogger(ModInfo.MOD_ID).log(Level.INFO, "init() END");
   }
 
