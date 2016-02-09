@@ -31,9 +31,9 @@ import org.lwjgl.input.Keyboard;
 public class Voidstone extends BaseItem {
 
   // int cooldown = 1200; // 1 minute
-  int cooldown = 36000; // 30 minutes
-
+  // int cooldown = 36000; // 30 minutes
   // int cooldown = 72000; // 1 hour
+  int cooldown = 12000; // 10 minutes
 
   public Voidstone() {
     super();

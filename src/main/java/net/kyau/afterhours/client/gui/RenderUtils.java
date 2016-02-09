@@ -47,6 +47,8 @@ public class RenderUtils {
       posX = posX / 2;
       posY = posY / 2;
     }
+    GlStateManager.enableLighting();
+    RenderHelper.disableStandardItemLighting();
     fontRenderer.drawSplitString(text, posX, posY, wrapWidth, color);
     glPop();
   }
