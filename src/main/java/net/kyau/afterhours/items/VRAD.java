@@ -6,6 +6,7 @@ import net.kyau.afterhours.AfterHours;
 import net.kyau.afterhours.references.ModInfo;
 import net.kyau.afterhours.references.Names;
 import net.kyau.afterhours.utils.ItemHelper;
+import net.kyau.afterhours.utils.LogHelper;
 import net.kyau.afterhours.utils.NBTHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryEnderChest;
@@ -28,24 +29,34 @@ public class VRAD extends BaseItem {
 
   @Override
   public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+    if (!ItemHelper.hasOwnerUUID(stack)) {
+      ItemHelper.setOwner(stack, player);
+      if (!world.isRemote)
+        player.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.LIGHT_PURPLE + "Soulbound!"));
+    }
+    // Set a UUID on the Alchemical Bag, if one doesn't exist already
+    if (!NBTHelper.hasUUID(stack)) {
+      LogHelper.info("Setting UUID");
+      NBTHelper.setUUID(stack);
+    }
     if (!world.isRemote) {
       if (player.isSneaking()) {
-        InventoryEnderChest invEnderChest = player.getInventoryEnderChest();
-        if (invEnderChest != null)
-          player.displayGUIChest(invEnderChest);
-      } else {
-        // player.openGui(AfterHours.instance, AfterHours.GUI_VRAD, world, (int) player.posX, (int) player.posY, (int)
-        // player.posZ);
-        if (!ItemHelper.hasOwnerUUID(stack)) {
-          ItemHelper.setOwner(stack, player);
-          player.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.LIGHT_PURPLE + "Soulbound!"));
+        if (ItemHelper.getOwnerName(stack).equals(player.getDisplayNameString())) {
+          InventoryEnderChest invEnderChest = player.getInventoryEnderChest();
+          if (invEnderChest != null)
+            player.displayGUIChest(invEnderChest);
         }
-
-        // Set a UUID on the Alchemical Bag, if one doesn't exist already
-        NBTHelper.setUUID(stack);
-        // TODO Do a scan of inventory and if we find a bag with the same UUID, change it's UUID
-        NBTHelper.setBoolean(stack, "vradGuiOpen", true);
-        player.openGui(AfterHours.instance, AfterHours.GUI_VRAD, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+      } else {
+        if (ItemHelper.getOwnerName(stack).equals(player.getDisplayNameString())) {
+          // TODO Do a scan of inventory and if we find a bag with the same UUID, change it's UUID
+          NBTHelper.setBoolean(stack, "vradGuiOpen", true);
+          player.openGui(AfterHours.instance, AfterHours.GUI_VRAD, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+          return super.onItemRightClick(stack, world, player);
+        }
+      }
+    } else {
+      if (!(ItemHelper.getOwnerName(stack).equals(player.getDisplayNameString()))) {
+        player.playSound("afterhours:error", 0.5F, 1.0F);
       }
     }
     return super.onItemRightClick(stack, world, player);

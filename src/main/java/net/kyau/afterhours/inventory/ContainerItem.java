@@ -12,11 +12,13 @@ import net.minecraft.item.ItemStack;
 public class ContainerItem extends Container {
 
   public final InventoryVRAD inventory;
+  public final InventoryVOID inventory2;
   private static final int INV_START = InventoryVRAD.INV_SIZE, INV_END = INV_START + 26, HOTBAR_START = INV_END + 1,
       HOTBAR_END = HOTBAR_START + 8;
 
-  public ContainerItem(EntityPlayer player, InventoryVRAD inventoryVRAD) {
+  public ContainerItem(EntityPlayer player, InventoryVRAD inventoryVRAD, InventoryVOID inventoryVOID) {
     this.inventory = inventoryVRAD;
+    this.inventory2 = inventoryVOID;
     int i;
     // ITEM INVENTORY - you'll need to adjust the slot locations to match your texture file
     // I have them set vertically in columns of 4 to the right of the player model
@@ -27,8 +29,10 @@ public class ContainerItem extends Container {
       // from being stored within itself, but if you want to allow that and
       // you followed my advice at the end of the above step, then you
       // could get away with using the vanilla Slot class
-      this.addSlotToContainer(new SlotItemInv(this.inventory, i, 8 + (18 * (int) (i / 3)), 17 + (18 * (i % 3))));
+      this.addSlotToContainer(new SlotItemInv(this.inventory, i, 8 + (18 * (int) (i / 5)), 1 + (18 * (i % 5)) - 18));
     }
+    // VOID SLOT
+    this.addSlotToContainer(new SlotItemInv(this.inventory2, 0, 152, 86));
     // If you want, you can add ARMOR SLOTS here as well, but you need to
     // make a public version of SlotArmor. I won't be doing that in this tutorial.
     /*
@@ -40,12 +44,12 @@ public class ContainerItem extends Container {
     // PLAYER INVENTORY - uses default locations for standard inventory texture file
     for (i = 0; i < 3; ++i) {
       for (int j = 0; j < 9; ++j) {
-        this.addSlotToContainer(new Slot(player.inventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+        this.addSlotToContainer(new Slot(player.inventory, j + i * 9 + 9, 8 + j * 18, 117 + i * 18));
       }
     }
     // PLAYER ACTION BAR - uses default locations for standard action bar texture file
     for (i = 0; i < 9; ++i) {
-      this.addSlotToContainer(new Slot(player.inventory, i, 8 + i * 18, 142));
+      this.addSlotToContainer(new Slot(player.inventory, i, 8 + i * 18, 175));
     }
   }
 

@@ -4,3 +4,5 @@ afterhours.voidstone.name=§eVoidstone§r
 afterhours.vrad.name=§eVRAD§r
 afterhours.voidjournal.name=Void Journal
 afterhours.voidwell.name=§eVoid Well§r
+afterhours.container:vrad=VRAD
+afterhours.container:void=Void

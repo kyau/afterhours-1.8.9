@@ -3,8 +3,8 @@ package net.kyau.afterhours.inventory;
 import java.util.UUID;
 
 import net.kyau.afterhours.items.VRAD;
+import net.kyau.afterhours.references.ModInfo;
 import net.kyau.afterhours.utils.INBTTaggable;
-import net.kyau.afterhours.utils.LogHelper;
 import net.kyau.afterhours.utils.NBTHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -14,11 +14,12 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.util.StatCollector;
 
 public class InventoryVRAD implements IInventory, INBTTaggable {
 
   private String name = "VRAD";
-  public final static int INV_SIZE = 27;
+  public final static int INV_SIZE = 9 * 5;
   public ItemStack parentItem;
   protected ItemStack[] inventory;
   protected String customName;
@@ -31,7 +32,7 @@ public class InventoryVRAD implements IInventory, INBTTaggable {
 
   @Override
   public String getName() {
-    return this.hasCustomName() ? this.getCustomName() : "container.afterhours:vrad";
+    return this.hasCustomName() ? this.getCustomName() : StatCollector.translateToLocal(ModInfo.MOD_ID + ".container:" + parentItem.getUnlocalizedName().substring(ModInfo.MOD_ID.length() + 1));
   }
 
   @Override
@@ -178,58 +179,8 @@ public class InventoryVRAD implements IInventory, INBTTaggable {
         tagList.appendTag(tagCompound);
       }
     }
-    LogHelper.info("NBT: VRAD: writing...");
     nbtTagCompound.setTag("Items", tagList);
   }
-
-  /*
-    public void readFromNBT(NBTTagCompound nbtTagCompound) {
-      LogHelper.info("Reading NBT data from VRAD...");
-      if (parentItem.hasTagCompound())
-        LogHelper.info("NBT: Found tagCompound.");
-      if (nbtTagCompound != null) {
-        NBTTagList tagList = nbtTagCompound.getTagList("Items", NBT.TAG_COMPOUND);
-        LogHelper.info("NBT: tagCompound has tags: " + this.tag.hasNoTags() + "(" + tagList.tagCount() + ")");
-        // Read in the ItemStacks in the inventory from NBT
-        // if (nbtTagCompound.hasKey("Items")) {
-        // NBTTagList tagList = nbtTagCompound.getTagList("Items", 10);
-        inventory = new ItemStack[this.getSizeInventory()];
-        for (int i = 0; i < tagList.tagCount(); ++i) {
-          NBTTagCompound tagCompound = tagList.getCompoundTagAt(i);
-          byte slotIndex = tagCompound.getByte("Slot");
-          if (slotIndex >= 0 && slotIndex < inventory.length) {
-            inventory[slotIndex] = ItemStack.loadItemStackFromNBT(tagCompound);
-          }
-        }
-        // }
-      }
-    }
-
-    public void writeToNBT(NBTTagCompound nbtTagCompound) {
-      // Write the ItemStacks in the inventory to NBT
-      LogHelper.info("Writing NBT data from VRAD...");
-      NBTTagList tagList = new NBTTagList();
-      int count = 0;
-      for (int currentIndex = 0; currentIndex < inventory.length; ++currentIndex) {
-        if (inventory[currentIndex] != null) {
-          count++;
-          LogHelper.info("NBT: Found item to save #" + count);
-          NBTTagCompound tagCompound = new NBTTagCompound();
-          tagCompound.setByte("Slot", (byte) currentIndex);
-          inventory[currentIndex].writeToNBT(tagCompound);
-          tagList.appendTag(tagCompound);
-        }
-      }
-      LogHelper.info("NBT: Saving Items to VRAD...");
-      parentItem.stackTagCompound.setTag("Items", tagList);
-      if (this.tag != null && this.tag.hasKey("Items")) {
-        if (parentItem.hasTagCompound())
-          LogHelper.info("NBT: VRAD Saved.");
-        NBTTagList tagList2 = this.tag.getTagList("Items", NBT.TAG_COMPOUND);
-        LogHelper.info("NBT: tagCompound has tags: " + this.tag.hasNoTags() + "(" + tagList2.tagCount() + ")");
-      }
-    }
-  */
 
   public void save() {
     NBTTagCompound nbtTagCompound = parentItem.getTagCompound();
@@ -254,11 +205,11 @@ public class InventoryVRAD implements IInventory, INBTTaggable {
     }
   }
 
-  public ItemStack findParentItem(EntityPlayer entityPlayer) {
+  public ItemStack findParentItem(EntityPlayer player) {
     if (NBTHelper.hasUUID(parentItem)) {
       UUID parentItemStackUUID = new UUID(parentItem.getTagCompound().getLong("UUIDMostSig"), parentItem.getTagCompound().getLong("UUIDLeastSig"));
-      for (int i = 0; i < entityPlayer.inventory.getSizeInventory(); i++) {
-        ItemStack itemStack = entityPlayer.inventory.getStackInSlot(i);
+      for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+        ItemStack itemStack = player.inventory.getStackInSlot(i);
 
         if (NBTHelper.hasUUID(itemStack)) {
           if (itemStack.getTagCompound().getLong("UUIDMostSig") == parentItemStackUUID.getMostSignificantBits() && itemStack.getTagCompound().getLong("UUIDLeastSig") == parentItemStackUUID.getLeastSignificantBits()) {

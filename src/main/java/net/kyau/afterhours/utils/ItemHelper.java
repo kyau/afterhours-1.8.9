@@ -108,8 +108,11 @@ public class ItemHelper {
   }
 
   public static void setOwnerUUID(ItemStack stack, EntityPlayer player) {
-    NBTHelper.setLong(stack, "UUIDMostSig", player.getUniqueID().getMostSignificantBits());
-    NBTHelper.setLong(stack, "UUIDLeastSig", player.getUniqueID().getLeastSignificantBits());
+    // NBTHelper.setLong(stack, "UUIDMostSig", player.getUniqueID().getMostSignificantBits());
+    // NBTHelper.setLong(stack, "UUIDLeastSig", player.getUniqueID().getLeastSignificantBits());
+    UUID itemUUID = UUID.randomUUID();
+    NBTHelper.setLong(stack, "UUIDMostSig", itemUUID.getMostSignificantBits());
+    NBTHelper.setLong(stack, "UUIDLeastSig", itemUUID.getLeastSignificantBits());
   }
 
   public static void setOwnerName(ItemStack stack, EntityPlayer player) {

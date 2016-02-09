@@ -63,7 +63,7 @@ public class VoidWell extends BaseItem {
       if (entityLiving instanceof EntityPlayerMP) {
         player = (EntityPlayerMP) entityLiving;
         long ticksSinceLastUse = player.worldObj.getTotalWorldTime() - getLastUseTime(stack);
-        if (ticksSinceLastUse > 20 && owner.equals(player.getDisplayNameString()) && energy[0] >= 10) {
+        if (ticksSinceLastUse > 100 && owner.equals(player.getDisplayNameString()) && energy[0] >= 10) {
           MovingObjectPosition mop = rayTrace(distance, 1.0F, player);
           BlockPos toPos = new BlockPos(mop.getBlockPos().getX(), mop.getBlockPos().getY(), mop.getBlockPos().getZ());
           IBlockState state = world.getBlockState(toPos);
@@ -71,7 +71,8 @@ public class VoidWell extends BaseItem {
           if (block == null) {
             return false;
           }
-          LogHelper.info("Teleport (" + player.getDisplayNameString() + "): x: " + toPos.getX() + " y: " + toPos.getY() + " z: " + toPos.getZ());
+          // LogHelper.info("Teleport (" + player.getDisplayNameString() + "): x: " + toPos.getX() + " y: " +
+          // toPos.getY() + " z: " + toPos.getZ());
           player.setPositionAndUpdate(toPos.getX(), toPos.getY(), toPos.getZ());
           while (player.getEntityBoundingBox() != null && world.getCollidingBoundingBoxes(player, player.getEntityBoundingBox()) != null && !world.getCollidingBoundingBoxes(player, player.getEntityBoundingBox()).isEmpty()) {
             player.setPositionAndUpdate(player.posX, player.posY + 1.0D, player.posZ);
