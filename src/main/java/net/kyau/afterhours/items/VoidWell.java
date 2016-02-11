@@ -62,6 +62,10 @@ public class VoidWell extends BaseItem {
     if (!world.isRemote) {
       if (entityLiving instanceof EntityPlayerMP) {
         player = (EntityPlayerMP) entityLiving;
+        if (player.dimension != 0) {
+          ChatUtil.sendNoSpam(player, EnumChatFormatting.RED + "Invalid dimension.");
+          return false;
+        }
         long ticksSinceLastUse = player.worldObj.getTotalWorldTime() - getLastUseTime(stack);
         if (ticksSinceLastUse > 100 && owner.equals(player.getDisplayNameString()) && energy[0] >= 10) {
           MovingObjectPosition mop = rayTrace(distance, 1.0F, player);

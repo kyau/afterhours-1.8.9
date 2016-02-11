@@ -1,9 +1,9 @@
-package net.kyau.afterhours.inventory;
+package net.kyau.afterhours.inventory.vrd;
 
 import java.util.UUID;
 
-import net.kyau.afterhours.items.VRAD;
-import net.kyau.afterhours.references.ModInfo;
+import net.kyau.afterhours.items.VRD;
+import net.kyau.afterhours.references.Names;
 import net.kyau.afterhours.utils.INBTTaggable;
 import net.kyau.afterhours.utils.NBTHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,23 +16,26 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StatCollector;
 
-public class InventoryVRAD implements IInventory, INBTTaggable {
+public class InventoryVRDMain implements IInventory, INBTTaggable {
 
-  private String name = "VRAD";
-  public final static int INV_SIZE = 9 * 5;
+  public final static int INV_SIZE = 9 * 5 + 3;
   public ItemStack parentItem;
   protected ItemStack[] inventory;
   protected String customName;
 
-  public InventoryVRAD(ItemStack stack) {
+  public InventoryVRDMain(ItemStack stack) {
     parentItem = stack;
     inventory = new ItemStack[this.getSizeInventory()];
     readFromNBT(stack.getTagCompound());
   }
 
+  public ItemStack[] getInventory() {
+    return inventory;
+  }
+
   @Override
   public String getName() {
-    return this.hasCustomName() ? this.getCustomName() : StatCollector.translateToLocal(ModInfo.MOD_ID + ".container:" + parentItem.getUnlocalizedName().substring(ModInfo.MOD_ID.length() + 1));
+    return this.hasCustomName() ? this.getCustomName() : StatCollector.translateToLocal(Names.Containers.VRD_MAIN);
   }
 
   @Override
@@ -118,7 +121,7 @@ public class InventoryVRAD implements IInventory, INBTTaggable {
 
   @Override
   public boolean isItemValidForSlot(int index, ItemStack stack) {
-    return !(stack.getItem() instanceof VRAD);
+    return !(stack.getItem() instanceof VRD);
   }
 
   @Override
@@ -144,10 +147,10 @@ public class InventoryVRAD implements IInventory, INBTTaggable {
 
   @Override
   public void readFromNBT(NBTTagCompound nbtTagCompound) {
-    if (nbtTagCompound != null && nbtTagCompound.hasKey("Items")) {
+    if (nbtTagCompound != null && nbtTagCompound.hasKey(Names.NBT.ITEMS)) {
       // Read in the ItemStacks in the inventory from NBT
-      if (nbtTagCompound.hasKey("Items")) {
-        NBTTagList tagList = nbtTagCompound.getTagList("Items", 10);
+      if (nbtTagCompound.hasKey(Names.NBT.ITEMS)) {
+        NBTTagList tagList = nbtTagCompound.getTagList(Names.NBT.ITEMS, 10);
         inventory = new ItemStack[this.getSizeInventory()];
         for (int i = 0; i < tagList.tagCount(); ++i) {
           NBTTagCompound tagCompound = tagList.getCompoundTagAt(i);
@@ -159,9 +162,9 @@ public class InventoryVRAD implements IInventory, INBTTaggable {
       }
 
       // Read in any custom name for the inventory
-      if (nbtTagCompound.hasKey("display") && nbtTagCompound.getTag("display").getClass().equals(NBTTagCompound.class)) {
-        if (nbtTagCompound.getCompoundTag("display").hasKey("Name")) {
-          customName = nbtTagCompound.getCompoundTag("display").getString("Name");
+      if (nbtTagCompound.hasKey(Names.NBT.DISPLAY) && nbtTagCompound.getTag(Names.NBT.DISPLAY).getClass().equals(NBTTagCompound.class)) {
+        if (nbtTagCompound.getCompoundTag(Names.NBT.DISPLAY).hasKey("Name")) {
+          customName = nbtTagCompound.getCompoundTag(Names.NBT.DISPLAY).getString("Name");
         }
       }
     }
@@ -179,7 +182,7 @@ public class InventoryVRAD implements IInventory, INBTTaggable {
         tagList.appendTag(tagCompound);
       }
     }
-    nbtTagCompound.setTag("Items", tagList);
+    nbtTagCompound.setTag(Names.NBT.ITEMS, tagList);
   }
 
   public void save() {
@@ -189,8 +192,8 @@ public class InventoryVRAD implements IInventory, INBTTaggable {
       nbtTagCompound = new NBTTagCompound();
 
       UUID uuid = UUID.randomUUID();
-      nbtTagCompound.setLong("UUIDMostSig", uuid.getMostSignificantBits());
-      nbtTagCompound.setLong("UUIDLeastSig", uuid.getLeastSignificantBits());
+      nbtTagCompound.setLong(Names.NBT.UUID_MOST_SIG, uuid.getMostSignificantBits());
+      nbtTagCompound.setLong(Names.NBT.UUID_LEAST_SIG, uuid.getLeastSignificantBits());
     }
 
     writeToNBT(nbtTagCompound);
@@ -207,12 +210,12 @@ public class InventoryVRAD implements IInventory, INBTTaggable {
 
   public ItemStack findParentItem(EntityPlayer player) {
     if (NBTHelper.hasUUID(parentItem)) {
-      UUID parentItemStackUUID = new UUID(parentItem.getTagCompound().getLong("UUIDMostSig"), parentItem.getTagCompound().getLong("UUIDLeastSig"));
+      UUID parentItemStackUUID = new UUID(parentItem.getTagCompound().getLong(Names.NBT.UUID_MOST_SIG), parentItem.getTagCompound().getLong(Names.NBT.UUID_LEAST_SIG));
       for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
         ItemStack itemStack = player.inventory.getStackInSlot(i);
 
         if (NBTHelper.hasUUID(itemStack)) {
-          if (itemStack.getTagCompound().getLong("UUIDMostSig") == parentItemStackUUID.getMostSignificantBits() && itemStack.getTagCompound().getLong("UUIDLeastSig") == parentItemStackUUID.getLeastSignificantBits()) {
+          if (itemStack.getTagCompound().getLong(Names.NBT.UUID_MOST_SIG) == parentItemStackUUID.getMostSignificantBits() && itemStack.getTagCompound().getLong(Names.NBT.UUID_LEAST_SIG) == parentItemStackUUID.getLeastSignificantBits()) {
             return itemStack;
           }
         }
@@ -223,11 +226,11 @@ public class InventoryVRAD implements IInventory, INBTTaggable {
   }
 
   public boolean matchesUUID(UUID uuid) {
-    return NBTHelper.hasUUID(parentItem) && parentItem.getTagCompound().getLong("UUIDLeastSig") == uuid.getLeastSignificantBits() && parentItem.getTagCompound().getLong("UUIDMostSig") == uuid.getMostSignificantBits();
+    return NBTHelper.hasUUID(parentItem) && parentItem.getTagCompound().getLong(Names.NBT.UUID_LEAST_SIG) == uuid.getLeastSignificantBits() && parentItem.getTagCompound().getLong(Names.NBT.UUID_MOST_SIG) == uuid.getMostSignificantBits();
   }
 
   @Override
   public String getTagLabel() {
-    return "InventoryVRAD";
+    return "InventoryVRDMain";
   }
 }

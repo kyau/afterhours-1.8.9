@@ -83,16 +83,16 @@ public class Voidstone extends BaseItem {
         // spawn
         if (playerHome == null) {
           spawnpoint = true;
-          playerHome = world.getSpawnPoint();
+          playerHome = overworld.getSpawnPoint();
         }
 
-        IBlockState state = world.getBlockState(playerHome);
-        Block block = (state == null) ? null : world.getBlockState(playerHome).getBlock();
+        IBlockState state = overworld.getBlockState(playerHome);
+        Block block = (state == null) ? null : overworld.getBlockState(playerHome).getBlock();
         if (block != null && !spawnpoint) {
-          if (block.equals(Blocks.bed) || block.isBed(world, playerHome, player)) {
+          if (block.equals(Blocks.bed) || block.isBed(overworld, playerHome, player)) {
             // reposition player according to where bed wants the
             // player to spawn
-            playerHome = block.getBedSpawnPosition(world, playerHome, null);
+            playerHome = block.getBedSpawnPosition(overworld, playerHome, null);
           } else {
             player.addChatMessage(new ChatComponentTranslation("Your bed was missing or obstructed."));
             return super.onItemRightClick(stack, world, player);
@@ -102,27 +102,30 @@ public class Voidstone extends BaseItem {
           return super.onItemRightClick(stack, world, player);
         }
 
-        // trigger item cooldown
-        setLastUseTime(stack, world.getTotalWorldTime());
         // spawn exists, teleport the player
         EntityPlayerMP playerMP = (EntityPlayerMP) player;
-        MinecraftServer.getServer().worldServerForDimension(0).playSoundEffect(player.posX, player.posY, player.posZ, "mob.endermen.portal", 1.0F, 1.0F);
-        if (playerMP.dimension != 0) {
-          MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension(playerMP, 0, new Teleporter(playerMP.mcServer.worldServerForDimension(0)));
-        }
-        player.setPositionAndUpdate(playerHome.getX(), playerHome.getY(), playerHome.getZ());
-        while (player.getEntityBoundingBox() != null && world.getCollidingBoundingBoxes(player, player.getEntityBoundingBox()) != null && !world.getCollidingBoundingBoxes(player, player.getEntityBoundingBox()).isEmpty()) {
-          player.setPositionAndUpdate(player.posX, player.posY + 1.0D, player.posZ);
+        if (!(playerMP.dimension == 1)) {
+          if (playerMP.dimension != 0) {
+            MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension(playerMP, 0, new Teleporter(playerMP.mcServer.worldServerForDimension(0)));
+          }
+          player.setPositionAndUpdate(playerHome.getX(), playerHome.getY(), playerHome.getZ());
+          while (player.getEntityBoundingBox() != null && world.getCollidingBoundingBoxes(player, player.getEntityBoundingBox()) != null && !world.getCollidingBoundingBoxes(player, player.getEntityBoundingBox()).isEmpty()) {
+            player.setPositionAndUpdate(player.posX, player.posY + 1.0D, player.posZ);
+          }
+          MinecraftServer.getServer().worldServerForDimension(playerMP.dimension).playSoundEffect(player.posX, player.posY, player.posZ, "mob.endermen.portal", 1.0F, 1.0F);
+          // trigger item cooldown
+          setLastUseTime(stack, overworld.getTotalWorldTime());
+          return super.onItemRightClick(stack, world, player);
         }
         /*
          * Server->Client Packet Example if (player instanceof EntityPlayerMP) { IMessage msg = new
          * SimplePacket.SimpleMessage("voidstone_activate"); PacketHandler.net.sendTo(msg, (EntityPlayerMP)player); }
          */
-        world.playSoundAtEntity(player, "mob.endermen.portal", 1.0F, 1.0F);
-        return super.onItemRightClick(stack, world, player);
       }
     } else {
-      if (!owner.equals("###") && (ticksSinceLastUse > 0 && ticksSinceLastUse < cooldown)) {
+      if (player.dimension == 1 && owner.equals(player.getDisplayNameString())) {
+        player.playSound("afterhours:error", 0.5F, 1.0F);
+      } else if (!owner.equals("###") && (ticksSinceLastUse > 0 && ticksSinceLastUse < cooldown)) {
         player.playSound("afterhours:error", 0.5F, 1.0F);
       }
     }

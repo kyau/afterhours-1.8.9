@@ -1,8 +1,11 @@
 afterhours.antenna.name=Antenna
 afterhours.dough.name=Dough
-afterhours.voidstone.name=§eVoidstone§r
-afterhours.vrad.name=§eVRAD§r
+afterhours.rawhide.name=Raw Hide
+afterhours.voidcrystal.name=Void Crystal
 afterhours.voidjournal.name=Void Journal
+afterhours.voidstone.name=§eVoidstone§r
 afterhours.voidwell.name=§eVoid Well§r
-afterhours.container:vrad=VRAD
-afterhours.container:void=Void
+afterhours.vrd.name=§eVRD§r
+afterhours.container:inventory=Inventory
+afterhours.container:vrdMain=Void Resonance Device
+afterhours.container:vrdVoid=Void

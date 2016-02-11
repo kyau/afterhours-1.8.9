@@ -14,7 +14,7 @@ public class ModInfo {
   public static final String MOD_AUTHOR = "kyau";
   public static final String MOD_DESC = "Based on the original AfterHours support mod that was created for my custom modpack, AfterHours aims to be a mod that brings useful utilities to the multiplayer side of Minecraft.";
   public static final String MOD_URL = "https://github.com/kyau/afterhours-1.8.9";
-  public static final String MOD_LOGO = "/assets/afterhours/textures/logo.png";
+  public static final String MOD_LOGO = "assets/afterhours/textures/logo.png";
   public static final String MOD_DEPENDENCIES = "";
   // Common/Client Proxy
   public static final String PROXY_CLIENT = "net.kyau." + MOD_ID + ".proxy.ClientProxy";

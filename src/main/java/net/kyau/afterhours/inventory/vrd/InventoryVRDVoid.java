@@ -1,33 +1,42 @@
-package net.kyau.afterhours.inventory;
+package net.kyau.afterhours.inventory.vrd;
 
-import net.kyau.afterhours.items.VRAD;
-import net.kyau.afterhours.references.ModInfo;
+import net.kyau.afterhours.items.VRD;
+import net.kyau.afterhours.items.VoidWell;
+import net.kyau.afterhours.references.Names;
+import net.kyau.afterhours.utils.ChatUtil;
 import net.kyau.afterhours.utils.INBTTaggable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StatCollector;
 
-public class InventoryVOID implements IInventory, INBTTaggable {
+public class InventoryVRDVoid implements IInventory, INBTTaggable {
 
+  public static boolean voidSync;
   public ItemStack parentItem;
   protected ItemStack[] inventory;
   protected String customName;
   public final static int INV_SIZE = 1;
+  private ItemStack[] inventoryVRDMain;
+  private EntityPlayer player;
 
-  public InventoryVOID(ItemStack stack) {
+  public InventoryVRDVoid(ItemStack stack, EntityPlayer player) {
+    voidSync = false;
     parentItem = stack;
+    this.player = player;
     inventory = new ItemStack[this.getSizeInventory()];
     // readFromNBT(stack.getTagCompound());
   }
 
   @Override
   public String getName() {
-    return this.hasCustomName() ? this.getCustomName() : StatCollector.translateToLocal(ModInfo.MOD_ID + ".container:void");
+    return this.hasCustomName() ? this.getCustomName() : StatCollector.translateToLocal(Names.Containers.VRD_VOID);
   }
 
   @Override
@@ -76,7 +85,6 @@ public class InventoryVOID implements IInventory, INBTTaggable {
 
   @Override
   public ItemStack decrStackSize(int index, int count) {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -88,6 +96,32 @@ public class InventoryVOID implements IInventory, INBTTaggable {
 
   @Override
   public void setInventorySlotContents(int index, ItemStack stack) {
+    InventoryVRDMain vrdMainClass = new InventoryVRDMain(parentItem);
+    this.inventoryVRDMain = vrdMainClass.getInventory();
+    if (inventoryVRDMain != null) {
+      for (int currentIndex = 0; currentIndex < inventoryVRDMain.length; ++currentIndex) {
+        if (inventoryVRDMain[currentIndex] != null && inventoryVRDMain[currentIndex].getItem() instanceof VoidWell) {
+          this.voidSync = true;
+          ItemStack voidWell = inventoryVRDMain[currentIndex];
+          String[] energy = null;
+          if (voidWell.hasTagCompound()) {
+            // LogHelper.info("Void Well, with Owner!");
+            String string = voidWell.getTagCompound().getString("Energy");
+            if (string.contains("#")) {
+              energy = string.split("#");
+              if (Integer.parseInt(energy[0]) < Integer.parseInt(energy[1])) {
+                if (stack != null && stack.stackSize > 62) {
+                  int newEnergy = Integer.parseInt(energy[0]) + 2;
+                  voidWell.setTagInfo("Energy", new NBTTagString(newEnergy + "#" + energy[1]));
+                  ChatUtil.sendNoSpam(player, EnumChatFormatting.GREEN + "Void Energy: " + EnumChatFormatting.GRAY + newEnergy + "/" + energy[1]);
+                  vrdMainClass.setInventorySlotContents(currentIndex, voidWell);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
     inventory[index] = null;
   }
 
@@ -123,7 +157,7 @@ public class InventoryVOID implements IInventory, INBTTaggable {
 
   @Override
   public boolean isItemValidForSlot(int index, ItemStack stack) {
-    return !(stack.getItem() instanceof VRAD);
+    return !(stack.getItem() instanceof VRD);
   }
 
   @Override

@@ -19,11 +19,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.input.Keyboard;
 
-public class VRAD extends BaseItem {
+public class VRD extends BaseItem {
 
-  public VRAD() {
+  public VRD() {
     super();
-    this.setUnlocalizedName(Names.Items.VRAD);
+    this.setUnlocalizedName(Names.Items.VRD);
     this.maxStackSize = 1;
   }
 
@@ -49,8 +49,8 @@ public class VRAD extends BaseItem {
       } else {
         if (ItemHelper.getOwnerName(stack).equals(player.getDisplayNameString())) {
           // TODO Do a scan of inventory and if we find a bag with the same UUID, change it's UUID
-          NBTHelper.setBoolean(stack, "vradGuiOpen", true);
-          player.openGui(AfterHours.instance, AfterHours.GUI_VRAD, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+          NBTHelper.setBoolean(stack, Names.NBT.VRD_GUI_OPEN, true);
+          player.openGui(AfterHours.instance, AfterHours.GUI_VRD, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
           return super.onItemRightClick(stack, world, player);
         }
       }
@@ -73,16 +73,15 @@ public class VRAD extends BaseItem {
     }
     // Description
     if (Keyboard.isKeyDown(0x2A) || Keyboard.isKeyDown(0x36)) {
-      tooltip.add(EnumChatFormatting.GRAY + "The VRAD or Void Remote Access Device");
-      tooltip.add(EnumChatFormatting.GRAY + "is used to remotely connect through");
-      tooltip.add(EnumChatFormatting.GRAY + "the void to secure storage containers.");
+      tooltip.add(EnumChatFormatting.GRAY + "The Void Resonance Device is");
+      tooltip.add(EnumChatFormatting.GRAY + "used to directly commune with");
+      tooltip.add(EnumChatFormatting.GRAY + "the void.");
     } else {
       tooltip.add(EnumChatFormatting.GRAY + "Hold " + EnumChatFormatting.WHITE + "SHIFT" + EnumChatFormatting.GRAY + " for more information.");
     }
     // Owner information
     if (ItemHelper.hasOwner(stack)) {
       String owner = ItemHelper.getOwnerName(stack);
-      // list.add(EnumChatFormatting.DARK_PURPLE + "Soulbound, Limited");
       if (owner.equals(player.getDisplayNameString())) {
         tooltip.add(EnumChatFormatting.GREEN + "Owner: " + owner);
       } else {

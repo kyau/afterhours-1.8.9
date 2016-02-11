@@ -1,7 +1,7 @@
 {
   "parent": "builtin/generated",
   "textures": {
-    "layer0": "afterhours:items/vrad"
+    "layer0": "afterhours:items/vrd"
   },
   "display": {
     "thirdperson": {

@@ -53,9 +53,9 @@ public class RenderUtils {
     glPop();
   }
 
-  public static void renderTexture(String resourceDomainIn, String resourcePathIn, int posX, int posY, int textureX, int textureY, int width, int height) {
+  public static void renderTexture(String resourceDomainIn, String resourcePathIn, int posX, int posY, int textureX, int textureY, int width, int height, float zLevel) {
     glPush();
-    float zLevel = 0;
+    // float zLevel = 0;
     minecraft.renderEngine.bindTexture(new ResourceLocation(resourceDomainIn, resourcePathIn));
     float f = 0.00390625F;
     float f1 = 0.00390625F;

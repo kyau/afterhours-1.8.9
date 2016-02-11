@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import net.kyau.afterhours.init.ModItems;
+import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -17,18 +18,21 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class RecipeManager {
 
   @SuppressWarnings("unchecked")
-  private static Collection<Item> removeSet = new HashSet();
+  private static Collection<Item> itemVanillaRemoveSet = new HashSet();
+  private static Collection<Block> blockVanillaRemoveSet = new HashSet();
 
   public static void init() {
     // Item recipes to remove from the game
-    Collections.addAll(removeSet, new Item[] {
+    Collections.addAll(itemVanillaRemoveSet, new Item[] {
         Items.bread,
+        Items.brewing_stand,
         Items.stone_axe,
         Items.stone_hoe,
         Items.stone_pickaxe,
         Items.stone_shovel,
         Items.stone_sword });
-    removeRecipes();
+    removeVanillaRecipes();
+    addVanillaRecipes();
     addRecipes();
   }
 
@@ -37,31 +41,88 @@ public class RecipeManager {
   }
 
   private static void addRecipes() {
-    // vanilla
-    GameRegistry.addRecipe(new ItemStack(Items.stone_axe, 1), "ss ", "st ", " t ", 's', new ItemStack(Blocks.stone, 1, 0), 't', Items.stick);
-    GameRegistry.addRecipe(new ItemStack(Items.stone_hoe, 1), "ss ", " t ", " t ", 's', new ItemStack(Blocks.stone, 1, 0), 't', Items.stick);
-    GameRegistry.addRecipe(new ItemStack(Items.stone_pickaxe, 1), "sss", " t ", " t ", 's', new ItemStack(Blocks.stone, 1, 0), 't', Items.stick);
-    GameRegistry.addRecipe(new ItemStack(Items.stone_shovel, 1), " s ", " t ", " t ", 's', new ItemStack(Blocks.stone, 1, 0), 't', Items.stick);
-    GameRegistry.addRecipe(new ItemStack(Items.stone_sword, 1), " s ", " s ", " t ", 's', new ItemStack(Blocks.stone, 1, 0), 't', Items.stick);
-    // afterhours
     GameRegistry.addRecipe(new ItemStack(ModItems.antenna, 1), "g", "s", 'g', Items.glowstone_dust, 's', Items.stick);
     GameRegistry.addRecipe(new ItemStack(ModItems.dough, 1), "www", 'w', Items.wheat);
     GameRegistry.addSmelting(ModItems.dough, new ItemStack(Items.bread, 1), 0.35F);
-    GameRegistry.addRecipe(new ItemStack(ModItems.voidstone, 1), " s ", "geg", " s ", 's', new ItemStack(Blocks.stone_slab, 1, 0), 'g', Items.glowstone_dust, 'e', Items.ender_pearl);
-    GameRegistry.addRecipe(new ItemStack(ModItems.voidwell, 1), "ege", "cmp", "ege", 'c', Items.clock, 'e', Items.ender_pearl, 'g', Items.glowstone_dust, 'm', Items.map, 'p', Items.compass);
-    GameRegistry.addRecipe(new ItemStack(ModItems.vrad, 1), "lal", "ses", "lcl", 'l', new ItemStack(Blocks.stone_slab, 1, 0), 'a', ModItems.antenna, 's', Items.stick, 'e', Blocks.ender_chest, 'c', Blocks.chest);
+    GameRegistry.addRecipe(new ItemStack(ModItems.voidcrystal, 1), "ggg", "lel", "ggg", 'g', Items.glowstone_dust, 'e', Items.ender_pearl, 'l', Items.lava_bucket);
+    GameRegistry.addRecipe(new ItemStack(ModItems.voidstone, 1), " s ", "geg", " s ", 's', new ItemStack(Blocks.stone_slab, 1, 0), 'g', Items.glowstone_dust, 'e', ModItems.voidcrystal);
+    GameRegistry.addRecipe(new ItemStack(ModItems.voidwell, 1), "ede", "cep", "ede", 'c', Items.clock, 'e', ModItems.voidcrystal, 'd', Items.diamond, 'p', Items.compass);
+    GameRegistry.addRecipe(new ItemStack(ModItems.vrd, 1), "sas", "ece", "ses", 's', new ItemStack(Blocks.stone_slab, 1, 0), 'a', ModItems.antenna, 's', Items.stick, 'c', Blocks.ender_chest, 'e', ModItems.voidcrystal);
   }
 
-  private static void removeRecipes() {
+  private static void removeVanillaRecipes() {
     Iterator<IRecipe> iterator = CraftingManager.getInstance().getRecipeList().iterator();
     while (iterator.hasNext()) {
       IRecipe recipe = iterator.next();
       if (recipe == null)
         continue;
       ItemStack output = recipe.getRecipeOutput();
-      if (output != null && output.getItem() != null && removeSet.contains(output.getItem()))
-        iterator.remove();
+      if (output != null && output.getItem() != null) {
+        if (itemVanillaRemoveSet.contains(output.getItem())) {
+          iterator.remove();
+        } else if (Block.getBlockFromItem(output.getItem()) == Blocks.sandstone && output.getItemDamage() == 1) {
+          // chiseled sandstone
+          iterator.remove();
+        } else if (Block.getBlockFromItem(output.getItem()) == Blocks.red_sandstone && output.getItemDamage() == 1) {
+          // chiseled red sandstone
+          iterator.remove();
+        } else if (Block.getBlockFromItem(output.getItem()) == Blocks.stonebrick && output.getItemDamage() == 3) {
+          // chiseled stone bricks
+          iterator.remove();
+        } else if (Block.getBlockFromItem(output.getItem()) == Blocks.quartz_block && (output.getItemDamage() == 1 || output.getItemDamage() == 2)) {
+          // chiseled quartz block & quartz pillar
+          iterator.remove();
+        }
+      }
     }
+  }
+
+  private static void addVanillaRecipes() {
+    // realistic recipes
+    // stone tools actually made from stone
+    GameRegistry.addRecipe(new ItemStack(Items.stone_axe, 1), "ss ", "st ", " t ", 's', new ItemStack(Blocks.stone, 1, 0), 't', Items.stick);
+    GameRegistry.addRecipe(new ItemStack(Items.stone_hoe, 1), "ss ", " t ", " t ", 's', new ItemStack(Blocks.stone, 1, 0), 't', Items.stick);
+    GameRegistry.addRecipe(new ItemStack(Items.stone_pickaxe, 1), "sss", " t ", " t ", 's', new ItemStack(Blocks.stone, 1, 0), 't', Items.stick);
+    GameRegistry.addRecipe(new ItemStack(Items.stone_shovel, 1), " s ", " t ", " t ", 's', new ItemStack(Blocks.stone, 1, 0), 't', Items.stick);
+    GameRegistry.addRecipe(new ItemStack(Items.stone_sword, 1), " s ", " s ", " t ", 's', new ItemStack(Blocks.stone, 1, 0), 't', Items.stick);
+    // add stone slabs to the brewing station
+    GameRegistry.addRecipe(new ItemStack(Items.brewing_stand, 1), " b ", "sss", 'b', Items.blaze_rod, 's', new ItemStack(Blocks.stone_slab, 1, 0));
+    // flint from gravel
+    GameRegistry.addShapelessRecipe(new ItemStack(Items.flint, 1), Blocks.gravel, Blocks.gravel, Blocks.gravel, Blocks.gravel);
+    // allow crafting/smelting of armor back into 50% of the components to make them
+    GameRegistry.addSmelting(Items.iron_helmet, new ItemStack(Items.iron_ingot, 2), 1f);
+    GameRegistry.addSmelting(Items.iron_chestplate, new ItemStack(Items.iron_ingot, 4), 1f);
+    GameRegistry.addSmelting(Items.iron_leggings, new ItemStack(Items.iron_ingot, 3), 1f);
+    GameRegistry.addSmelting(Items.iron_boots, new ItemStack(Items.iron_ingot, 2), 1f);
+    GameRegistry.addSmelting(Items.golden_helmet, new ItemStack(Items.gold_ingot, 2), 1f);
+    GameRegistry.addSmelting(Items.golden_chestplate, new ItemStack(Items.gold_ingot, 4), 1f);
+    GameRegistry.addSmelting(Items.golden_leggings, new ItemStack(Items.gold_ingot, 3), 1f);
+    GameRegistry.addSmelting(Items.golden_boots, new ItemStack(Items.gold_ingot, 2), 1f);
+    GameRegistry.addSmelting(Items.diamond_helmet, new ItemStack(Items.diamond, 2), 1f);
+    GameRegistry.addSmelting(Items.diamond_chestplate, new ItemStack(Items.diamond, 4), 1f);
+    GameRegistry.addSmelting(Items.diamond_leggings, new ItemStack(Items.diamond, 3), 1f);
+    GameRegistry.addSmelting(Items.diamond_boots, new ItemStack(Items.diamond, 2), 1f);
+    // wood slabs
+    for (int i = 0; i < 6; i++) {
+      GameRegistry.addShapelessRecipe(new ItemStack(Blocks.planks, 1, i), new ItemStack(Blocks.wooden_slab, 1, i), new ItemStack(Blocks.wooden_slab, 1, i));
+    }
+    // chiseled block fixes
+    GameRegistry.addShapelessRecipe(new ItemStack(Blocks.sandstone, 4, 1), new ItemStack(Blocks.sandstone, 1, 2), new ItemStack(Blocks.sandstone, 1, 2), new ItemStack(Blocks.sandstone, 1, 2), new ItemStack(Blocks.sandstone, 1, 2));
+    GameRegistry.addShapelessRecipe(new ItemStack(Blocks.red_sandstone, 4, 1), new ItemStack(Blocks.red_sandstone, 1, 2), new ItemStack(Blocks.red_sandstone, 1, 2), new ItemStack(Blocks.red_sandstone, 1, 2), new ItemStack(Blocks.red_sandstone, 1, 2));
+    GameRegistry.addShapelessRecipe(new ItemStack(Blocks.stonebrick, 4, 3), new ItemStack(Blocks.stonebrick, 1, 0), new ItemStack(Blocks.stonebrick, 1, 0), new ItemStack(Blocks.stonebrick, 1, 0), new ItemStack(Blocks.stonebrick, 1, 0));
+    GameRegistry.addShapelessRecipe(new ItemStack(Blocks.quartz_block, 4, 1), new ItemStack(Blocks.quartz_block, 1, 0), new ItemStack(Blocks.quartz_block, 1, 0), new ItemStack(Blocks.quartz_block, 1, 0), new ItemStack(Blocks.quartz_block, 1, 0));
+    GameRegistry.addShapelessRecipe(new ItemStack(Blocks.quartz_block, 4, 2), new ItemStack(Blocks.quartz_block, 4, 1), new ItemStack(Blocks.quartz_block, 4, 1), new ItemStack(Blocks.quartz_block, 4, 1), new ItemStack(Blocks.quartz_block, 4, 1));
+    // stone slabs
+    GameRegistry.addShapelessRecipe(new ItemStack(Blocks.stone, 1, 0), new ItemStack(Blocks.stone_slab, 1, 0), new ItemStack(Blocks.stone_slab, 1, 0));
+    GameRegistry.addShapelessRecipe(new ItemStack(Blocks.sandstone, 1, 0), new ItemStack(Blocks.stone_slab, 1, 1), new ItemStack(Blocks.stone_slab, 1, 1));
+    GameRegistry.addShapelessRecipe(new ItemStack(Blocks.cobblestone, 1), new ItemStack(Blocks.stone_slab, 1, 3), new ItemStack(Blocks.stone_slab, 1, 3));
+    GameRegistry.addShapelessRecipe(new ItemStack(Blocks.brick_block, 1), new ItemStack(Blocks.stone_slab, 1, 4), new ItemStack(Blocks.stone_slab, 1, 4));
+    GameRegistry.addShapelessRecipe(new ItemStack(Blocks.stonebrick, 1, 0), new ItemStack(Blocks.stone_slab, 1, 5), new ItemStack(Blocks.stone_slab, 1, 5));
+    GameRegistry.addShapelessRecipe(new ItemStack(Blocks.nether_brick, 1), new ItemStack(Blocks.stone_slab, 1, 6), new ItemStack(Blocks.stone_slab, 1, 6));
+    GameRegistry.addShapelessRecipe(new ItemStack(Blocks.quartz_block, 1, 0), new ItemStack(Blocks.stone_slab, 1, 7), new ItemStack(Blocks.stone_slab, 1, 7));
+    GameRegistry.addShapelessRecipe(new ItemStack(Blocks.red_sandstone, 1, 0), new ItemStack(Blocks.stone_slab2, 1, 0), new ItemStack(Blocks.stone_slab2, 1, 0));
+    // smelting: rawhide -> leather
+    GameRegistry.addSmelting(ModItems.rawhide, new ItemStack(Items.leather, 1), 0.25F);
   }
 
   private static void changeRecipes() {

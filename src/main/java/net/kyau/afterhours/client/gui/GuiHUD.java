@@ -133,8 +133,8 @@ public class GuiHUD extends Gui {
     }
 
     if ((minecraft.inGameHasFocus || (minecraft.currentScreen != null && (minecraft.currentScreen instanceof GuiChat))) && !minecraft.gameSettings.showDebugInfo && !minecraft.ingameGUI.getChatGUI().getChatOpen()) {
-      int countVRAD = InventoryHandler.countItems(player, ModItems.vrad);
-      if (countVRAD > 0) {
+      int countVRD = InventoryHandler.countItems(player, ModItems.vrd);
+      if (countVRD > 0) {
         setClientPos();
 
         // render character
@@ -164,7 +164,7 @@ public class GuiHUD extends Gui {
 
         // fps / ping
         RenderUtils.renderText(getFPS(), centerLeftX, fixedY, 0xdcdcdc, 1, true);
-        RenderUtils.renderTexture("minecraft", "textures/gui/icons.png", centerLeftX - 12, fixedY - 1, 0, 176 + getPingIndex() * 8, 10, 8);
+        RenderUtils.renderTexture("minecraft", "textures/gui/icons.png", centerLeftX - 12, fixedY - 1, 0, 176 + getPingIndex() * 8, 10, 8, 0);
 
         // real clock
         RenderUtils.renderItem(new ItemStack(Items.clock), centerRightX, fixedY - 4);
