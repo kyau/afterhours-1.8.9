@@ -25,6 +25,7 @@ public class RecipeManager {
     Collections.addAll(itemVanillaRemoveSet, new Item[] {
         Items.bread,
         Items.brewing_stand,
+        Items.leather,
         Items.stone_axe,
         Items.stone_hoe,
         Items.stone_pickaxe,
@@ -43,6 +44,7 @@ public class RecipeManager {
     GameRegistry.addRecipe(new ItemStack(ModItems.antenna, 1), "g", "s", 'g', Items.glowstone_dust, 's', Items.stick);
     GameRegistry.addRecipe(new ItemStack(ModItems.dough, 1), "www", 'w', Items.wheat);
     GameRegistry.addSmelting(ModItems.dough, new ItemStack(Items.bread, 1), 0.35F);
+    GameRegistry.addShapelessRecipe(new ItemStack(ModItems.rawhide, 1), Items.rabbit_hide, Items.rabbit_hide, Items.rabbit_hide, Items.rabbit_hide);
     GameRegistry.addRecipe(new ItemStack(ModItems.voidcrystal, 1), "ggg", "lel", "ggg", 'g', Items.glowstone_dust, 'e', Items.ender_pearl, 'l', Items.lava_bucket);
     GameRegistry.addRecipe(new ItemStack(ModItems.voidpearl, 1), " s ", "geg", " s ", 's', new ItemStack(Blocks.stone_slab, 1, 0), 'g', Items.glowstone_dust, 'e', ModItems.voidcrystal);
     GameRegistry.addRecipe(new ItemStack(ModItems.voidwell, 1), "ede", "cep", "ede", 'c', Items.clock, 'e', ModItems.voidcrystal, 'd', Items.diamond, 'p', Items.compass);

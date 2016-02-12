@@ -183,27 +183,4 @@ public class VoidPearl extends BaseItem {
     return currentCooldown;
   }
 
-  /*
-    private void registerTags(ItemStack stack) {
-      stack.setTagCompound(new NBTTagCompound());
-      stack.getTagCompound().setLong("LastUse", -1);
-      stack.getTagCompound().setString("Owner", "###");
-    }
-
-    private String getOwner(ItemStack stack) {
-      return stack.hasTagCompound() ? stack.getTagCompound().getString("Owner") : "###";
-    }
-
-    private void setOwner(ItemStack stack, String owner) {
-      stack.setTagInfo("Owner", new NBTTagString(owner));
-    }
-
-    private long getLastUseTime(ItemStack stack) {
-      return stack.hasTagCompound() ? stack.getTagCompound().getLong("LastUse") : 0;
-    }
-
-    private void setLastUseTime(ItemStack stack, long time) {
-      stack.setTagInfo("LastUse", new NBTTagLong(time));
-    }
-  */
 }
