@@ -5,6 +5,7 @@ import javax.annotation.Nonnull;
 import net.kyau.afterhours.init.ModItems;
 import net.kyau.afterhours.references.ModInfo;
 import net.kyau.afterhours.utils.InventoryHandler;
+import net.kyau.afterhours.utils.ItemHelper;
 import net.kyau.afterhours.utils.LogHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -22,27 +23,18 @@ public class ForgeEventHandler {
       ItemStack itemCurrent = event.item.getEntityItem();
       World world = event.entity.worldObj;
       if (!world.isRemote) {
-        if (itemCurrent.getUnlocalizedName().equals(ModItems.voidstone.getUnlocalizedName())) {
+        if (itemCurrent.getUnlocalizedName().equals(ModItems.voidpearl.getUnlocalizedName())) {
           String playerName = event.entity.getName();
           String itemOwner;
           if (itemCurrent.getTagCompound() == null) {
-            itemOwner = "###";
+            itemOwner = "null";
           } else {
-            itemOwner = itemCurrent.getTagCompound().getString("Owner");
+            itemOwner = ItemHelper.getOwnerName(itemCurrent);
           }
-          if (ModInfo.DEBUG)
-            LogHelper.info("> DEBUG: itemPickup: " + itemCurrent.getUnlocalizedName().substring(11) + " (owner=" + itemOwner + ")");
-          if (playerName.equals(itemOwner)) {
-            if (ModInfo.DEBUG)
-              LogHelper.info("> DEBUG: owner valid!");
-          } else {
-            if (ModInfo.DEBUG)
-              LogHelper.info("> DEBUG: owner invalid!");
-          }
-          int count = InventoryHandler.countItems(event.entityPlayer, ModItems.voidstone);
+          int count = InventoryHandler.countItems(event.entityPlayer, ModItems.voidpearl);
           if (count > 0) {
             if (ModInfo.DEBUG)
-              LogHelper.info("> DEBUG: itemPickup canceled!");
+              LogHelper.info("> DEBUG: itemPickup: " + itemCurrent.getUnlocalizedName().substring(11) + " (owner=" + itemOwner + ") canceled!");
             event.setCanceled(true);
           }
         }
@@ -56,8 +48,8 @@ public class ForgeEventHandler {
       EntityPlayer player = event.player;
       World world = player.worldObj;
       if (!world.isRemote) {
-        ItemStack item = new ItemStack(ModItems.voidstone);
-        int count = InventoryHandler.countItems(player, ModItems.voidstone);
+        ItemStack item = new ItemStack(ModItems.voidpearl);
+        int count = InventoryHandler.countItems(player, ModItems.voidpearl);
         if (count > 1) {
           InventoryHandler.removeLimitedItem(player, item);
         }

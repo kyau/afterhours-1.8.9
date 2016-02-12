@@ -4,7 +4,7 @@ import net.kyau.afterhours.inventory.ContainerVRD;
 import net.kyau.afterhours.inventory.vrd.InventoryVRDMain;
 import net.kyau.afterhours.inventory.vrd.InventoryVRDVoid;
 import net.kyau.afterhours.references.ModInfo;
-import net.kyau.afterhours.references.Names;
+import net.kyau.afterhours.references.Ref;
 import net.kyau.afterhours.utils.NBTHelper;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -47,14 +47,14 @@ public class GuiVRD extends GuiContainer {
   protected void drawGuiContainerForegroundLayer(int par1, int par2) {
     String vrdMainName = this.inventoryVRDMain.hasCustomName() ? this.inventoryVRDMain.getName() : this.inventoryVRDMain.getName();
     String vrdVoidName = this.inventoryVRDVoid.hasCustomName() ? this.inventoryVRDVoid.getName() : this.inventoryVRDVoid.getName();
-    String inventoryName = StatCollector.translateToLocal(Names.Containers.INVENTORY);
+    String inventoryName = StatCollector.translateToLocal(Ref.Containers.INVENTORY);
     super.fontRendererObj.drawString(vrdMainName, 8, this.ySize - 262, 0x404040);
     super.fontRendererObj.drawString(vrdVoidName, 128, 87, 0x404040);
     super.fontRendererObj.drawString(inventoryName, 8, this.ySize - 128, 0x404040);
     if (this.inventoryVRDVoid.voidSync) {
-      super.fontRendererObj.drawString(Names.Containers.VOID_SYNC_TRUE, 46, 87, 0x008000);
+      super.fontRendererObj.drawString(Ref.Containers.VOID_SYNC_TRUE, 46, 87, 0x008000);
     } else {
-      super.fontRendererObj.drawString(Names.Containers.VOID_SYNC_FALSE, 46, 87, 0x800000);
+      super.fontRendererObj.drawString(Ref.Containers.VOID_SYNC_FALSE, 46, 87, 0x800000);
     }
   }
 
@@ -77,8 +77,8 @@ public class GuiVRD extends GuiContainer {
     if (mc.thePlayer != null) {
       for (ItemStack itemStack : mc.thePlayer.inventory.mainInventory) {
         if (itemStack != null) {
-          if (NBTHelper.hasTag(itemStack, Names.NBT.VRD_GUI_OPEN)) {
-            NBTHelper.removeTag(itemStack, Names.NBT.VRD_GUI_OPEN);
+          if (NBTHelper.hasTag(itemStack, Ref.NBT.VRD_GUI_OPEN)) {
+            NBTHelper.removeTag(itemStack, Ref.NBT.VRD_GUI_OPEN);
           }
         }
       }

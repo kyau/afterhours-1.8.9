@@ -2,7 +2,7 @@ package net.kyau.afterhours.items;
 
 import java.util.List;
 
-import net.kyau.afterhours.references.Names;
+import net.kyau.afterhours.references.Ref;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
@@ -16,7 +16,7 @@ public class Antenna extends BaseItem {
 
   public Antenna() {
     super();
-    this.setUnlocalizedName(Names.Items.ANTENNA);
+    this.setUnlocalizedName(Ref.ItemID.ANTENNA);
     this.maxStackSize = 16;
   }
 

@@ -2,7 +2,7 @@ package net.kyau.afterhours.inventory.vrd;
 
 import net.kyau.afterhours.items.VRD;
 import net.kyau.afterhours.items.VoidWell;
-import net.kyau.afterhours.references.Names;
+import net.kyau.afterhours.references.Ref;
 import net.kyau.afterhours.utils.ChatUtil;
 import net.kyau.afterhours.utils.INBTTaggable;
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,7 +36,7 @@ public class InventoryVRDVoid implements IInventory, INBTTaggable {
 
   @Override
   public String getName() {
-    return this.hasCustomName() ? this.getCustomName() : StatCollector.translateToLocal(Names.Containers.VRD_VOID);
+    return this.hasCustomName() ? this.getCustomName() : StatCollector.translateToLocal(Ref.Containers.VRD_VOID);
   }
 
   @Override

@@ -2,7 +2,7 @@ package net.kyau.afterhours.utils;
 
 import java.util.UUID;
 
-import net.kyau.afterhours.references.Names;
+import net.kyau.afterhours.references.Ref;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -12,8 +12,8 @@ public class NBTHelper {
   public static void clearStatefulNBTTags(ItemStack itemStack) {
     if (NBTHelper.hasTag(itemStack, "craftingGuiOpen")) {
       NBTHelper.removeTag(itemStack, "craftingGuiOpen");
-    } else if (NBTHelper.hasTag(itemStack, Names.NBT.VRD_GUI_OPEN)) {
-      NBTHelper.removeTag(itemStack, Names.NBT.VRD_GUI_OPEN);
+    } else if (NBTHelper.hasTag(itemStack, Ref.NBT.VRD_GUI_OPEN)) {
+      NBTHelper.removeTag(itemStack, Ref.NBT.VRD_GUI_OPEN);
     }
   }
 
@@ -28,18 +28,25 @@ public class NBTHelper {
   }
 
   public static boolean hasUUID(ItemStack stack) {
-    return hasTag(stack, Names.NBT.UUID_MOST_SIG) && hasTag(stack, Names.NBT.UUID_LEAST_SIG);
+    return hasTag(stack, Ref.NBT.UUID_MOST_SIG) && hasTag(stack, Ref.NBT.UUID_LEAST_SIG);
   }
 
   public static void setUUID(ItemStack stack) {
     initNBTTagCompound(stack);
 
-    // Set a UUID on the Alchemical Bag, if one doesn't exist already
-    if (!hasTag(stack, Names.NBT.UUID_MOST_SIG) && !hasTag(stack, Names.NBT.UUID_LEAST_SIG)) {
+    // Set a UUID if one doesn't exist already
+    if (!hasTag(stack, Ref.NBT.UUID_MOST_SIG) && !hasTag(stack, Ref.NBT.UUID_LEAST_SIG)) {
       UUID itemUUID = UUID.randomUUID();
-      setLong(stack, Names.NBT.UUID_MOST_SIG, itemUUID.getMostSignificantBits());
-      setLong(stack, Names.NBT.UUID_LEAST_SIG, itemUUID.getLeastSignificantBits());
+      setLong(stack, Ref.NBT.UUID_MOST_SIG, itemUUID.getMostSignificantBits());
+      setLong(stack, Ref.NBT.UUID_LEAST_SIG, itemUUID.getLeastSignificantBits());
     }
+  }
+
+  public static void setLastUse(ItemStack stack, long lastUse) {
+    long ticksSinceLastUse;
+    initNBTTagCompound(stack);
+
+    setLong(stack, Ref.NBT.LASTUSE, lastUse);
   }
 
   /**

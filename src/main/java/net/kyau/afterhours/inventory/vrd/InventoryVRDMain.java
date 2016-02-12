@@ -3,7 +3,7 @@ package net.kyau.afterhours.inventory.vrd;
 import java.util.UUID;
 
 import net.kyau.afterhours.items.VRD;
-import net.kyau.afterhours.references.Names;
+import net.kyau.afterhours.references.Ref;
 import net.kyau.afterhours.utils.INBTTaggable;
 import net.kyau.afterhours.utils.NBTHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,7 +35,7 @@ public class InventoryVRDMain implements IInventory, INBTTaggable {
 
   @Override
   public String getName() {
-    return this.hasCustomName() ? this.getCustomName() : StatCollector.translateToLocal(Names.Containers.VRD_MAIN);
+    return this.hasCustomName() ? this.getCustomName() : StatCollector.translateToLocal(Ref.Containers.VRD_MAIN);
   }
 
   @Override
@@ -147,10 +147,10 @@ public class InventoryVRDMain implements IInventory, INBTTaggable {
 
   @Override
   public void readFromNBT(NBTTagCompound nbtTagCompound) {
-    if (nbtTagCompound != null && nbtTagCompound.hasKey(Names.NBT.ITEMS)) {
+    if (nbtTagCompound != null && nbtTagCompound.hasKey(Ref.NBT.ITEMS)) {
       // Read in the ItemStacks in the inventory from NBT
-      if (nbtTagCompound.hasKey(Names.NBT.ITEMS)) {
-        NBTTagList tagList = nbtTagCompound.getTagList(Names.NBT.ITEMS, 10);
+      if (nbtTagCompound.hasKey(Ref.NBT.ITEMS)) {
+        NBTTagList tagList = nbtTagCompound.getTagList(Ref.NBT.ITEMS, 10);
         inventory = new ItemStack[this.getSizeInventory()];
         for (int i = 0; i < tagList.tagCount(); ++i) {
           NBTTagCompound tagCompound = tagList.getCompoundTagAt(i);
@@ -162,9 +162,9 @@ public class InventoryVRDMain implements IInventory, INBTTaggable {
       }
 
       // Read in any custom name for the inventory
-      if (nbtTagCompound.hasKey(Names.NBT.DISPLAY) && nbtTagCompound.getTag(Names.NBT.DISPLAY).getClass().equals(NBTTagCompound.class)) {
-        if (nbtTagCompound.getCompoundTag(Names.NBT.DISPLAY).hasKey("Name")) {
-          customName = nbtTagCompound.getCompoundTag(Names.NBT.DISPLAY).getString("Name");
+      if (nbtTagCompound.hasKey(Ref.NBT.DISPLAY) && nbtTagCompound.getTag(Ref.NBT.DISPLAY).getClass().equals(NBTTagCompound.class)) {
+        if (nbtTagCompound.getCompoundTag(Ref.NBT.DISPLAY).hasKey("Name")) {
+          customName = nbtTagCompound.getCompoundTag(Ref.NBT.DISPLAY).getString("Name");
         }
       }
     }
@@ -182,7 +182,7 @@ public class InventoryVRDMain implements IInventory, INBTTaggable {
         tagList.appendTag(tagCompound);
       }
     }
-    nbtTagCompound.setTag(Names.NBT.ITEMS, tagList);
+    nbtTagCompound.setTag(Ref.NBT.ITEMS, tagList);
   }
 
   public void save() {
@@ -192,8 +192,8 @@ public class InventoryVRDMain implements IInventory, INBTTaggable {
       nbtTagCompound = new NBTTagCompound();
 
       UUID uuid = UUID.randomUUID();
-      nbtTagCompound.setLong(Names.NBT.UUID_MOST_SIG, uuid.getMostSignificantBits());
-      nbtTagCompound.setLong(Names.NBT.UUID_LEAST_SIG, uuid.getLeastSignificantBits());
+      nbtTagCompound.setLong(Ref.NBT.UUID_MOST_SIG, uuid.getMostSignificantBits());
+      nbtTagCompound.setLong(Ref.NBT.UUID_LEAST_SIG, uuid.getLeastSignificantBits());
     }
 
     writeToNBT(nbtTagCompound);
@@ -210,12 +210,12 @@ public class InventoryVRDMain implements IInventory, INBTTaggable {
 
   public ItemStack findParentItem(EntityPlayer player) {
     if (NBTHelper.hasUUID(parentItem)) {
-      UUID parentItemStackUUID = new UUID(parentItem.getTagCompound().getLong(Names.NBT.UUID_MOST_SIG), parentItem.getTagCompound().getLong(Names.NBT.UUID_LEAST_SIG));
+      UUID parentItemStackUUID = new UUID(parentItem.getTagCompound().getLong(Ref.NBT.UUID_MOST_SIG), parentItem.getTagCompound().getLong(Ref.NBT.UUID_LEAST_SIG));
       for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
         ItemStack itemStack = player.inventory.getStackInSlot(i);
 
         if (NBTHelper.hasUUID(itemStack)) {
-          if (itemStack.getTagCompound().getLong(Names.NBT.UUID_MOST_SIG) == parentItemStackUUID.getMostSignificantBits() && itemStack.getTagCompound().getLong(Names.NBT.UUID_LEAST_SIG) == parentItemStackUUID.getLeastSignificantBits()) {
+          if (itemStack.getTagCompound().getLong(Ref.NBT.UUID_MOST_SIG) == parentItemStackUUID.getMostSignificantBits() && itemStack.getTagCompound().getLong(Ref.NBT.UUID_LEAST_SIG) == parentItemStackUUID.getLeastSignificantBits()) {
             return itemStack;
           }
         }
@@ -226,7 +226,7 @@ public class InventoryVRDMain implements IInventory, INBTTaggable {
   }
 
   public boolean matchesUUID(UUID uuid) {
-    return NBTHelper.hasUUID(parentItem) && parentItem.getTagCompound().getLong(Names.NBT.UUID_LEAST_SIG) == uuid.getLeastSignificantBits() && parentItem.getTagCompound().getLong(Names.NBT.UUID_MOST_SIG) == uuid.getMostSignificantBits();
+    return NBTHelper.hasUUID(parentItem) && parentItem.getTagCompound().getLong(Ref.NBT.UUID_LEAST_SIG) == uuid.getLeastSignificantBits() && parentItem.getTagCompound().getLong(Ref.NBT.UUID_MOST_SIG) == uuid.getMostSignificantBits();
   }
 
   @Override

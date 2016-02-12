@@ -2,7 +2,7 @@ package net.kyau.afterhours.items;
 
 import java.util.List;
 
-import net.kyau.afterhours.references.Names;
+import net.kyau.afterhours.references.Ref;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -13,7 +13,7 @@ public class Dough extends BaseItem {
 
   public Dough() {
     super();
-    this.setUnlocalizedName(Names.Items.DOUGH);
+    this.setUnlocalizedName(Ref.ItemID.DOUGH);
     this.maxStackSize = 64;
   }
 

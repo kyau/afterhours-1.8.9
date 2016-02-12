@@ -2,7 +2,7 @@ package net.kyau.afterhours.items;
 
 import java.util.List;
 
-import net.kyau.afterhours.references.Names;
+import net.kyau.afterhours.references.Ref;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -13,7 +13,7 @@ public class RawHide extends BaseItem {
 
   public RawHide() {
     super();
-    this.setUnlocalizedName(Names.Items.RAWHIDE);
+    this.setUnlocalizedName(Ref.ItemID.RAWHIDE);
     this.maxStackSize = 64;
   }
 

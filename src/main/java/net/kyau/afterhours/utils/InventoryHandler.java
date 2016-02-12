@@ -61,19 +61,15 @@ public class InventoryHandler {
   }
 
   public static void searchInventory(IInventory inv, EntityPlayer player, ItemStack stack, int chest) {
-    // ArrayList<Integer> owner = new ArrayList<Integer>();
-    // ArrayList<Integer> unboundOwner = new ArrayList<Integer>();
-    // int ownerCount = 0;
-    // int unboundCount = 0;
     for (int i = 0; i < inv.getSizeInventory(); i++) {
       if (inv.getStackInSlot(i) != null) {
-        ItemStack j = inv.getStackInSlot(i);
-        if (j.getItem() != null && j.getItem().getUnlocalizedName().equals(stack.getItem().getUnlocalizedName())) {
-          if (j.getTagCompound() != null) {
+        ItemStack stackFound = inv.getStackInSlot(i);
+        if (stackFound.getItem() != null && stackFound.getItem().getUnlocalizedName().equals(stack.getItem().getUnlocalizedName())) {
+          if (stackFound.getTagCompound() != null) {
             // if the voidstone belongs to the player
-            if (j.getTagCompound().getString("Owner").equals(player.getDisplayNameString()) && ownerCount < 1) {
+            if (ItemHelper.getOwnerName(stackFound).equals(player.getDisplayNameString()) && ownerCount < 1) {
               if (ModInfo.DEBUG)
-                LogHelper.info("> DEBUG: item found (" + j.getTagCompound().getString("Owner") + "), saved!");
+                LogHelper.info("> DEBUG: item found (" + ItemHelper.getOwnerName(stackFound) + "), saved!");
               owner.add(ownerCount, i);
               ownerInv.add(ownerCount, inv);
               ownerCount++;
@@ -83,12 +79,12 @@ public class InventoryHandler {
                   removeItemFromSlot(unboundInv.get(z), player, chest, unbound.get(z), tmpItem);
                 }
               }
-            } else if (j.getTagCompound().getString("Owner").equals(player.getDisplayNameString()) && ownerCount == 1) {
+            } else if (ItemHelper.getOwnerName(stackFound).equals(player.getDisplayNameString()) && ownerCount == 1) {
               // remove the voidstone with the lowest cooldown
               if (ModInfo.DEBUG)
                 LogHelper.info("> DEBUG: removing...");
               ItemStack prev = ownerInv.get(0).getStackInSlot(owner.get(0));
-              if (j.getTagCompound().getLong("LastUse") > prev.getTagCompound().getLong("LastUse")) {
+              if (NBTHelper.getLong(stackFound, "LastUse") > NBTHelper.getLong(prev, "LastUse")) {
                 removeItemFromSlot(ownerInv.get(0), player, chest, owner.get(0), prev);
               } else {
                 removeItemFromSlot(inv, player, chest, i, stack);

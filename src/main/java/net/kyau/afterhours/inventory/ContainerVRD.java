@@ -4,8 +4,8 @@ import net.kyau.afterhours.inventory.vrd.InventoryVRDMain;
 import net.kyau.afterhours.inventory.vrd.InventoryVRDVoid;
 import net.kyau.afterhours.items.VRD;
 import net.kyau.afterhours.items.VoidWell;
-import net.kyau.afterhours.items.Voidstone;
-import net.kyau.afterhours.references.Names;
+import net.kyau.afterhours.items.VoidPearl;
+import net.kyau.afterhours.references.Ref;
 import net.kyau.afterhours.utils.NBTHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -23,8 +23,8 @@ public class ContainerVRD extends Container {
       HOTBAR_END = HOTBAR_START + 8;
   protected final int PLAYER_INVENTORY_ROWS = 3;
   protected final int PLAYER_INVENTORY_COLUMNS = 9;
-  protected final int vrdInventoryRows = Names.Containers.VRD_MAIN_ROWS;
-  protected final int vrdInventoryColumns = Names.Containers.VRD_MAIN_COLS;
+  protected final int vrdInventoryRows = Ref.Containers.VRD_MAIN_ROWS;
+  protected final int vrdInventoryColumns = Ref.Containers.VRD_MAIN_COLS;
 
   public ContainerVRD(EntityPlayer player, InventoryVRDMain inventoryVRDMain, InventoryVRDVoid inventoryVRDVoid) {
     this.inventoryVRDMain = inventoryVRDMain;
@@ -153,8 +153,8 @@ public class ContainerVRD extends Container {
       InventoryPlayer invPlayer = player.inventory;
       for (ItemStack itemStack : invPlayer.mainInventory) {
         if (itemStack != null) {
-          if (NBTHelper.hasTag(itemStack, Names.NBT.VRD_GUI_OPEN)) {
-            NBTHelper.removeTag(itemStack, Names.NBT.VRD_GUI_OPEN);
+          if (NBTHelper.hasTag(itemStack, Ref.NBT.VRD_GUI_OPEN)) {
+            NBTHelper.removeTag(itemStack, Ref.NBT.VRD_GUI_OPEN);
           }
         }
       }
@@ -177,7 +177,7 @@ public class ContainerVRD extends Container {
     @Override
     public boolean isItemValid(ItemStack itemstack) {
       // Everything returns true except an instance of our Item
-      return !(itemstack.getItem() instanceof VRD || itemstack.getItem() instanceof Voidstone || itemstack.getItem() instanceof VoidWell);
+      return !(itemstack.getItem() instanceof VRD || itemstack.getItem() instanceof VoidPearl || itemstack.getItem() instanceof VoidWell);
     }
 
   }
@@ -191,7 +191,7 @@ public class ContainerVRD extends Container {
     @Override
     public boolean isItemValid(ItemStack stack) {
       Item item = stack.getItem();
-      if (item instanceof Voidstone) {
+      if (item instanceof VoidPearl) {
         return true;
       }
       return false;

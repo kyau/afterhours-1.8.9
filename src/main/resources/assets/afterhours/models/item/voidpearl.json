@@ -1,7 +1,7 @@
 {
   "parent": "builtin/generated",
   "textures": {
-    "layer0": "afterhours:items/voidstone"
+    "layer0": "afterhours:items/voidpearl"
   },
   "display": {
     "thirdperson": {

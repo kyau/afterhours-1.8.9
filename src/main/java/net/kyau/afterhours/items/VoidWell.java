@@ -5,7 +5,7 @@ import java.util.List;
 import net.kyau.afterhours.network.PacketHandler;
 import net.kyau.afterhours.network.SimplePacket;
 import net.kyau.afterhours.references.ModInfo;
-import net.kyau.afterhours.references.Names;
+import net.kyau.afterhours.references.Ref;
 import net.kyau.afterhours.utils.ChatUtil;
 import net.kyau.afterhours.utils.LogHelper;
 import net.minecraft.block.Block;
@@ -36,7 +36,7 @@ public class VoidWell extends BaseItem {
 
   public VoidWell() {
     super();
-    this.setUnlocalizedName(Names.Items.VOIDWELL);
+    this.setUnlocalizedName(Ref.ItemID.VOIDWELL);
     this.maxStackSize = 1;
   }
 

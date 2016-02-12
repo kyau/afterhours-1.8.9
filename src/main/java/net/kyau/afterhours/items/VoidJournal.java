@@ -3,7 +3,7 @@ package net.kyau.afterhours.items;
 import java.util.List;
 
 import net.kyau.afterhours.AfterHours;
-import net.kyau.afterhours.references.Names;
+import net.kyau.afterhours.references.Ref;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
@@ -15,7 +15,7 @@ public class VoidJournal extends BaseItem {
 
   public VoidJournal() {
     super();
-    this.setUnlocalizedName(Names.Items.VOIDJOURNAL);
+    this.setUnlocalizedName(Ref.ItemID.VOIDJOURNAL);
     this.maxStackSize = 1;
   }
 

@@ -12,7 +12,7 @@ public class AfterHoursTab extends CreativeTabs {
 
   @Override
   public Item getTabIconItem() {
-    return ModItems.voidstone;
+    return ModItems.voidpearl;
   }
 
   public String getTranslatedTabLabel() {

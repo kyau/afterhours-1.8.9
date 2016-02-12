@@ -2,7 +2,7 @@ package net.kyau.afterhours.utils;
 
 import java.util.UUID;
 
-import net.kyau.afterhours.references.Names;
+import net.kyau.afterhours.references.Ref;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -74,21 +74,21 @@ public class ItemHelper {
   }
 
   public static boolean hasOwner(ItemStack stack) {
-    return (NBTHelper.hasTag(stack, Names.NBT.UUID_MOST_SIG) && NBTHelper.hasTag(stack, Names.NBT.UUID_LEAST_SIG)) || NBTHelper.hasTag(stack, Names.NBT.OWNER);
+    return (NBTHelper.hasTag(stack, Ref.NBT.UUID_MOST_SIG) && NBTHelper.hasTag(stack, Ref.NBT.UUID_LEAST_SIG)) || NBTHelper.hasTag(stack, Ref.NBT.OWNER);
   }
 
   public static boolean hasOwnerUUID(ItemStack stack) {
-    return NBTHelper.hasTag(stack, Names.NBT.UUID_MOST_SIG) && NBTHelper.hasTag(stack, Names.NBT.UUID_LEAST_SIG);
+    return NBTHelper.hasTag(stack, Ref.NBT.UUID_MOST_SIG) && NBTHelper.hasTag(stack, Ref.NBT.UUID_LEAST_SIG);
   }
 
   public static boolean hasOwnerName(ItemStack stack) {
-    return NBTHelper.hasTag(stack, Names.NBT.OWNER);
+    return NBTHelper.hasTag(stack, Ref.NBT.OWNER);
   }
 
   public static String getOwnerName(ItemStack stack) {
 
-    if (NBTHelper.hasTag(stack, Names.NBT.OWNER)) {
-      return NBTHelper.getString(stack, Names.NBT.OWNER);
+    if (NBTHelper.hasTag(stack, Ref.NBT.OWNER)) {
+      return NBTHelper.getString(stack, Ref.NBT.OWNER);
     }
 
     return null;
@@ -96,8 +96,8 @@ public class ItemHelper {
 
   public static UUID getOwnerUUID(ItemStack stack) {
 
-    if (NBTHelper.hasTag(stack, Names.NBT.UUID_MOST_SIG) && NBTHelper.hasTag(stack, Names.NBT.UUID_LEAST_SIG)) {
-      return new UUID(NBTHelper.getLong(stack, Names.NBT.UUID_MOST_SIG), NBTHelper.getLong(stack, Names.NBT.UUID_LEAST_SIG));
+    if (NBTHelper.hasTag(stack, Ref.NBT.UUID_MOST_SIG) && NBTHelper.hasTag(stack, Ref.NBT.UUID_LEAST_SIG)) {
+      return new UUID(NBTHelper.getLong(stack, Ref.NBT.UUID_MOST_SIG), NBTHelper.getLong(stack, Ref.NBT.UUID_LEAST_SIG));
     }
 
     return null;
@@ -112,12 +112,12 @@ public class ItemHelper {
     // NBTHelper.setLong(stack, "UUIDMostSig", player.getUniqueID().getMostSignificantBits());
     // NBTHelper.setLong(stack, "UUIDLeastSig", player.getUniqueID().getLeastSignificantBits());
     UUID itemUUID = UUID.randomUUID();
-    NBTHelper.setLong(stack, Names.NBT.UUID_MOST_SIG, itemUUID.getMostSignificantBits());
-    NBTHelper.setLong(stack, Names.NBT.UUID_LEAST_SIG, itemUUID.getLeastSignificantBits());
+    NBTHelper.setLong(stack, Ref.NBT.UUID_MOST_SIG, itemUUID.getMostSignificantBits());
+    NBTHelper.setLong(stack, Ref.NBT.UUID_LEAST_SIG, itemUUID.getLeastSignificantBits());
   }
 
   public static void setOwnerName(ItemStack stack, EntityPlayer player) {
-    NBTHelper.setString(stack, Names.NBT.OWNER, player.getDisplayNameString());
+    NBTHelper.setString(stack, Ref.NBT.OWNER, player.getDisplayNameString());
   }
 
 }

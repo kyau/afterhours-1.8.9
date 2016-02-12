@@ -20,8 +20,8 @@ public class FMLEventHandler {
     EntityPlayer player = event.player;
     World world = player.worldObj;
     if (!world.isRemote) {
-      if (item.getUnlocalizedName().equals(ModItems.voidstone.getUnlocalizedName())) {
-        int count = InventoryHandler.countItems(player, ModItems.voidstone);
+      if (item.getUnlocalizedName().equals(ModItems.voidpearl.getUnlocalizedName())) {
+        int count = InventoryHandler.countItems(player, ModItems.voidpearl);
         if (count > 1) {
           if (ModInfo.DEBUG)
             LogHelper.info("> DEBUG: crafting successful, deleting!");
@@ -29,7 +29,7 @@ public class FMLEventHandler {
         }
       } else {
         if (ModInfo.DEBUG)
-          LogHelper.info("> DEBUG: crafting successful!");
+          LogHelper.info("> DEBUG: " + player.getDisplayNameString() + ": crafted:" + item.getDisplayName() + " (x" + item.stackSize + ")");
       }
     }
   }

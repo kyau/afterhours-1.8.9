@@ -4,8 +4,9 @@ import javax.annotation.Nonnull;
 
 import net.kyau.afterhours.config.AfterHoursTab;
 import net.kyau.afterhours.event.GuiHandler;
+import net.kyau.afterhours.init.ModBlocks;
 import net.kyau.afterhours.init.ModItems;
-import net.kyau.afterhours.items.RecipeManager;
+import net.kyau.afterhours.init.RecipeManager;
 import net.kyau.afterhours.network.PacketHandler;
 import net.kyau.afterhours.proxy.IProxy;
 import net.kyau.afterhours.references.ModInfo;
@@ -48,7 +49,8 @@ public class AfterHours {
     PacketHandler.init();
     proxy.registerEventHandlers();
     proxy.registerKeybindings();
-    ModItems.init(event);
+    ModItems.init();
+    ModBlocks.init();
   }
 
   @Mod.EventHandler

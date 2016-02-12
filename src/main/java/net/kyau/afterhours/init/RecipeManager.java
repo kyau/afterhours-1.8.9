@@ -1,11 +1,10 @@
-package net.kyau.afterhours.items;
+package net.kyau.afterhours.init;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import net.kyau.afterhours.init.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -45,7 +44,7 @@ public class RecipeManager {
     GameRegistry.addRecipe(new ItemStack(ModItems.dough, 1), "www", 'w', Items.wheat);
     GameRegistry.addSmelting(ModItems.dough, new ItemStack(Items.bread, 1), 0.35F);
     GameRegistry.addRecipe(new ItemStack(ModItems.voidcrystal, 1), "ggg", "lel", "ggg", 'g', Items.glowstone_dust, 'e', Items.ender_pearl, 'l', Items.lava_bucket);
-    GameRegistry.addRecipe(new ItemStack(ModItems.voidstone, 1), " s ", "geg", " s ", 's', new ItemStack(Blocks.stone_slab, 1, 0), 'g', Items.glowstone_dust, 'e', ModItems.voidcrystal);
+    GameRegistry.addRecipe(new ItemStack(ModItems.voidpearl, 1), " s ", "geg", " s ", 's', new ItemStack(Blocks.stone_slab, 1, 0), 'g', Items.glowstone_dust, 'e', ModItems.voidcrystal);
     GameRegistry.addRecipe(new ItemStack(ModItems.voidwell, 1), "ede", "cep", "ede", 'c', Items.clock, 'e', ModItems.voidcrystal, 'd', Items.diamond, 'p', Items.compass);
     GameRegistry.addRecipe(new ItemStack(ModItems.vrd, 1), "sas", "ece", "ses", 's', new ItemStack(Blocks.stone_slab, 1, 0), 'a', ModItems.antenna, 's', Items.stick, 'c', Blocks.ender_chest, 'e', ModItems.voidcrystal);
   }
