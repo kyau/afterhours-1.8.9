@@ -1,0 +1,7 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "afterhours:blocks/infused_voidstone",
+        "particle": "blocks/lapis_block"
+    }
+}

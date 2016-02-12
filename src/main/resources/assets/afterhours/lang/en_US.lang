@@ -1,9 +1,12 @@
+afterhours.creativetab=AfterHours
 afterhours.antenna.name=Antenna
 afterhours.dough.name=Dough
 afterhours.rawhide.name=Raw Hide
 afterhours.voidcrystal.name=Void Crystal
 afterhours.voidjournal.name=Void Journal
 afterhours.voidpearl.name=§eVoid Pearl§r
+afterhours.voidstone.name=Voidstone
+afterhours.infused_voidstone.name=§eInfused Voidstone§r
 afterhours.voidwell.name=§eVoid Well§r
 afterhours.vrd.name=§eVRD§r
 afterhours.container:inventory=Inventory

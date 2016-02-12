@@ -47,7 +47,9 @@ public class RecipeManager {
     GameRegistry.addShapelessRecipe(new ItemStack(ModItems.rawhide, 1), Items.rabbit_hide, Items.rabbit_hide, Items.rabbit_hide, Items.rabbit_hide);
     GameRegistry.addRecipe(new ItemStack(ModItems.voidcrystal, 1), "ggg", "lel", "ggg", 'g', Items.glowstone_dust, 'e', Items.ender_pearl, 'l', Items.lava_bucket);
     GameRegistry.addRecipe(new ItemStack(ModItems.voidpearl, 1), " s ", "geg", " s ", 's', new ItemStack(Blocks.stone_slab, 1, 0), 'g', Items.glowstone_dust, 'e', ModItems.voidcrystal);
-    GameRegistry.addRecipe(new ItemStack(ModItems.voidwell, 1), "ede", "cep", "ede", 'c', Items.clock, 'e', ModItems.voidcrystal, 'd', Items.diamond, 'p', Items.compass);
+    GameRegistry.addSmelting(Blocks.end_stone, new ItemStack(ModBlocks.voidstone, 1), 1F);
+    GameRegistry.addRecipe(new ItemStack(ModBlocks.infused_voidstone, 1), "ggg", "gvg", "ggg", 'g', Items.glowstone_dust, 'v', new ItemStack(ModBlocks.voidstone, 1, 0));
+    GameRegistry.addRecipe(new ItemStack(ModItems.voidwell, 1), "cdc", "ici", "cdc", 'c', ModItems.voidcrystal, 'd', Items.diamond, 'i', new ItemStack(ModBlocks.infused_voidstone, 1, 0));
     GameRegistry.addRecipe(new ItemStack(ModItems.vrd, 1), "sas", "ece", "ses", 's', new ItemStack(Blocks.stone_slab, 1, 0), 'a', ModItems.antenna, 's', Items.stick, 'c', Blocks.ender_chest, 'e', ModItems.voidcrystal);
   }
 

@@ -4,6 +4,8 @@ public class Ref {
 
   public static final class BlockID {
 
+    public static final String VOIDSTONE = "voidstone";
+    public static final String INFUSED_VOIDSTONE = "infused_voidstone";
   }
 
   public static final class ItemID {

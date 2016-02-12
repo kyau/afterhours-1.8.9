@@ -49,8 +49,9 @@ public class AfterHours {
     PacketHandler.init();
     proxy.registerEventHandlers();
     proxy.registerKeybindings();
-    ModItems.init();
-    ModBlocks.init();
+    ModBlocks.registerBlocks();
+    ModItems.registerItems();
+    proxy.initRenderingAndTextures();
   }
 
   @Mod.EventHandler
