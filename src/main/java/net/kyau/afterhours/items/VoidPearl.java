@@ -3,6 +3,7 @@ package net.kyau.afterhours.items;
 import java.util.List;
 
 import net.kyau.afterhours.AfterHours;
+import net.kyau.afterhours.dimension.TeleporterVoid;
 import net.kyau.afterhours.references.ModInfo;
 import net.kyau.afterhours.references.Ref;
 import net.kyau.afterhours.utils.ChatUtil;
@@ -20,7 +21,6 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
-import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.relauncher.Side;
@@ -99,7 +99,7 @@ public class VoidPearl extends BaseItem {
         EntityPlayerMP playerMP = (EntityPlayerMP) player;
         if (!(playerMP.dimension == 1)) {
           if (playerMP.dimension != 0) {
-            MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension(playerMP, 0, new Teleporter(playerMP.mcServer.worldServerForDimension(0)));
+            MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension(playerMP, 0, new TeleporterVoid(playerMP.mcServer.worldServerForDimension(0)));
           }
           player.setPositionAndUpdate(playerHome.getX(), playerHome.getY(), playerHome.getZ());
           while (player.getEntityBoundingBox() != null && world.getCollidingBoundingBoxes(player, player.getEntityBoundingBox()) != null && !world.getCollidingBoundingBoxes(player, player.getEntityBoundingBox()).isEmpty()) {

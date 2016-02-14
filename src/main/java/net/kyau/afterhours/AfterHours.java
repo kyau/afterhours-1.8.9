@@ -3,6 +3,7 @@ package net.kyau.afterhours;
 import javax.annotation.Nonnull;
 
 import net.kyau.afterhours.config.AfterHoursTab;
+import net.kyau.afterhours.dimension.DimensionHandler;
 import net.kyau.afterhours.event.GuiHandler;
 import net.kyau.afterhours.init.ModBlocks;
 import net.kyau.afterhours.init.ModItems;
@@ -10,6 +11,7 @@ import net.kyau.afterhours.init.RecipeManager;
 import net.kyau.afterhours.network.PacketHandler;
 import net.kyau.afterhours.proxy.IProxy;
 import net.kyau.afterhours.references.ModInfo;
+import net.kyau.afterhours.references.Ref;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -34,6 +36,8 @@ public class AfterHours {
 
   public static CreativeTabs AfterHoursTab = new AfterHoursTab(CreativeTabs.getNextID(), "AfterHours");
 
+  public static int voidDimID = Ref.Dimension.DIM;
+
   public static int guiIndex = 0;
   public static final int GUI_VOIDJOURNAL = guiIndex++;
   public static final int GUI_VRD = guiIndex++;
@@ -46,6 +50,7 @@ public class AfterHours {
     event.getModMetadata().description = ModInfo.MOD_DESC;
     event.getModMetadata().url = ModInfo.MOD_URL;
     event.getModMetadata().logoFile = ModInfo.MOD_LOGO;
+    DimensionHandler.init();
     PacketHandler.init();
     proxy.registerEventHandlers();
     proxy.registerKeybindings();

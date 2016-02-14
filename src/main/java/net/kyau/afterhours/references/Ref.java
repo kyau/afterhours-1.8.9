@@ -53,4 +53,11 @@ public class Ref {
     public static final String VOID_SYNC_TRUE = "Sync";
     public static final String VOID_SYNC_FALSE = "";
   }
+
+  public static final class Dimension {
+
+    public static final int DIM = 5;
+    public static final int BIOMEID = 250;
+    public static final String INTERNAL_NAME = "void";
+  }
 }
