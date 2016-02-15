@@ -8,6 +8,7 @@ import net.kyau.afterhours.dimension.WorldGenerator;
 import net.kyau.afterhours.event.GuiHandler;
 import net.kyau.afterhours.init.ModBlocks;
 import net.kyau.afterhours.init.ModItems;
+import net.kyau.afterhours.init.ModVanilla;
 import net.kyau.afterhours.init.RecipeManager;
 import net.kyau.afterhours.network.PacketHandler;
 import net.kyau.afterhours.proxy.IProxy;
@@ -59,6 +60,7 @@ public class AfterHours {
     proxy.registerKeybindings();
     ModItems.registerItems();
     ModBlocks.registerBlocks();
+    ModVanilla.registerItems();
     proxy.initRenderingAndTextures();
   }
 

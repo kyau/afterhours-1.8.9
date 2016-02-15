@@ -13,7 +13,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.oredict.OreDictionary;
 
 public class RecipeManager {
 
@@ -43,9 +42,9 @@ public class RecipeManager {
 
   private static void addRecipes() {
     GameRegistry.addRecipe(new ItemStack(ModItems.antenna, 1), "g", "s", 'g', Items.glowstone_dust, 's', Items.stick);
-    GameRegistry.addRecipe(new ItemStack(ModItems.dough, 1), "www", 'w', Items.wheat);
-    GameRegistry.addSmelting(ModItems.dough, new ItemStack(Items.bread, 1), 0.35F);
-    GameRegistry.addShapelessRecipe(new ItemStack(ModItems.rawhide, 1), Items.rabbit_hide, Items.rabbit_hide, Items.rabbit_hide, Items.rabbit_hide);
+    GameRegistry.addRecipe(new ItemStack(ModVanilla.dough, 1), "www", 'w', Items.wheat);
+    GameRegistry.addSmelting(ModVanilla.dough, new ItemStack(Items.bread, 1), 0.35F);
+    GameRegistry.addShapelessRecipe(new ItemStack(ModVanilla.rawhide, 1), Items.rabbit_hide, Items.rabbit_hide, Items.rabbit_hide, Items.rabbit_hide);
     GameRegistry.addRecipe(new ItemStack(ModItems.singularity, 1), "iii", "iui", "iii", 'i', new ItemStack(ModBlocks.infused_voidstone, 1, 0), 'u', ModItems.unstablecore);
     GameRegistry.addRecipe(new ItemStack(ModItems.stablecore, 1), "ddd", "dud", "ddd", 'd', ModItems.darkmatter, 'u', ModItems.unstablecore);
     GameRegistry.addRecipe(new ItemStack(ModItems.unstablecore, 1), "ccc", "cnc", "ccc", 'c', ModItems.voidcrystal, 'n', Items.nether_star);
@@ -59,9 +58,8 @@ public class RecipeManager {
 
     // dark matter gear
     GameRegistry.addRecipe(new ItemStack(ModItems.darkmatter_sword), " d ", " d ", " s ", 'd', ModItems.darkmatter, 's', Items.stick);
-    GameRegistry.addShapelessRecipe(new ItemStack(ModItems.darkmatter_sword), new Object[] {
-        new ItemStack(ModItems.darkmatter),
-        new ItemStack(ModItems.darkmatter_sword, 1, OreDictionary.WILDCARD_VALUE) });
+    // dark matter repair recipes
+    CraftingManager.getInstance().getRecipeList().add(new RecipeRepair(new ItemStack(ModItems.darkmatter_sword), new ItemStack(ModItems.darkmatter), 750));
   }
 
   private static void removeVanillaRecipes() {
@@ -136,7 +134,7 @@ public class RecipeManager {
     GameRegistry.addShapelessRecipe(new ItemStack(Blocks.quartz_block, 1, 0), new ItemStack(Blocks.stone_slab, 1, 7), new ItemStack(Blocks.stone_slab, 1, 7));
     GameRegistry.addShapelessRecipe(new ItemStack(Blocks.red_sandstone, 1, 0), new ItemStack(Blocks.stone_slab2, 1, 0), new ItemStack(Blocks.stone_slab2, 1, 0));
     // smelting: rawhide -> leather
-    GameRegistry.addSmelting(ModItems.rawhide, new ItemStack(Items.leather, 1), 0.25F);
+    GameRegistry.addSmelting(ModVanilla.rawhide, new ItemStack(Items.leather, 1), 0.25F);
   }
 
   private static void changeRecipes() {

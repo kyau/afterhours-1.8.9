@@ -1,12 +1,11 @@
 package net.kyau.afterhours.items.darkmatter;
 
-import net.kyau.afterhours.init.ModItems;
 import net.kyau.afterhours.items.BaseItem;
 import net.kyau.afterhours.references.Ref;
 import net.kyau.afterhours.utils.LogHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.enchantment.Enchantment;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -28,28 +27,130 @@ import com.google.common.collect.Multimap;
 public class DarkMatterSword extends BaseItem {
 
   private float attackDamage;
-  private ItemStack repairMaterial;
+  private final BaseItem.ToolMaterial material;
+  private boolean broken = false;
 
-  // (int harvestLevel, int maxUses, float efficiency, float damageVsEntity, int enchantability)
-  // Diamond: (3, 1561, 8.0F, 3.0F, 10)
-  public DarkMatterSword() {
-    super();
-    this.setUnlocalizedName(Ref.ItemID.DARKMATTER_SWORD);
+  public DarkMatterSword(BaseItem.ToolMaterial material) {
+    this.material = material;
     this.maxStackSize = 1;
-    this.setMaxDamage(2341);
-    this.attackDamage = 13.666F;
-    this.repairMaterial = new ItemStack(ModItems.darkmatter, 0, 1);
+    this.setMaxDamage(material.getMaxUses());
+    this.attackDamage = 4.0F + material.getDamageVsEntity();
+    this.setUnlocalizedName(Ref.ItemID.DARKMATTER_SWORD);
   }
 
-  @Override
-  public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn) {
-    stack.addEnchantment(Enchantment.unbreaking, 5);
+  /**
+   * Returns the amount of damage this item will deal. One heart of damage is equal to 2 damage points.
+   */
+  public float getDamageVsEntity() {
+    return this.material.getDamageVsEntity();
   }
 
-  @Override
+  public float getStrVsBlock(ItemStack stack, Block block) {
+    if (block == Blocks.web) {
+      return 15.0F;
+    } else {
+      Material material = block.getMaterial();
+      return material != Material.plants && material != Material.vine && material != Material.coral && material != Material.leaves && material != Material.gourd ? 1.0F : 1.5F;
+    }
+  }
+
+  /**
+   * Current implementations of this method in child classes do not use the entry argument beside ev. They just raise
+   * the damage on the stack.
+   */
   public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
-    damageItem(stack, 1000, attacker);
+    damageItem(stack, 1, attacker);
     return true;
+  }
+
+  @Override
+  public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
+    if (stack.getItemDamage() == stack.getMaxDamage()) {
+      this.broken = true;
+    } else {
+      this.broken = false;
+    }
+    if (this.broken)
+      return true;
+    return false;
+  }
+
+  /**
+   * Called when a Block is destroyed using this Item. Return true to trigger the "Use Item" statistic.
+   */
+  public boolean onBlockDestroyed(ItemStack stack, World worldIn, Block blockIn, BlockPos pos, EntityLivingBase playerIn) {
+    if ((double) blockIn.getBlockHardness(worldIn, pos) != 0.0D) {
+      damageItem(stack, 2, playerIn);
+    }
+
+    return true;
+  }
+
+  /**
+   * Returns True is the item is renderer in full 3D when hold.
+   */
+  @SideOnly(Side.CLIENT)
+  public boolean isFull3D() {
+    return true;
+  }
+
+  /**
+   * returns the action that specifies what animation to play when the items is being used
+   */
+  public EnumAction getItemUseAction(ItemStack stack) {
+    return EnumAction.BLOCK;
+  }
+
+  /**
+   * How long it takes to use or consume an item
+   */
+  public int getMaxItemUseDuration(ItemStack stack) {
+    return 72000;
+  }
+
+  /**
+   * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack, world, entityPlayer
+   */
+  public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn) {
+    playerIn.setItemInUse(itemStackIn, this.getMaxItemUseDuration(itemStackIn));
+    return itemStackIn;
+  }
+
+  /**
+   * Check whether this Item can harvest the given Block
+   */
+  public boolean canHarvestBlock(Block blockIn) {
+    return blockIn == Blocks.web;
+  }
+
+  /**
+   * Return the enchantability factor of the item, most of the time is based on material.
+   */
+  public int getItemEnchantability() {
+    return this.material.getEnchantability();
+  }
+
+  /**
+   * Return the name for this tool's material.
+   */
+  public String getToolMaterialName() {
+    return this.material.toString();
+  }
+
+  /**
+   * Return whether this item is repairable in an anvil.
+   */
+  public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
+    ItemStack mat = this.material.getRepairItemStack();
+    if (mat != null && net.minecraftforge.oredict.OreDictionary.itemMatches(mat, repair, false))
+      return true;
+    return super.getIsRepairable(toRepair, repair);
+  }
+
+  public Multimap<String, AttributeModifier> getItemAttributeModifiers() {
+    Multimap<String, AttributeModifier> multimap = super.getItemAttributeModifiers();
+    multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(itemModifierUUID, "Weapon modifier", (double) this.attackDamage, 0));
+    return multimap;
   }
 
   public void damageItem(ItemStack stack, int amount, EntityLivingBase entityIn) {
@@ -57,7 +158,7 @@ public class DarkMatterSword extends BaseItem {
       if (stack.isItemStackDamageable()) {
         if (stack.attemptDamageItem(amount, entityIn.getRNG())) {
           LogHelper.info("SWORD BROKE!!!!!!!!!!!!!!!");
-          entityIn.playSound("random.break", 0.8F, 0.8F + entityIn.worldObj.rand.nextFloat() * 0.4F);
+          entityIn.worldObj.playSoundAtEntity(entityIn, "random.break", 0.8F, 0.8F + entityIn.worldObj.rand.nextFloat() * 0.4F);
           for (int i = 0; i < 5; ++i) {
             Vec3 vec3 = new Vec3(((double) entityIn.worldObj.rand.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
             vec3 = vec3.rotatePitch(-entityIn.rotationPitch * (float) Math.PI / 180.0F);
@@ -69,7 +170,6 @@ public class DarkMatterSword extends BaseItem {
             vec31 = vec31.addVector(entityIn.posX, entityIn.posY + (double) entityIn.getEyeHeight(), entityIn.posZ);
             entityIn.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, vec31.xCoord, vec31.yCoord, vec31.zCoord, vec3.xCoord, vec3.yCoord + 0.05D, vec3.zCoord, new int[] { Item.getIdFromItem(stack.getItem()) });
           }
-          // --stack.stackSize;
 
           if (entityIn instanceof EntityPlayer) {
             EntityPlayer entityplayer = (EntityPlayer) entityIn;
@@ -86,103 +186,4 @@ public class DarkMatterSword extends BaseItem {
     }
   }
 
-  // Tells the game the item has a container item
-  @Override
-  public boolean hasContainerItem(ItemStack stack) {
-    return false;
-  }
-
-  // Sets the container item
-  @Override
-  public ItemStack getContainerItem(ItemStack itemStack) {
-    ItemStack stack = itemStack.copy();
-    LogHelper.info("REMOVED!");
-    if (itemStack.getItemDamage() >= 0) {
-      LogHelper.info("FOUND!" + itemStack.getItemDamage());
-      int newDamage = itemStack.getItemDamage() - 750;
-      if (newDamage > itemStack.getMaxDamage()) {
-        itemStack.setItemDamage(itemStack.getMaxDamage());
-      } else {
-        itemStack.setItemDamage(newDamage);
-      }
-      stack.stackSize = 1;
-    }
-    // itemStack.attemptDamageItem(1, itemRand);
-
-    return stack;
-  }
-
-  @Override
-  public float getStrVsBlock(ItemStack stack, Block block) {
-    if (block == Blocks.web) {
-      return 5.0F;
-    } else {
-      Material material = block.getMaterial();
-      return material != Material.plants && material != Material.vine && material != Material.coral && material != Material.leaves && material != Material.gourd ? 1.0F : 1.5F;
-    }
-  }
-
-  @Override
-  public boolean onBlockDestroyed(ItemStack stack, World worldIn, Block blockIn, BlockPos pos, EntityLivingBase playerIn) {
-    if ((double) blockIn.getBlockHardness(worldIn, pos) != 0.0D) {
-      stack.damageItem(2, playerIn);
-    }
-
-    return true;
-  }
-
-  @Override
-  @SideOnly(Side.CLIENT)
-  public boolean isFull3D() {
-    return true;
-  }
-
-  @Override
-  public EnumAction getItemUseAction(ItemStack stack) {
-    return EnumAction.BLOCK;
-  }
-
-  @Override
-  public int getMaxItemUseDuration(ItemStack stack) {
-    return 72000;
-  }
-
-  @Override
-  public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn) {
-    playerIn.setItemInUse(itemStackIn, this.getMaxItemUseDuration(itemStackIn));
-    return itemStackIn;
-  }
-
-  @Override
-  public boolean canHarvestBlock(Block blockIn) {
-    return blockIn == Blocks.web;
-  }
-
-  @Override
-  public int getItemEnchantability() {
-    // gold level
-    return 22;
-  }
-
-  @Override
-  public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
-    ItemStack mat = getRepairItemStack();
-    // if (mat != null && net.minecraftforge.oredict.OreDictionary.itemMatches(mat, repair, false)) return true;
-    return super.getIsRepairable(toRepair, repair);
-  }
-
-  @Override
-  public Multimap<String, AttributeModifier> getItemAttributeModifiers() {
-    Multimap<String, AttributeModifier> multimap = super.getItemAttributeModifiers();
-    multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(itemModifierUUID, "Weapon modifier", (double) this.attackDamage, 0));
-    return multimap;
-  }
-
-  public ItemStack getRepairItemStack() {
-    return repairMaterial;
-  }
-
-  public String getToolMaterialName() {
-    return "Dark Matter";
-  }
 }

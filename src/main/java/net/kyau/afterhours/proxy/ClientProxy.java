@@ -4,6 +4,7 @@ import net.kyau.afterhours.client.gui.GuiHUD;
 import net.kyau.afterhours.client.gui.GuiVoidJournal;
 import net.kyau.afterhours.init.ModBlocks;
 import net.kyau.afterhours.init.ModItems;
+import net.kyau.afterhours.init.ModVanilla;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -32,6 +33,7 @@ public class ClientProxy extends CommonProxy {
   public void initRenderingAndTextures() {
     ModItems.registerRenders();
     ModBlocks.registerRenders();
+    ModVanilla.registerRenders();
   }
 
   @Override

@@ -20,12 +20,6 @@ public class FMLEventHandler {
     EntityPlayer player = event.player;
     World world = player.worldObj;
     if (!world.isRemote) {
-      if (event.craftMatrix.getStackInSlot(0).getUnlocalizedName().equals(ModItems.darkmatter_sword.getUnlocalizedName()) && event.craftMatrix.getStackInSlot(1).getUnlocalizedName().equals(ModItems.darkmatter.getUnlocalizedName())) {
-        LogHelper.info("Found Sword in crafting table.");
-        int newDamage = event.craftMatrix.getStackInSlot(0).getItemDamage();
-        event.crafting.setItemDamage(newDamage + 750);
-        LogHelper.info("New Damage: " + event.crafting.getItemDamage());
-      }
       if (item.getUnlocalizedName().equals(ModItems.voidpearl.getUnlocalizedName())) {
         int count = InventoryHandler.countItems(player, ModItems.voidpearl);
         if (count > 1) {

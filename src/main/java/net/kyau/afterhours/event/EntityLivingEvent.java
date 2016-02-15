@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 import javax.annotation.Nonnull;
 
-import net.kyau.afterhours.init.ModItems;
+import net.kyau.afterhours.init.ModVanilla;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.passive.EntityHorse;
@@ -37,7 +37,7 @@ public class EntityLivingEvent {
         if (event.entityLiving.isBurning()) {
           event.drops.add(new EntityItem(event.entityLiving.worldObj, event.entityLiving.posX, event.entityLiving.posY, event.entityLiving.posZ, new ItemStack(Items.leather)));
         } else {
-          event.drops.add(new EntityItem(event.entityLiving.worldObj, event.entityLiving.posX, event.entityLiving.posY, event.entityLiving.posZ, new ItemStack(ModItems.rawhide)));
+          event.drops.add(new EntityItem(event.entityLiving.worldObj, event.entityLiving.posX, event.entityLiving.posY, event.entityLiving.posZ, new ItemStack(ModVanilla.rawhide)));
         }
       }
     }
