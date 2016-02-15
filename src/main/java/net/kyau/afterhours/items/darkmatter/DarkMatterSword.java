@@ -2,7 +2,6 @@ package net.kyau.afterhours.items.darkmatter;
 
 import net.kyau.afterhours.items.BaseItem;
 import net.kyau.afterhours.references.Ref;
-import net.kyau.afterhours.utils.LogHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -65,13 +64,6 @@ public class DarkMatterSword extends BaseItem {
 
   @Override
   public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
-    if (stack.getItemDamage() == stack.getMaxDamage()) {
-      this.broken = true;
-    } else {
-      this.broken = false;
-    }
-    if (this.broken)
-      return true;
     return false;
   }
 
@@ -157,7 +149,6 @@ public class DarkMatterSword extends BaseItem {
     if (!(entityIn instanceof EntityPlayer) || !((EntityPlayer) entityIn).capabilities.isCreativeMode) {
       if (stack.isItemStackDamageable()) {
         if (stack.attemptDamageItem(amount, entityIn.getRNG())) {
-          LogHelper.info("SWORD BROKE!!!!!!!!!!!!!!!");
           entityIn.worldObj.playSoundAtEntity(entityIn, "random.break", 0.8F, 0.8F + entityIn.worldObj.rand.nextFloat() * 0.4F);
           for (int i = 0; i < 5; ++i) {
             Vec3 vec3 = new Vec3(((double) entityIn.worldObj.rand.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
