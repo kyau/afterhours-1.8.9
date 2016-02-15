@@ -4,7 +4,6 @@ import javax.annotation.Nonnull;
 
 import net.kyau.afterhours.init.ModItems;
 import net.kyau.afterhours.references.ModInfo;
-import net.kyau.afterhours.references.Ref;
 import net.kyau.afterhours.utils.InventoryHandler;
 import net.kyau.afterhours.utils.LogHelper;
 import net.minecraft.entity.EntityLiving;
@@ -47,8 +46,7 @@ public class FMLEventHandler {
         EntityPlayer player = (EntityPlayer) attackSource.getSourceOfDamage();
         if (player.getHeldItem() != null) {
           ItemStack stack = player.getHeldItem();
-          if (stack.getUnlocalizedName().equals(ModInfo.MOD_ID + "." + Ref.ItemID.DARKMATTER_SWORD)) {
-            LogHelper.info("Holding Sword!");
+          if (ModItems.repairList.contains(stack.getUnlocalizedName())) {
             if (stack.getItemDamage() == stack.getMaxDamage()) {
               event.ammount = 0.5F;
             }

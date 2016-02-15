@@ -14,6 +14,9 @@ import net.kyau.afterhours.items.VoidCrystal;
 import net.kyau.afterhours.items.VoidJournal;
 import net.kyau.afterhours.items.VoidPearl;
 import net.kyau.afterhours.items.VoidWell;
+import net.kyau.afterhours.items.darkmatter.DarkMatterAxe;
+import net.kyau.afterhours.items.darkmatter.DarkMatterPickaxe;
+import net.kyau.afterhours.items.darkmatter.DarkMatterShovel;
 import net.kyau.afterhours.items.darkmatter.DarkMatterSword;
 import net.kyau.afterhours.references.ModInfo;
 import net.kyau.afterhours.references.Ref;
@@ -23,6 +26,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class ModItems {
 
   public static List<BaseItem> itemList = new ArrayList<BaseItem>();
+  public static List<String> repairList = new ArrayList<String>();
 
   public static BaseItem antenna;
   public static BaseItem darkmatter;
@@ -37,6 +41,9 @@ public class ModItems {
 
   // dark matter gear
   public static BaseItem darkmatter_sword;
+  public static BaseItem darkmatter_shovel;
+  public static BaseItem darkmatter_pickaxe;
+  public static BaseItem darkmatter_axe;
 
   public static void registerItems() {
 
@@ -53,6 +60,9 @@ public class ModItems {
 
     // dark matter gear
     darkmatter_sword = new DarkMatterSword(BaseItem.ToolMaterial.DARKMATTER).register(Ref.ItemID.DARKMATTER_SWORD);
+    darkmatter_shovel = new DarkMatterShovel(BaseItem.ToolMaterial.DARKMATTER).register(Ref.ItemID.DARKMATTER_SHOVEL);
+    darkmatter_pickaxe = new DarkMatterPickaxe(BaseItem.ToolMaterial.DARKMATTER).register(Ref.ItemID.DARKMATTER_PICKAXE);
+    darkmatter_axe = new DarkMatterAxe(BaseItem.ToolMaterial.DARKMATTER).register(Ref.ItemID.DARKMATTER_AXE);
   }
 
   public static void registerRenders() {

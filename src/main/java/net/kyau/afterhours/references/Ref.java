@@ -14,6 +14,9 @@ public class Ref {
     public static final String ANTENNA = "antenna";
     public static final String DARKMATTER = "darkmatter";
     public static final String DARKMATTER_SWORD = "darkmatter_sword";
+    public static final String DARKMATTER_SHOVEL = "darkmatter_shovel";
+    public static final String DARKMATTER_PICKAXE = "darkmatter_pickaxe";
+    public static final String DARKMATTER_AXE = "darkmatter_axe";
     public static final String DOUGH = "dough";
     public static final String RAWHIDE = "rawhide";
     public static final String SINGULARITY = "singularity";

@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import net.kyau.afterhours.items.BaseItem;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -59,7 +60,10 @@ public class RecipeManager {
     // dark matter gear
     GameRegistry.addRecipe(new ItemStack(ModItems.darkmatter_sword), " d ", " d ", " s ", 'd', ModItems.darkmatter, 's', Items.stick);
     // dark matter repair recipes
-    CraftingManager.getInstance().getRecipeList().add(new RecipeRepair(new ItemStack(ModItems.darkmatter_sword), new ItemStack(ModItems.darkmatter), 750));
+    CraftingManager.getInstance().getRecipeList().add(new RecipeRepair(new ItemStack(ModItems.darkmatter_sword), new ItemStack(ModItems.darkmatter), (int) Math.round(BaseItem.ToolMaterial.DARKMATTER.getMaxUses() / 4.5)));
+    CraftingManager.getInstance().getRecipeList().add(new RecipeRepair(new ItemStack(ModItems.darkmatter_shovel), new ItemStack(ModItems.darkmatter), (int) Math.round(BaseItem.ToolMaterial.DARKMATTER.getMaxUses() / 4.5)));
+    CraftingManager.getInstance().getRecipeList().add(new RecipeRepair(new ItemStack(ModItems.darkmatter_pickaxe), new ItemStack(ModItems.darkmatter), (int) Math.round(BaseItem.ToolMaterial.DARKMATTER.getMaxUses() / 4.5)));
+    CraftingManager.getInstance().getRecipeList().add(new RecipeRepair(new ItemStack(ModItems.darkmatter_axe), new ItemStack(ModItems.darkmatter), (int) Math.round(BaseItem.ToolMaterial.DARKMATTER.getMaxUses() / 4.5)));
   }
 
   private static void removeVanillaRecipes() {

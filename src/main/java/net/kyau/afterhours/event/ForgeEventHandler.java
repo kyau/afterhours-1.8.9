@@ -11,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
@@ -52,6 +53,20 @@ public class ForgeEventHandler {
         int count = InventoryHandler.countItems(player, ModItems.voidpearl);
         if (count > 1) {
           InventoryHandler.removeLimitedItem(player, item);
+        }
+      }
+    }
+  }
+
+  @SubscribeEvent
+  public void playerBreakSpeed(PlayerEvent.BreakSpeed event) {
+    EntityPlayer player = event.entityPlayer;
+    if (player.getHeldItem() != null) {
+      ItemStack stack = player.getHeldItem();
+      if (ModItems.repairList.contains(stack.getUnlocalizedName())) {
+        if (stack.getItemDamage() == stack.getMaxDamage()) {
+          LogHelper.info("Broken tool!");
+          event.newSpeed = 1.0F;
         }
       }
     }
