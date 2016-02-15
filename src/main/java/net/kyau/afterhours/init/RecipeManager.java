@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class RecipeManager {
 
@@ -45,12 +46,22 @@ public class RecipeManager {
     GameRegistry.addRecipe(new ItemStack(ModItems.dough, 1), "www", 'w', Items.wheat);
     GameRegistry.addSmelting(ModItems.dough, new ItemStack(Items.bread, 1), 0.35F);
     GameRegistry.addShapelessRecipe(new ItemStack(ModItems.rawhide, 1), Items.rabbit_hide, Items.rabbit_hide, Items.rabbit_hide, Items.rabbit_hide);
+    GameRegistry.addRecipe(new ItemStack(ModItems.singularity, 1), "iii", "iui", "iii", 'i', new ItemStack(ModBlocks.infused_voidstone, 1, 0), 'u', ModItems.unstablecore);
+    GameRegistry.addRecipe(new ItemStack(ModItems.stablecore, 1), "ddd", "dud", "ddd", 'd', ModItems.darkmatter, 'u', ModItems.unstablecore);
+    GameRegistry.addRecipe(new ItemStack(ModItems.unstablecore, 1), "ccc", "cnc", "ccc", 'c', ModItems.voidcrystal, 'n', Items.nether_star);
     GameRegistry.addRecipe(new ItemStack(ModItems.voidcrystal, 1), "ggg", "lel", "ggg", 'g', Items.glowstone_dust, 'e', Items.ender_pearl, 'l', Items.lava_bucket);
+    GameRegistry.addShapelessRecipe(new ItemStack(ModItems.voidjournal, 1), Items.book, Items.ender_pearl, Items.glowstone_dust);
     GameRegistry.addRecipe(new ItemStack(ModItems.voidpearl, 1), " s ", "geg", " s ", 's', new ItemStack(Blocks.stone_slab, 1, 0), 'g', Items.glowstone_dust, 'e', ModItems.voidcrystal);
     GameRegistry.addSmelting(Blocks.end_stone, new ItemStack(ModBlocks.voidstone, 1), 1F);
     GameRegistry.addRecipe(new ItemStack(ModBlocks.infused_voidstone, 1), "ggg", "gvg", "ggg", 'g', Items.glowstone_dust, 'v', new ItemStack(ModBlocks.voidstone, 1, 0));
-    GameRegistry.addRecipe(new ItemStack(ModItems.voidwell, 1), "cdc", "ici", "cdc", 'c', ModItems.voidcrystal, 'd', Items.diamond, 'i', new ItemStack(ModBlocks.infused_voidstone, 1, 0));
+    GameRegistry.addRecipe(new ItemStack(ModItems.voidwell, 1), "mdm", "iui", "mdm", 'u', ModItems.stablecore, 'd', Items.diamond, 'i', new ItemStack(ModBlocks.infused_voidstone, 1, 0), 'm', ModItems.darkmatter);
     GameRegistry.addRecipe(new ItemStack(ModItems.vrd, 1), "sas", "ece", "ses", 's', new ItemStack(Blocks.stone_slab, 1, 0), 'a', ModItems.antenna, 's', Items.stick, 'c', Blocks.ender_chest, 'e', ModItems.voidcrystal);
+
+    // dark matter gear
+    GameRegistry.addRecipe(new ItemStack(ModItems.darkmatter_sword), " d ", " d ", " s ", 'd', ModItems.darkmatter, 's', Items.stick);
+    GameRegistry.addShapelessRecipe(new ItemStack(ModItems.darkmatter_sword), new Object[] {
+        new ItemStack(ModItems.darkmatter),
+        new ItemStack(ModItems.darkmatter_sword, 1, OreDictionary.WILDCARD_VALUE) });
   }
 
   private static void removeVanillaRecipes() {

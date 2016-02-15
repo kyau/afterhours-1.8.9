@@ -18,7 +18,7 @@ public class AfterHoursTab extends CreativeTabs {
   @SideOnly(Side.CLIENT)
   @Override
   public Item getTabIconItem() {
-    return ModItems.voidpearl;
+    return ModItems.darkmatter;
   }
 
   public String getTranslatedTabLabel() {

@@ -1,6 +1,7 @@
 package net.kyau.afterhours.init;
 
 import net.kyau.afterhours.blocks.BaseBlock;
+import net.kyau.afterhours.blocks.DarkMatterCluster;
 import net.kyau.afterhours.blocks.InfusedVoidstone;
 import net.kyau.afterhours.blocks.Voidstone;
 import net.kyau.afterhours.references.ModInfo;
@@ -14,15 +15,18 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ModBlocks {
 
+  public static final BaseBlock darkmattercluster = new DarkMatterCluster();
   public static final BaseBlock voidstone = new Voidstone();
   public static final BaseBlock infused_voidstone = new InfusedVoidstone();
 
   public static void registerBlocks() {
+    GameRegistry.registerBlock(darkmattercluster, Ref.BlockID.DARKMATTERCLUSTER);
     GameRegistry.registerBlock(voidstone, Ref.BlockID.VOIDSTONE);
     GameRegistry.registerBlock(infused_voidstone, Ref.BlockID.INFUSED_VOIDSTONE);
   }
 
   public static void registerRenders() {
+    registerRender(darkmattercluster);
     registerRender(voidstone);
     registerRender(infused_voidstone);
   }

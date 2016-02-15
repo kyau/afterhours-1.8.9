@@ -7,6 +7,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+/*
+ * ItemHelper.java
+ * Source: Equivalent Exchange 3 by Pahimar
+ * License: GPLv3
+ * 
+ */
 public class ItemHelper {
 
   public static ItemStack cloneItemStack(ItemStack stack, int stackSize) {

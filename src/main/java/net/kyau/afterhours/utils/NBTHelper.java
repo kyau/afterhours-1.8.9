@@ -7,6 +7,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
+/*
+ * LogHelper.java
+ * Source: Equivalent Exchange 3 by Pahimar
+ * License: GPLv3
+ *
+ * Contains Modifications by: Kyau
+ */
 public class NBTHelper {
 
   public static void clearStatefulNBTTags(ItemStack itemStack) {

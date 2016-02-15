@@ -19,6 +19,12 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
+/*
+ * ChatUtil.java
+ * Source: Blood Magic: AlchemicalWizardry by WayofTime
+ * License: Creative Commons Attribution 4.0 International
+ * 
+ */
 public class ChatUtil {
 
   private static final int DELETION_ID = 4201337;

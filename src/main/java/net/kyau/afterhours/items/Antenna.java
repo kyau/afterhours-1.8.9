@@ -2,12 +2,9 @@ package net.kyau.afterhours.items;
 
 import java.util.List;
 
-import net.kyau.afterhours.dimension.TeleporterVoid;
 import net.kyau.afterhours.references.Ref;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -25,13 +22,6 @@ public class Antenna extends BaseItem {
 
   @Override
   public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-    if (!world.isRemote) {
-      EntityPlayerMP playerMP = (EntityPlayerMP) player;
-      if (playerMP.dimension != 5) {
-        MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension(playerMP, 5, new TeleporterVoid(playerMP.mcServer.worldServerForDimension(5)));
-      }
-      player.setPositionAndUpdate(0, 128, 0);
-    }
     return super.onItemRightClick(stack, world, player);
   }
 

@@ -4,6 +4,7 @@ public class Ref {
 
   public static final class BlockID {
 
+    public static final String DARKMATTERCLUSTER = "darkmattercluster";
     public static final String VOIDSTONE = "voidstone";
     public static final String INFUSED_VOIDSTONE = "infused_voidstone";
   }
@@ -11,8 +12,13 @@ public class Ref {
   public static final class ItemID {
 
     public static final String ANTENNA = "antenna";
+    public static final String DARKMATTER = "darkmatter";
+    public static final String DARKMATTER_SWORD = "darkmatter_sword";
     public static final String DOUGH = "dough";
     public static final String RAWHIDE = "rawhide";
+    public static final String SINGULARITY = "singularity";
+    public static final String STABLECORE = "stablecore";
+    public static final String UNSTABLECORE = "unstablecore";
     public static final String VOIDCRYSTAL = "voidcrystal";
     public static final String VOIDJOURNAL = "voidjournal";
     public static final String VOIDPEARL = "voidpearl";
@@ -57,7 +63,7 @@ public class Ref {
   public static final class Dimension {
 
     public static final int DIM = 5;
-    public static final int BIOMEID = 250;
+    public static final int BIOMEID = 222;
     public static final String INTERNAL_NAME = "void";
   }
 }

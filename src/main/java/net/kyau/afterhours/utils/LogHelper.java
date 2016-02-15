@@ -9,6 +9,12 @@ import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 import org.apache.logging.log4j.message.Message;
 
+/*
+ * LogHelper.java
+ * Source: Equivalent Exchange 3 by Pahimar
+ * License: GPLv3
+ * 
+ */
 public class LogHelper {
 
   public static final Marker MOD_MARKER = MarkerManager.getMarker(ModInfo.MOD_ID);

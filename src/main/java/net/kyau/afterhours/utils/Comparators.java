@@ -6,6 +6,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
+/*
+ * Comparators.java
+ * Source: Equivalent Exchange 3 by Pahimar
+ * License: GPLv3
+ * 
+ */
 public class Comparators {
 
   public static Comparator<String> stringComparator = new Comparator<String>() {
