@@ -126,4 +126,19 @@ public class ItemHelper {
     NBTHelper.setString(stack, Ref.NBT.OWNER, player.getDisplayNameString());
   }
 
+  public static String formatCooldown(long time) {
+    long hours = time / 3600;
+    long minutes = (time % 3600) / 60;
+    long seconds = time % 60;
+    String currentCooldown = "";
+    if (hours > 0) {
+      currentCooldown = String.format("%dh %dm %ds", hours, minutes, seconds);
+    } else if (minutes > 0) {
+      currentCooldown = String.format("%dm %ds", minutes, seconds);
+    } else {
+      currentCooldown = String.format("%ds", seconds);
+    }
+    return currentCooldown;
+  }
+
 }

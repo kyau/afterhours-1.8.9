@@ -1,8 +1,8 @@
 package net.kyau.afterhours.client.gui;
 
-import net.kyau.afterhours.inventory.ContainerVRD;
-import net.kyau.afterhours.inventory.vrd.InventoryVRDMain;
-import net.kyau.afterhours.inventory.vrd.InventoryVRDVoid;
+import net.kyau.afterhours.inventory.ContainerQRD;
+import net.kyau.afterhours.inventory.qrd.InventoryQRDMain;
+import net.kyau.afterhours.inventory.qrd.InventoryQRDVoid;
 import net.kyau.afterhours.references.ModInfo;
 import net.kyau.afterhours.references.Ref;
 import net.kyau.afterhours.utils.NBTHelper;
@@ -14,22 +14,22 @@ import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
-public class GuiVRD extends GuiContainer {
+public class GuiQRD extends GuiContainer {
 
   private float xSize_lo;
   protected int ySize = 233;
   private float ySize_lo;
-  private static final ResourceLocation iconLocation = new ResourceLocation(ModInfo.MOD_ID, "textures/gui/vrd1.png");
+  private static final ResourceLocation iconLocation = new ResourceLocation(ModInfo.MOD_ID, "textures/gui/qrd.png");
   private final ItemStack parentItem;
-  private final InventoryVRDMain inventoryVRDMain;
-  private final InventoryVRDVoid inventoryVRDVoid;
+  private final InventoryQRDMain inventoryQRDMain;
+  private final InventoryQRDVoid inventoryQRDVoid;
 
-  public GuiVRD(EntityPlayer player, InventoryVRDMain inventoryVRDMain, InventoryVRDVoid inventoryVRDVoid) {
-    super(new ContainerVRD(player, inventoryVRDMain, inventoryVRDVoid));
+  public GuiQRD(EntityPlayer player, InventoryQRDMain inventoryQRDMain, InventoryQRDVoid inventoryQRDVoid) {
+    super(new ContainerQRD(player, inventoryQRDMain, inventoryQRDVoid));
     // this.inventory = containerItem.inventory;
-    this.parentItem = inventoryVRDMain.parentItem;
-    this.inventoryVRDMain = inventoryVRDMain;
-    this.inventoryVRDVoid = inventoryVRDVoid;
+    this.parentItem = inventoryQRDMain.parentItem;
+    this.inventoryQRDMain = inventoryQRDMain;
+    this.inventoryQRDVoid = inventoryQRDVoid;
   }
 
   /**
@@ -45,13 +45,13 @@ public class GuiVRD extends GuiContainer {
    * Draw the foreground layer for the GuiContainer (everything in front of the items)
    */
   protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-    String vrdMainName = this.inventoryVRDMain.hasCustomName() ? this.inventoryVRDMain.getName() : this.inventoryVRDMain.getName();
-    String vrdVoidName = this.inventoryVRDVoid.hasCustomName() ? this.inventoryVRDVoid.getName() : this.inventoryVRDVoid.getName();
+    String qrdMainName = this.inventoryQRDMain.hasCustomName() ? this.inventoryQRDMain.getName() : this.inventoryQRDMain.getName();
+    String qrdVoidName = this.inventoryQRDVoid.hasCustomName() ? this.inventoryQRDVoid.getName() : this.inventoryQRDVoid.getName();
     String inventoryName = StatCollector.translateToLocal(Ref.Containers.INVENTORY);
-    super.fontRendererObj.drawString(vrdMainName, 8, this.ySize - 262, 0x404040);
-    super.fontRendererObj.drawString(vrdVoidName, 128, 87, 0x404040);
+    super.fontRendererObj.drawString(qrdMainName, 8, this.ySize - 262, 0x404040);
+    super.fontRendererObj.drawString(qrdVoidName, 128, 87, 0x404040);
     super.fontRendererObj.drawString(inventoryName, 8, this.ySize - 128, 0x404040);
-    if (this.inventoryVRDVoid.voidSync) {
+    if (this.inventoryQRDVoid.quantumSync) {
       super.fontRendererObj.drawString(Ref.Containers.VOID_SYNC_TRUE, 46, 87, 0x008000);
     } else {
       super.fontRendererObj.drawString(Ref.Containers.VOID_SYNC_FALSE, 46, 87, 0x800000);
@@ -77,8 +77,8 @@ public class GuiVRD extends GuiContainer {
     if (mc.thePlayer != null) {
       for (ItemStack itemStack : mc.thePlayer.inventory.mainInventory) {
         if (itemStack != null) {
-          if (NBTHelper.hasTag(itemStack, Ref.NBT.VRD_GUI_OPEN)) {
-            NBTHelper.removeTag(itemStack, Ref.NBT.VRD_GUI_OPEN);
+          if (NBTHelper.hasTag(itemStack, Ref.NBT.QRD_GUI_OPEN)) {
+            NBTHelper.removeTag(itemStack, Ref.NBT.QRD_GUI_OPEN);
           }
         }
       }

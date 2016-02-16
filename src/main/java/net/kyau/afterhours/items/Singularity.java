@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -31,6 +32,7 @@ public class Singularity extends BaseItem {
         MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension(playerMP, 5, new TeleporterVoid(playerMP.mcServer.worldServerForDimension(5)));
       }
       player.setPositionAndUpdate(0, 128, 0);
+      MinecraftServer.getServer().worldServerForDimension(playerMP.dimension).playSoundEffect(player.posX, player.posY, player.posZ, "afterhours:singularity", 1.0F, 1.0F);
     }
     return super.onItemRightClick(stack, world, player);
   }
@@ -48,7 +50,7 @@ public class Singularity extends BaseItem {
       tooltip.add(EnumChatFormatting.GRAY + "seems to glow with an un-natural");
       tooltip.add(EnumChatFormatting.GRAY + "aura.");
     } else {
-      tooltip.add(EnumChatFormatting.GRAY + "Hold " + EnumChatFormatting.WHITE + "SHIFT" + EnumChatFormatting.GRAY + " for more information.");
+      tooltip.add(StatCollector.translateToLocal(Ref.Translation.MORE_INFORMATION));
     }
     super.addInformation(stack, player, tooltip, advanced);
   }

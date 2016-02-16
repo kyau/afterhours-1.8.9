@@ -20,44 +20,48 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.input.Keyboard;
 
-public class VRD extends BaseItem {
+public class QRD extends BaseItem {
 
-  public VRD() {
+  public QRD() {
     super();
-    this.setUnlocalizedName(Ref.ItemID.VRD);
+    this.setUnlocalizedName(Ref.ItemID.QRD);
     this.maxStackSize = 1;
   }
 
   @Override
   public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-    // Set an Owner on the VRD, if one doesn't exist already
+    // Set an Owner, if one doesn't exist already
     if (!ItemHelper.hasOwnerUUID(stack)) {
       ItemHelper.setOwner(stack, player);
       if (!world.isRemote)
-        ChatUtil.sendNoSpam(player, new ChatComponentTranslation("afterhours.msg.bound"));
+        ChatUtil.sendNoSpam(player, new ChatComponentTranslation(Ref.Translation.IMPRINT_SUCCESS));
     }
-    // Set a UUID on the VRD, if one doesn't exist already
+    // Set a UUID, if one doesn't exist already
     if (!NBTHelper.hasUUID(stack)) {
       NBTHelper.setUUID(stack);
     }
+    final String owner = ItemHelper.getOwnerName(stack);
     if (!world.isRemote) {
       if (player.isSneaking()) {
-        if (ItemHelper.getOwnerName(stack).equals(player.getDisplayNameString())) {
+        if (owner.equals(player.getDisplayNameString())) {
           InventoryEnderChest invEnderChest = player.getInventoryEnderChest();
           if (invEnderChest != null)
             player.displayGUIChest(invEnderChest);
         }
       } else {
-        if (ItemHelper.getOwnerName(stack).equals(player.getDisplayNameString())) {
+        if (owner.equals(player.getDisplayNameString())) {
           // TODO Do a scan of inventory and if we find a bag with the same UUID, change it's UUID
-          NBTHelper.setBoolean(stack, Ref.NBT.VRD_GUI_OPEN, true);
+          NBTHelper.setBoolean(stack, Ref.NBT.QRD_GUI_OPEN, true);
           player.openGui(AfterHours.instance, AfterHours.GUI_VRD, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
           return super.onItemRightClick(stack, world, player);
         }
       }
     } else {
-      if (!(ItemHelper.getOwnerName(stack).equals(player.getDisplayNameString()))) {
+      // invalid ownership
+      if (!(owner.equals(player.getDisplayNameString()))) {
+        ChatUtil.sendNoSpam(player, Ref.Translation.IMPRINT_SCAN_FAILED);
         player.playSound("afterhours:error", 0.5F, 1.0F);
+        return super.onItemRightClick(stack, world, player);
       }
     }
     return super.onItemRightClick(stack, world, player);
@@ -68,28 +72,29 @@ public class VRD extends BaseItem {
   public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
     // Item Stats
     if (ItemHelper.hasOwner(stack)) {
-      tooltip.add(EnumChatFormatting.DARK_PURPLE + Ref.ItemStat.BOUND);
+      tooltip.add(StatCollector.translateToLocal(Ref.Translation.IMPRINTED));
     } else {
-      tooltip.add(StatCollector.translateToLocal("afterhours.msg.prebound").trim());
+      tooltip.add(StatCollector.translateToLocal(Ref.Translation.PREIMPRINT));
     }
     // Description
     if (Keyboard.isKeyDown(0x2A) || Keyboard.isKeyDown(0x36)) {
-      tooltip.add(EnumChatFormatting.GRAY + "The Void Resonance Device is");
-      tooltip.add(EnumChatFormatting.GRAY + "used to directly commune with");
-      tooltip.add(EnumChatFormatting.GRAY + "the void.");
+      tooltip.add(EnumChatFormatting.GRAY + "This device uses quantum resonance");
+      tooltip.add(EnumChatFormatting.GRAY + "to shift matter into qubits to digitally");
+      tooltip.add(EnumChatFormatting.GRAY + "store them.");
+      tooltip.add(EnumChatFormatting.BLUE + "Upgrades Available!");
     } else {
-      tooltip.add(EnumChatFormatting.GRAY + "Hold " + EnumChatFormatting.WHITE + "SHIFT" + EnumChatFormatting.GRAY + " for more information.");
+      tooltip.add(StatCollector.translateToLocal(Ref.Translation.MORE_INFORMATION));
     }
     // Owner information
     if (ItemHelper.hasOwner(stack)) {
-      String owner = ItemHelper.getOwnerName(stack);
+      final String owner = ItemHelper.getOwnerName(stack);
       if (owner.equals(player.getDisplayNameString())) {
-        tooltip.add(EnumChatFormatting.GREEN + "Owner: " + owner);
+        tooltip.add(EnumChatFormatting.GREEN + StatCollector.translateToLocal(Ref.Translation.OWNER) + " " + owner);
       } else {
         if (ModInfo.DEBUG) {
-          tooltip.add(EnumChatFormatting.RED + "Owner: " + owner);
+          tooltip.add(EnumChatFormatting.RED + StatCollector.translateToLocal(Ref.Translation.OWNER) + " " + owner);
         } else {
-          tooltip.add(EnumChatFormatting.RED + "Owner: " + EnumChatFormatting.OBFUSCATED + owner);
+          tooltip.add(EnumChatFormatting.RED + StatCollector.translateToLocal(Ref.Translation.OWNER) + " " + EnumChatFormatting.OBFUSCATED + owner);
         }
       }
     }

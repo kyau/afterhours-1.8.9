@@ -1,33 +1,35 @@
-package net.kyau.afterhours.inventory.vrd;
+package net.kyau.afterhours.inventory.qrd;
 
-import net.kyau.afterhours.items.VRD;
-import net.kyau.afterhours.items.VoidWell;
+import net.kyau.afterhours.items.QRD;
+import net.kyau.afterhours.items.WormholeManipulator;
 import net.kyau.afterhours.references.Ref;
 import net.kyau.afterhours.utils.ChatUtil;
 import net.kyau.afterhours.utils.INBTTaggable;
+import net.kyau.afterhours.utils.ItemHelper;
+import net.kyau.afterhours.utils.LogHelper;
+import net.kyau.afterhours.utils.NBTHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StatCollector;
 
-public class InventoryVRDVoid implements IInventory, INBTTaggable {
+public class InventoryQRDVoid implements IInventory, INBTTaggable {
 
-  public static boolean voidSync;
+  public static boolean quantumSync;
   public ItemStack parentItem;
   protected ItemStack[] inventory;
   protected String customName;
   public final static int INV_SIZE = 1;
-  private ItemStack[] inventoryVRDMain;
+  private ItemStack[] inventoryQRDMain;
   private EntityPlayer player;
 
-  public InventoryVRDVoid(ItemStack stack, EntityPlayer player) {
-    voidSync = false;
+  public InventoryQRDVoid(ItemStack stack, EntityPlayer player) {
+    quantumSync = false;
     parentItem = stack;
     this.player = player;
     inventory = new ItemStack[this.getSizeInventory()];
@@ -36,7 +38,7 @@ public class InventoryVRDVoid implements IInventory, INBTTaggable {
 
   @Override
   public String getName() {
-    return this.hasCustomName() ? this.getCustomName() : StatCollector.translateToLocal(Ref.Containers.VRD_VOID);
+    return this.hasCustomName() ? this.getCustomName() : StatCollector.translateToLocal(Ref.Containers.QRD_VOID);
   }
 
   @Override
@@ -96,25 +98,28 @@ public class InventoryVRDVoid implements IInventory, INBTTaggable {
 
   @Override
   public void setInventorySlotContents(int index, ItemStack stack) {
-    InventoryVRDMain vrdMainClass = new InventoryVRDMain(parentItem);
-    this.inventoryVRDMain = vrdMainClass.getInventory();
-    if (inventoryVRDMain != null) {
-      for (int currentIndex = 0; currentIndex < inventoryVRDMain.length; ++currentIndex) {
-        if (inventoryVRDMain[currentIndex] != null && inventoryVRDMain[currentIndex].getItem() instanceof VoidWell) {
-          this.voidSync = true;
-          ItemStack voidWell = inventoryVRDMain[currentIndex];
-          String[] energy = null;
-          if (voidWell.hasTagCompound()) {
-            // LogHelper.info("Void Well, with Owner!");
-            String string = voidWell.getTagCompound().getString("Energy");
-            if (string.contains("#")) {
-              energy = string.split("#");
-              if (Integer.parseInt(energy[0]) < Integer.parseInt(energy[1])) {
+    InventoryQRDMain qrdMainClass = new InventoryQRDMain(parentItem);
+    this.inventoryQRDMain = qrdMainClass.getInventory();
+    if (inventoryQRDMain != null) {
+      for (int currentIndex = 0; currentIndex < inventoryQRDMain.length; ++currentIndex) {
+        if (inventoryQRDMain[currentIndex] != null && inventoryQRDMain[currentIndex].getItem() instanceof WormholeManipulator) {
+          this.quantumSync = true;
+          ItemStack voidWell = inventoryQRDMain[currentIndex];
+          if (ItemHelper.hasOwner(voidWell)) {
+            if (NBTHelper.hasTag(voidWell, Ref.NBT.ENERGY_LEVEL) && NBTHelper.hasTag(voidWell, Ref.NBT.ENERGY_MAX)) {
+              LogHelper.info("Void Well, with Energy!");
+              int[] energy = NBTHelper.getEnergyLevels(voidWell);
+              // String string = voidWell.getTagCompound().getString("Energy");
+              // if (string.contains("#")) {
+              // energy = string.split("#");
+              // if (Integer.parseInt(energy[0]) < Integer.parseInt(energy[1])) {
+              if (energy[0] < energy[1]) {
                 if (stack != null && stack.stackSize > 62) {
-                  int newEnergy = Integer.parseInt(energy[0]) + 2;
-                  voidWell.setTagInfo("Energy", new NBTTagString(newEnergy + "#" + energy[1]));
-                  ChatUtil.sendNoSpam(player, EnumChatFormatting.GREEN + "Void Energy: " + EnumChatFormatting.GRAY + newEnergy + "/" + energy[1]);
-                  vrdMainClass.setInventorySlotContents(currentIndex, voidWell);
+                  int newEnergy = energy[0] + 2;
+                  // voidWell.setTagInfo("Energy", new NBTTagString(newEnergy + "#" + energy[1]));
+                  NBTHelper.setEnergyLevels(voidWell, newEnergy, energy[1]);
+                  ChatUtil.sendNoSpam(player, EnumChatFormatting.GREEN + StatCollector.translateToLocal(Ref.Translation.ENERGY) + " " + EnumChatFormatting.GRAY + newEnergy + "/" + energy[1]);
+                  qrdMainClass.setInventorySlotContents(currentIndex, voidWell);
                 }
               }
             }
@@ -157,7 +162,7 @@ public class InventoryVRDVoid implements IInventory, INBTTaggable {
 
   @Override
   public boolean isItemValidForSlot(int index, ItemStack stack) {
-    return !(stack.getItem() instanceof VRD);
+    return !(stack.getItem() instanceof QRD);
   }
 
   @Override

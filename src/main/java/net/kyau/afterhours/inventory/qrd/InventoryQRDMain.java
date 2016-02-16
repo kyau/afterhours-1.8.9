@@ -1,8 +1,8 @@
-package net.kyau.afterhours.inventory.vrd;
+package net.kyau.afterhours.inventory.qrd;
 
 import java.util.UUID;
 
-import net.kyau.afterhours.items.VRD;
+import net.kyau.afterhours.items.QRD;
 import net.kyau.afterhours.references.Ref;
 import net.kyau.afterhours.utils.INBTTaggable;
 import net.kyau.afterhours.utils.NBTHelper;
@@ -16,14 +16,14 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StatCollector;
 
-public class InventoryVRDMain implements IInventory, INBTTaggable {
+public class InventoryQRDMain implements IInventory, INBTTaggable {
 
   public final static int INV_SIZE = 9 * 5 + 3;
   public ItemStack parentItem;
   protected ItemStack[] inventory;
   protected String customName;
 
-  public InventoryVRDMain(ItemStack stack) {
+  public InventoryQRDMain(ItemStack stack) {
     parentItem = stack;
     inventory = new ItemStack[this.getSizeInventory()];
     readFromNBT(stack.getTagCompound());
@@ -35,7 +35,7 @@ public class InventoryVRDMain implements IInventory, INBTTaggable {
 
   @Override
   public String getName() {
-    return this.hasCustomName() ? this.getCustomName() : StatCollector.translateToLocal(Ref.Containers.VRD_MAIN);
+    return this.hasCustomName() ? this.getCustomName() : StatCollector.translateToLocal(Ref.Containers.QRD_MAIN);
   }
 
   @Override
@@ -121,7 +121,7 @@ public class InventoryVRDMain implements IInventory, INBTTaggable {
 
   @Override
   public boolean isItemValidForSlot(int index, ItemStack stack) {
-    return !(stack.getItem() instanceof VRD);
+    return !(stack.getItem() instanceof QRD);
   }
 
   @Override
@@ -231,6 +231,6 @@ public class InventoryVRDMain implements IInventory, INBTTaggable {
 
   @Override
   public String getTagLabel() {
-    return "InventoryVRDMain";
+    return "InventoryQRDMain";
   }
 }

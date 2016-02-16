@@ -133,7 +133,7 @@ public class GuiHUD extends Gui {
     }
 
     if ((minecraft.inGameHasFocus || (minecraft.currentScreen != null && (minecraft.currentScreen instanceof GuiChat))) && !minecraft.gameSettings.showDebugInfo && !minecraft.ingameGUI.getChatGUI().getChatOpen()) {
-      int countVRD = InventoryHandler.countItems(player, ModItems.vrd);
+      int countVRD = InventoryHandler.countItems(player, ModItems.qrd);
       if (countVRD > 0) {
         setClientPos();
 

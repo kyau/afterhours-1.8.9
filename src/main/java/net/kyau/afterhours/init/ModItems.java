@@ -7,14 +7,15 @@ import net.kyau.afterhours.AfterHours;
 import net.kyau.afterhours.items.Antenna;
 import net.kyau.afterhours.items.BaseItem;
 import net.kyau.afterhours.items.DarkMatter;
+import net.kyau.afterhours.items.QRD;
+import net.kyau.afterhours.items.QuantumRod;
 import net.kyau.afterhours.items.Singularity;
 import net.kyau.afterhours.items.StableCore;
 import net.kyau.afterhours.items.UnstableCore;
-import net.kyau.afterhours.items.VRD;
 import net.kyau.afterhours.items.VoidCrystal;
 import net.kyau.afterhours.items.VoidJournal;
 import net.kyau.afterhours.items.VoidPearl;
-import net.kyau.afterhours.items.VoidWell;
+import net.kyau.afterhours.items.WormholeManipulator;
 import net.kyau.afterhours.items.darkmatter.DarkMatterAxe;
 import net.kyau.afterhours.items.darkmatter.DarkMatterPickaxe;
 import net.kyau.afterhours.items.darkmatter.DarkMatterShovel;
@@ -31,6 +32,8 @@ public class ModItems {
 
   public static BaseItem antenna;
   public static BaseItem darkmatter;
+  public static BaseItem qrd;
+  public static BaseItem quantumrod;
   public static BaseItem singularity;
   public static BaseItem stablecore;
   public static BaseItem unstablecore;
@@ -38,7 +41,6 @@ public class ModItems {
   public static BaseItem voidjournal;
   public static BaseItem voidpearl;
   public static BaseItem voidwell;
-  public static BaseItem vrd;
 
   // dark matter gear
   public static BaseItem darkmatter_sword;
@@ -50,14 +52,15 @@ public class ModItems {
 
     voidjournal = new VoidJournal().register(Ref.ItemID.VOIDJOURNAL);
     antenna = new Antenna().register(Ref.ItemID.ANTENNA);
+    qrd = new QRD().register(Ref.ItemID.QRD);
     darkmatter = new DarkMatter().register(Ref.ItemID.DARKMATTER);
+    quantumrod = new QuantumRod().register(Ref.ItemID.QUANTUMROD);
     singularity = new Singularity().register(Ref.ItemID.SINGULARITY);
     stablecore = new StableCore().register(Ref.ItemID.STABLECORE);
     unstablecore = new UnstableCore().register(Ref.ItemID.UNSTABLECORE);
     voidcrystal = new VoidCrystal().register(Ref.ItemID.VOIDCRYSTAL);
     voidpearl = new VoidPearl().register(Ref.ItemID.VOIDPEARL);
-    voidwell = new VoidWell().register(Ref.ItemID.VOIDWELL);
-    vrd = new VRD().register(Ref.ItemID.VRD);
+    voidwell = new WormholeManipulator().register(Ref.ItemID.WORMHOLE_MANIPULATOR);
 
     // dark matter gear
     darkmatter_sword = new DarkMatterSword(AfterHours.darkmatter).register(Ref.ItemID.DARKMATTER_SWORD);

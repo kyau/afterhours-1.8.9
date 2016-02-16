@@ -55,10 +55,13 @@ public class RecipeManager {
     GameRegistry.addSmelting(Blocks.end_stone, new ItemStack(ModBlocks.voidstone, 1), 1F);
     GameRegistry.addRecipe(new ItemStack(ModBlocks.infused_voidstone, 1), "ggg", "gvg", "ggg", 'g', Items.glowstone_dust, 'v', new ItemStack(ModBlocks.voidstone, 1, 0));
     GameRegistry.addRecipe(new ItemStack(ModItems.voidwell, 1), "mdm", "iui", "mdm", 'u', ModItems.stablecore, 'd', Items.diamond, 'i', new ItemStack(ModBlocks.infused_voidstone, 1, 0), 'm', ModItems.darkmatter);
-    GameRegistry.addRecipe(new ItemStack(ModItems.vrd, 1), "sas", "ece", "ses", 's', new ItemStack(Blocks.stone_slab, 1, 0), 'a', ModItems.antenna, 's', Items.stick, 'c', Blocks.ender_chest, 'e', ModItems.voidcrystal);
+    GameRegistry.addRecipe(new ItemStack(ModItems.qrd, 1), "sas", "ece", "ses", 's', new ItemStack(Blocks.stone_slab, 1, 0), 'a', ModItems.antenna, 's', Items.stick, 'c', Blocks.ender_chest, 'e', ModItems.voidcrystal);
 
     // dark matter gear
-    GameRegistry.addRecipe(new ItemStack(ModItems.darkmatter_sword), " d ", " d ", " s ", 'd', ModItems.darkmatter, 's', Items.stick);
+    GameRegistry.addRecipe(new ItemStack(ModItems.darkmatter_sword), " d ", " d ", " q ", 'd', ModItems.darkmatter, 'q', ModItems.quantumrod);
+    GameRegistry.addRecipe(new ItemStack(ModItems.darkmatter_axe), "dd ", "dq ", " q ", 'd', ModItems.darkmatter, 'q', ModItems.quantumrod);
+    GameRegistry.addRecipe(new ItemStack(ModItems.darkmatter_pickaxe), "ddd", " q ", " q ", 'd', ModItems.darkmatter, 'q', ModItems.quantumrod);
+    GameRegistry.addRecipe(new ItemStack(ModItems.darkmatter_shovel), " d ", " q ", " q ", 'd', ModItems.darkmatter, 'q', ModItems.quantumrod);
     // dark matter repair recipes
     CraftingManager.getInstance().getRecipeList().add(new RecipeRepair(new ItemStack(ModItems.darkmatter_sword), new ItemStack(ModItems.darkmatter), (int) Math.round(AfterHours.darkmatter.getMaxUses() / 4.5)));
     CraftingManager.getInstance().getRecipeList().add(new RecipeRepair(new ItemStack(ModItems.darkmatter_shovel), new ItemStack(ModItems.darkmatter), (int) Math.round(AfterHours.darkmatter.getMaxUses() / 4.5)));

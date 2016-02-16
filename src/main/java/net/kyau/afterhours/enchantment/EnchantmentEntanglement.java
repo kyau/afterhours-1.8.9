@@ -16,7 +16,7 @@ public class EnchantmentEntanglement extends Enchantment {
 
   @Override
   public boolean canApply(ItemStack stack) {
-    return true;
+    return false;
   }
 
   @Override

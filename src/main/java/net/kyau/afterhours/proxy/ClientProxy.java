@@ -2,7 +2,7 @@ package net.kyau.afterhours.proxy;
 
 import net.kyau.afterhours.client.gui.GuiHUD;
 import net.kyau.afterhours.client.gui.GuiVoidJournal;
-import net.kyau.afterhours.event.ForgeClientEventHandler;
+import net.kyau.afterhours.event.TooltipEventHandler;
 import net.kyau.afterhours.init.ModBlocks;
 import net.kyau.afterhours.init.ModItems;
 import net.kyau.afterhours.init.ModVanilla;
@@ -49,7 +49,7 @@ public class ClientProxy extends CommonProxy {
 
   @Override
   public void registerClientEventHandlers() {
-    MinecraftForge.EVENT_BUS.register(new ForgeClientEventHandler());
+    MinecraftForge.EVENT_BUS.register(new TooltipEventHandler());
   }
 
 }

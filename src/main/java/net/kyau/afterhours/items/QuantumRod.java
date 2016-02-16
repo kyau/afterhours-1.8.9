@@ -13,11 +13,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.input.Keyboard;
 
-public class Antenna extends BaseItem {
+public class QuantumRod extends BaseItem {
 
-  public Antenna() {
+  public QuantumRod() {
     super();
-    this.setUnlocalizedName(Ref.ItemID.ANTENNA);
+    this.setUnlocalizedName(Ref.ItemID.QUANTUMROD);
     this.maxStackSize = 16;
   }
 
@@ -31,9 +31,8 @@ public class Antenna extends BaseItem {
   public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
     // Description
     if (Keyboard.isKeyDown(0x2A) || Keyboard.isKeyDown(0x36)) {
-      tooltip.add(EnumChatFormatting.GRAY + "All devices that connect through the");
-      tooltip.add(EnumChatFormatting.GRAY + "void require an antenna for proper");
-      tooltip.add(EnumChatFormatting.GRAY + "communication.");
+      tooltip.add(EnumChatFormatting.GRAY + "Used to stabalize dark matter in");
+      tooltip.add(EnumChatFormatting.GRAY + "order to harness the material.");
     } else {
       tooltip.add(StatCollector.translateToLocal(Ref.Translation.MORE_INFORMATION));
     }

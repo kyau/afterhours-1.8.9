@@ -1,9 +1,9 @@
 package net.kyau.afterhours.inventory;
 
-import net.kyau.afterhours.inventory.vrd.InventoryVRDMain;
-import net.kyau.afterhours.inventory.vrd.InventoryVRDVoid;
-import net.kyau.afterhours.items.VRD;
-import net.kyau.afterhours.items.VoidWell;
+import net.kyau.afterhours.inventory.qrd.InventoryQRDMain;
+import net.kyau.afterhours.inventory.qrd.InventoryQRDVoid;
+import net.kyau.afterhours.items.QRD;
+import net.kyau.afterhours.items.WormholeManipulator;
 import net.kyau.afterhours.items.VoidPearl;
 import net.kyau.afterhours.references.Ref;
 import net.kyau.afterhours.utils.NBTHelper;
@@ -15,23 +15,23 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class ContainerVRD extends Container {
+public class ContainerQRD extends Container {
 
-  public final InventoryVRDMain inventoryVRDMain;
-  public final InventoryVRDVoid inventoryVRDVoid;
-  private static final int INV_START = InventoryVRDMain.INV_SIZE, INV_END = INV_START + 26, HOTBAR_START = INV_END + 1,
+  public final InventoryQRDMain inventoryQRDMain;
+  public final InventoryQRDVoid inventoryQRDVoid;
+  private static final int INV_START = InventoryQRDMain.INV_SIZE, INV_END = INV_START + 26, HOTBAR_START = INV_END + 1,
       HOTBAR_END = HOTBAR_START + 8;
   protected final int PLAYER_INVENTORY_ROWS = 3;
   protected final int PLAYER_INVENTORY_COLUMNS = 9;
-  protected final int vrdInventoryRows = Ref.Containers.VRD_MAIN_ROWS;
-  protected final int vrdInventoryColumns = Ref.Containers.VRD_MAIN_COLS;
+  protected final int qrdInventoryRows = Ref.Containers.QRD_MAIN_ROWS;
+  protected final int qrdInventoryColumns = Ref.Containers.QRD_MAIN_COLS;
 
-  public ContainerVRD(EntityPlayer player, InventoryVRDMain inventoryVRDMain, InventoryVRDVoid inventoryVRDVoid) {
-    this.inventoryVRDMain = inventoryVRDMain;
-    this.inventoryVRDVoid = inventoryVRDVoid;
-    for (int vrdRowIndex = 0; vrdRowIndex < vrdInventoryRows; ++vrdRowIndex) {
-      for (int vrdColumnIndex = 0; vrdColumnIndex < vrdInventoryColumns; ++vrdColumnIndex) {
-        this.addSlotToContainer(new SlotVRDMain(this.inventoryVRDMain, vrdColumnIndex + vrdRowIndex * vrdInventoryColumns, 8 + vrdColumnIndex * 18, vrdRowIndex * 18 - 17));
+  public ContainerQRD(EntityPlayer player, InventoryQRDMain inventoryVRDMain, InventoryQRDVoid inventoryVRDVoid) {
+    this.inventoryQRDMain = inventoryVRDMain;
+    this.inventoryQRDVoid = inventoryVRDVoid;
+    for (int qrdRowIndex = 0; qrdRowIndex < qrdInventoryRows; ++qrdRowIndex) {
+      for (int qrdColumnIndex = 0; qrdColumnIndex < qrdInventoryColumns; ++qrdColumnIndex) {
+        this.addSlotToContainer(new SlotQRDMain(this.inventoryQRDMain, qrdColumnIndex + qrdRowIndex * qrdInventoryColumns, 8 + qrdColumnIndex * 18, qrdRowIndex * 18 - 17));
         // LogHelper.info("index: " + (vrdColumnIndex + vrdRowIndex * vrdInventoryColumns));
       }
     }
@@ -44,10 +44,10 @@ public class ContainerVRD extends Container {
     // you followed my advice at the end of the above step, then you
     // could get away with using the vanilla Slot class
     // VOID SLOT
-    this.addSlotToContainer(new SlotVRDMain(this.inventoryVRDVoid, 0, 152, 83));
+    this.addSlotToContainer(new SlotQRDMain(this.inventoryQRDVoid, 0, 152, 83));
     // VOID MOD SLOTS
-    this.addSlotToContainer(new SlotVRDMod1(this.inventoryVRDMain, 45, 8, 83));
-    this.addSlotToContainer(new SlotVRDMod2(this.inventoryVRDMain, 46, 26, 83));
+    this.addSlotToContainer(new SlotQRDMod1(this.inventoryQRDMain, 45, 8, 83));
+    this.addSlotToContainer(new SlotQRDMod2(this.inventoryQRDMain, 46, 26, 83));
     // int tmpX = 0;
     // for (i = 0; i < InventoryVRDMain.INV_SIZE; ++i) {
     // this.addSlotToContainer(new SlotModInv(this.inventoryVRDVoid, i, 8 + tmpX, 83));
@@ -153,8 +153,8 @@ public class ContainerVRD extends Container {
       InventoryPlayer invPlayer = player.inventory;
       for (ItemStack itemStack : invPlayer.mainInventory) {
         if (itemStack != null) {
-          if (NBTHelper.hasTag(itemStack, Ref.NBT.VRD_GUI_OPEN)) {
-            NBTHelper.removeTag(itemStack, Ref.NBT.VRD_GUI_OPEN);
+          if (NBTHelper.hasTag(itemStack, Ref.NBT.QRD_GUI_OPEN)) {
+            NBTHelper.removeTag(itemStack, Ref.NBT.QRD_GUI_OPEN);
           }
         }
       }
@@ -164,12 +164,12 @@ public class ContainerVRD extends Container {
   }
 
   public void saveInventory(EntityPlayer player) {
-    inventoryVRDMain.onGuiSaved(player);
+    inventoryQRDMain.onGuiSaved(player);
   }
 
-  public class SlotVRDMain extends Slot {
+  public class SlotQRDMain extends Slot {
 
-    public SlotVRDMain(IInventory inv, int index, int xPos, int yPos) {
+    public SlotQRDMain(IInventory inv, int index, int xPos, int yPos) {
       super(inv, index, xPos, yPos);
     }
 
@@ -177,14 +177,14 @@ public class ContainerVRD extends Container {
     @Override
     public boolean isItemValid(ItemStack itemstack) {
       // Everything returns true except an instance of our Item
-      return !(itemstack.getItem() instanceof VRD || itemstack.getItem() instanceof VoidPearl || itemstack.getItem() instanceof VoidWell);
+      return !(itemstack.getItem() instanceof QRD || itemstack.getItem() instanceof VoidPearl || itemstack.getItem() instanceof WormholeManipulator);
     }
 
   }
 
-  public class SlotVRDMod1 extends Slot {
+  public class SlotQRDMod1 extends Slot {
 
-    public SlotVRDMod1(IInventory inv, int index, int xPos, int yPos) {
+    public SlotQRDMod1(IInventory inv, int index, int xPos, int yPos) {
       super(inv, index, xPos, yPos);
     }
 
@@ -198,11 +198,11 @@ public class ContainerVRD extends Container {
     }
   }
 
-  public class SlotVRDMod2 extends Slot {
+  public class SlotQRDMod2 extends Slot {
 
     private final int slotIndex;
 
-    public SlotVRDMod2(IInventory inv, int index, int xPos, int yPos) {
+    public SlotQRDMod2(IInventory inv, int index, int xPos, int yPos) {
       super(inv, index, xPos, yPos);
       this.slotIndex = index;
     }
@@ -210,7 +210,7 @@ public class ContainerVRD extends Container {
     @Override
     public boolean isItemValid(ItemStack stack) {
       Item item = stack.getItem();
-      if (item instanceof VoidWell) {
+      if (item instanceof WormholeManipulator) {
         return true;
       }
       return false;
@@ -219,7 +219,7 @@ public class ContainerVRD extends Container {
     @Override
     public void putStack(ItemStack stack) {
       if (stack != null)
-        if (stack.getItem() instanceof VoidWell) {
+        if (stack.getItem() instanceof WormholeManipulator) {
           // TODO: implement client inventory sync
           // inventoryVRDVoid.voidSync = true;
         }
@@ -230,8 +230,8 @@ public class ContainerVRD extends Container {
     @Override
     public void onPickupFromSlot(EntityPlayer playerIn, ItemStack stack) {
       if (stack != null)
-        if (stack.getItem() instanceof VoidWell) {
-          inventoryVRDVoid.voidSync = false;
+        if (stack.getItem() instanceof WormholeManipulator) {
+          inventoryQRDVoid.quantumSync = false;
         }
       this.onSlotChanged();
     }

@@ -19,8 +19,8 @@ public class NBTHelper {
   public static void clearStatefulNBTTags(ItemStack itemStack) {
     if (NBTHelper.hasTag(itemStack, "craftingGuiOpen")) {
       NBTHelper.removeTag(itemStack, "craftingGuiOpen");
-    } else if (NBTHelper.hasTag(itemStack, Ref.NBT.VRD_GUI_OPEN)) {
-      NBTHelper.removeTag(itemStack, Ref.NBT.VRD_GUI_OPEN);
+    } else if (NBTHelper.hasTag(itemStack, Ref.NBT.QRD_GUI_OPEN)) {
+      NBTHelper.removeTag(itemStack, Ref.NBT.QRD_GUI_OPEN);
     }
   }
 
@@ -54,6 +54,24 @@ public class NBTHelper {
     initNBTTagCompound(stack);
 
     setLong(stack, Ref.NBT.LASTUSE, lastUse);
+  }
+
+  public static void setEnergyLevels(ItemStack stack, int current, int max) {
+    initNBTTagCompound(stack);
+
+    setInteger(stack, Ref.NBT.ENERGY_LEVEL, current);
+    setInteger(stack, Ref.NBT.ENERGY_MAX, max);
+  }
+
+  public static int[] getEnergyLevels(ItemStack stack) {
+    initNBTTagCompound(stack);
+
+    if (!stack.getTagCompound().hasKey(Ref.NBT.ENERGY_LEVEL) || !stack.getTagCompound().hasKey(Ref.NBT.ENERGY_MAX)) {
+      LogHelper.error("Trying to retrieve energy levels from an item without Energy!");
+    }
+    return new int[] {
+        getInt(stack, Ref.NBT.ENERGY_LEVEL),
+        getInt(stack, Ref.NBT.ENERGY_MAX) };
   }
 
   /**

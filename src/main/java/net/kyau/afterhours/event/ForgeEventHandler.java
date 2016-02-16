@@ -98,7 +98,7 @@ public class ForgeEventHandler {
       EntityItem entityItem = iterator.next();
       ItemStack stack = entityItem.getEntityItem();
       if (EnchantmentEntanglement.isEntangled(stack)) {
-        if (addToPlayerInventory(event.entityPlayer, stack)) {
+        if (addToInventory(event.entityPlayer, stack, 0)) {
           iterator.remove();
         }
       }
@@ -119,7 +119,7 @@ public class ForgeEventHandler {
     for (int i = 0; i < event.original.inventory.mainInventory.length; i++) {
       ItemStack stack = event.original.inventory.mainInventory[i];
       if (EnchantmentEntanglement.isEntangled(stack)) {
-        if (addToPlayerInventory(event.entityPlayer, stack)) {
+        if (addToInventory(event.entityPlayer, stack, i)) {
           event.original.inventory.mainInventory[i] = null;
         }
       }
@@ -127,14 +127,14 @@ public class ForgeEventHandler {
     for (int i = 0; i < event.original.inventory.armorInventory.length; i++) {
       ItemStack stack = event.original.inventory.armorInventory[i];
       if (EnchantmentEntanglement.isEntangled(stack)) {
-        if (addToPlayerInventory(event.entityPlayer, stack)) {
+        if (addToInventory(event.entityPlayer, stack, i)) {
           event.original.inventory.armorInventory[i] = null;
         }
       }
     }
   }
 
-  private boolean addToPlayerInventory(EntityPlayer entityPlayer, ItemStack stack) {
+  private boolean addToInventory(EntityPlayer entityPlayer, ItemStack stack, int id) {
     if (stack == null || entityPlayer == null) {
       return false;
     }
@@ -148,10 +148,15 @@ public class ForgeEventHandler {
     }
 
     InventoryPlayer inv = entityPlayer.inventory;
-    for (int i = 0; i < inv.mainInventory.length; i++) {
-      if (inv.mainInventory[i] == null) {
-        inv.mainInventory[i] = stack.copy();
-        return true;
+    if (inv.mainInventory[id] == null) {
+      inv.mainInventory[id] = stack.copy();
+      return true;
+    } else {
+      for (int i = 0; i < inv.mainInventory.length; i++) {
+        if (inv.mainInventory[i] == null) {
+          inv.mainInventory[i] = stack.copy();
+          return true;
+        }
       }
     }
 

@@ -30,10 +30,7 @@ import org.lwjgl.input.Keyboard;
 
 public class VoidPearl extends BaseItem {
 
-  // int cooldown = 1200; // 1 minute
-  // int cooldown = 36000; // 30 minutes
-  // int cooldown = 72000; // 1 hour
-  public static int cooldown = 12000; // 10 minutes
+  public static int cooldown = Ref.ItemCooldown.VOIDPEARL;
 
   public VoidPearl() {
     super();
@@ -43,38 +40,46 @@ public class VoidPearl extends BaseItem {
 
   @Override
   public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-    // Set an Owner on the Void Pearl, if one doesn't exist already
+    boolean firstUse = false;
+    // Set an Owner, if one doesn't exist already
     if (!ItemHelper.hasOwnerUUID(stack)) {
       ItemHelper.setOwner(stack, player);
       if (!world.isRemote)
-        ChatUtil.sendNoSpam(player, new ChatComponentTranslation("afterhours.msg.bound"));
+        ChatUtil.sendNoSpam(player, new ChatComponentTranslation(Ref.Translation.IMPRINT_SUCCESS));
+      firstUse = true;
     }
-    // Set a UUID on the Void Pearl, if one doesn't exist already
+    // Set a UUID, if one doesn't exist already
     if (!NBTHelper.hasUUID(stack)) {
       NBTHelper.setUUID(stack);
     }
-    // Set a LastUse on the Void Pearl, if one doesn't exist already
+    // Set a LastUse, if one doesn't exist already
     if (!NBTHelper.hasTag(stack, Ref.NBT.LASTUSE)) {
       NBTHelper.setLastUse(stack, player.worldObj.getTotalWorldTime() - (cooldown + 10));
     }
 
+    if (firstUse)
+      return super.onItemRightClick(stack, world, player);
+
     long ticksSinceLastUse = player.worldObj.getTotalWorldTime() - NBTHelper.getLong(stack, Ref.NBT.LASTUSE);
 
+    final String owner = ItemHelper.getOwnerName(stack);
     if (!world.isRemote) {
-      if (!ItemHelper.getOwnerName(stack).equals(player.getDisplayNameString())) {
+      // invalid ownership
+      if (!owner.equals(player.getDisplayNameString())) {
+        ChatUtil.sendNoSpam(player, Ref.Translation.IMPRINT_SCAN_FAILED);
         player.playSound("afterhours:error", 0.5F, 1.0F);
         return super.onItemRightClick(stack, world, player);
       }
       if (ModInfo.DEBUG)
         LogHelper.info("> DEBUG: ticksSinceLastUse: " + ticksSinceLastUse + "." + cooldown);
       if (ticksSinceLastUse > cooldown || ticksSinceLastUse < 0) {
-        // get the overworld world object
+        // Get the Overworld world object
         DimensionManager dm = new DimensionManager();
         World overworld = dm.getWorld(0);
         BlockPos playerHome = player.getBedLocation(0);
         boolean spawnpoint = false;
 
-        // if player has no bed location, set to warp location to server spawn
+        // If player has no bed, set the destination to server spawn
         if (playerHome == null) {
           spawnpoint = true;
           playerHome = overworld.getSpawnPoint();
@@ -84,7 +89,7 @@ public class VoidPearl extends BaseItem {
         Block block = (state == null) ? null : overworld.getBlockState(playerHome).getBlock();
         if (block != null && !spawnpoint) {
           if (block.equals(Blocks.bed) || block.isBed(overworld, playerHome, player)) {
-            // reposition player according to where bed wants the player to spawn
+            // Reposition player according to where bed wants the player to spawn
             playerHome = block.getBedSpawnPosition(overworld, playerHome, null);
           } else {
             player.addChatMessage(new ChatComponentTranslation("Your bed was missing or obstructed."));
@@ -95,7 +100,7 @@ public class VoidPearl extends BaseItem {
           return super.onItemRightClick(stack, world, player);
         }
 
-        // spawn exists, teleport the player
+        // Destination exists, teleport the player
         EntityPlayerMP playerMP = (EntityPlayerMP) player;
         if (!(playerMP.dimension == 1)) {
           if (playerMP.dimension != 0) {
@@ -106,7 +111,7 @@ public class VoidPearl extends BaseItem {
             player.setPositionAndUpdate(player.posX, player.posY + 1.0D, player.posZ);
           }
           MinecraftServer.getServer().worldServerForDimension(playerMP.dimension).playSoundEffect(player.posX, player.posY, player.posZ, "mob.endermen.portal", 1.0F, 1.0F);
-          // trigger item cooldown
+          // Trigger cooldown
           NBTHelper.setLastUse(stack, overworld.getTotalWorldTime());
           return super.onItemRightClick(stack, world, player);
         }
@@ -116,8 +121,7 @@ public class VoidPearl extends BaseItem {
          */
       }
     } else {
-
-      if (player.dimension == 1 && ItemHelper.getOwnerName(stack).equals(player.getDisplayNameString())) {
+      if (player.dimension == 1 && owner.equals(player.getDisplayNameString())) {
         player.playSound("afterhours:error", 0.5F, 1.0F);
       } else if (ticksSinceLastUse > 0 && ticksSinceLastUse < cooldown) {
         player.playSound("afterhours:error", 0.5F, 1.0F);
@@ -131,55 +135,40 @@ public class VoidPearl extends BaseItem {
   public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
     // Item Stats
     if (ItemHelper.hasOwner(stack)) {
-      tooltip.add(EnumChatFormatting.DARK_PURPLE + Ref.ItemStat.BOUND + ", " + Ref.ItemStat.LIMITED);
+      tooltip.add(EnumChatFormatting.DARK_PURPLE + Ref.ItemStat.IMPRINTED + ", " + Ref.ItemStat.LIMITED);
     } else {
-      tooltip.add(StatCollector.translateToLocal("afterhours.msg.prebound").trim());
+      tooltip.add(StatCollector.translateToLocal(Ref.Translation.PREIMPRINT));
     }
     // Description
     if (Keyboard.isKeyDown(0x2A) || Keyboard.isKeyDown(0x36)) {
       tooltip.add(EnumChatFormatting.GRAY + "This device may be used to transport");
       tooltip.add(EnumChatFormatting.GRAY + "you across dimensions to your home.");
     } else {
-      tooltip.add(EnumChatFormatting.GRAY + "Hold " + EnumChatFormatting.WHITE + "SHIFT" + EnumChatFormatting.GRAY + " for more information.");
+      tooltip.add(StatCollector.translateToLocal(Ref.Translation.MORE_INFORMATION));
     }
     // Owner information
     if (ItemHelper.hasOwner(stack)) {
-      String owner = ItemHelper.getOwnerName(stack);
+      final String owner = ItemHelper.getOwnerName(stack);
       if (owner.equals(player.getDisplayNameString())) {
-        tooltip.add(EnumChatFormatting.GREEN + "Owner: " + owner);
+        tooltip.add(EnumChatFormatting.GREEN + StatCollector.translateToLocal(Ref.Translation.OWNER) + " " + owner);
         if (NBTHelper.getLong(stack, Ref.NBT.LASTUSE) != -1) {
           long ticksSinceLastUse = player.worldObj.getTotalWorldTime() - NBTHelper.getLong(stack, Ref.NBT.LASTUSE);
           long current = (cooldown / 20) - (ticksSinceLastUse / 20);
-          String currentCooldown = formatCooldown(current);
-          tooltip.add("Cooldown: " + currentCooldown);
+          String currentCooldown = ItemHelper.formatCooldown(current);
+          tooltip.add(StatCollector.translateToLocal(Ref.Translation.COOLDOWN) + " " + currentCooldown);
           if (ticksSinceLastUse > cooldown) {
             tooltip.remove(tooltip.size() - 1);
           }
         }
       } else {
         if (ModInfo.DEBUG) {
-          tooltip.add(EnumChatFormatting.RED + "Owner: " + owner);
+          tooltip.add(EnumChatFormatting.RED + StatCollector.translateToLocal(Ref.Translation.OWNER) + " " + owner);
         } else {
-          tooltip.add(EnumChatFormatting.RED + "Owner: " + EnumChatFormatting.OBFUSCATED + owner);
+          tooltip.add(EnumChatFormatting.RED + StatCollector.translateToLocal(Ref.Translation.OWNER) + " " + EnumChatFormatting.OBFUSCATED + owner);
         }
       }
     }
     super.addInformation(stack, player, tooltip, advanced);
-  }
-
-  private String formatCooldown(long time) {
-    long hours = time / 3600;
-    long minutes = (time % 3600) / 60;
-    long seconds = time % 60;
-    String currentCooldown = "";
-    if (hours > 0) {
-      currentCooldown = String.format("%dh %dm %ds", hours, minutes, seconds);
-    } else if (minutes > 0) {
-      currentCooldown = String.format("%dm %ds", minutes, seconds);
-    } else {
-      currentCooldown = String.format("%ds", seconds);
-    }
-    return currentCooldown;
   }
 
 }

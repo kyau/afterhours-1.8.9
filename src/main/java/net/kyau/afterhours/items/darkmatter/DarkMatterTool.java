@@ -38,11 +38,14 @@ public class DarkMatterTool extends BaseItem {
     this.setCreativeTab(CreativeTabs.tabTools);
     if (this instanceof DarkMatterPickaxe) {
       this.setMaxDamage(Ref.DarkMatter.DURABILITY);
+      this.efficiencyOnProperMaterial = Ref.DarkMatter.EFFICIENCY * 0.8F;
       toolClass = "pickaxe";
     } else if (this instanceof DarkMatterAxe) {
       this.setMaxDamage(Ref.DarkMatter.DURABILITY - 500);
+      this.efficiencyOnProperMaterial = Ref.DarkMatter.EFFICIENCY;
       toolClass = "axe";
     } else if (this instanceof DarkMatterShovel) {
+      this.efficiencyOnProperMaterial = Ref.DarkMatter.EFFICIENCY;
       this.setMaxDamage(Ref.DarkMatter.DURABILITY - 750);
       toolClass = "shovel";
     }

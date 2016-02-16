@@ -10,6 +10,7 @@ import net.kyau.afterhours.init.ModItems;
 import net.kyau.afterhours.items.darkmatter.DarkMatterAxe;
 import net.kyau.afterhours.items.darkmatter.DarkMatterPickaxe;
 import net.kyau.afterhours.items.darkmatter.DarkMatterShovel;
+import net.kyau.afterhours.references.Ref;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.init.Blocks;
@@ -18,8 +19,10 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
@@ -33,13 +36,14 @@ import org.lwjgl.input.Keyboard;
 
 import com.google.common.collect.Multimap;
 
-public class ForgeClientEventHandler {
+public class TooltipEventHandler {
 
   @SubscribeEvent(priority = EventPriority.LOWEST)
   @SideOnly(Side.CLIENT)
   public void itemTooltip(ItemTooltipEvent event) {
     List<String> tooltip = event.toolTip;
     ItemStack stack = event.itemStack;
+    // F3+H enabled, remove here then re-add to the bottom of the tooltip
     if (event.showAdvancedItemTooltips) {
       tooltip.removeIf(p -> {
         Pattern pattern = Pattern.compile("Durability: [0-9]+ / [0-9]+");
@@ -65,14 +69,28 @@ public class ForgeClientEventHandler {
         }
       }
     }
-    String sneakLine = EnumChatFormatting.GRAY + "Hold " + EnumChatFormatting.WHITE + "SHIFT" + EnumChatFormatting.GRAY + " for more information.";
-    // System.out.println(tooltip);
+    // Rephrase the enchanting tooltip for WAWLA
+    String sneakLine = StatCollector.translateToLocal(Ref.Translation.MORE_INFORMATION);
+    // String sneakLine = EnumChatFormatting.GRAY + "Hold " + EnumChatFormatting.WHITE + "SHIFT" +
+    // EnumChatFormatting.GRAY + " for more information.";
     Collections.replaceAll(tooltip, "Hold the Sneak key for Enchantment Description", sneakLine);
+
+    // F3+H is disabled, show Item IDs anyway
     if (!(event.showAdvancedItemTooltips)) {
       String id = String.format("#%04d", Item.getIdFromItem(stack.getItem()));
       String name = stack.getDisplayName() + EnumChatFormatting.GRAY + " (" + id + ")";
       tooltip.set(0, name);
     }
+
+    // Burn time
+    if (!(TileEntityFurnace.getItemBurnTime(stack) == 0)) {
+      String msg = "Burn Time: " + TileEntityFurnace.getItemBurnTime(stack);
+      if (!(tooltip.contains(msg))) {
+        tooltip.add(EnumChatFormatting.GRAY + msg);
+      }
+    }
+
+    // Weapons and tools
     if (ModItems.repairList.contains(stack.getUnlocalizedName()) || stack.getItem() instanceof ItemSword || stack.getItem() instanceof ItemTool) {
       String toolClass;
       // LogHelper.info(stack.getItem().getToolClasses(stack));
@@ -141,7 +159,7 @@ public class ForgeClientEventHandler {
         if (!(speed == 0.0F))
           tooltip.add(EnumChatFormatting.GRAY + "Speed: " + EnumChatFormatting.DARK_GREEN + (double) Math.round(((double) speed / 4.0F) * 100d) / 100d);
       } else {
-        tooltip.add(EnumChatFormatting.GRAY + "Hold " + EnumChatFormatting.WHITE + "SHIFT" + EnumChatFormatting.GRAY + " for more information.");
+        tooltip.add(StatCollector.translateToLocal(Ref.Translation.MORE_INFORMATION));
       }
     } else if (stack.isItemStackDamageable()) {
       tooltip.add(EnumChatFormatting.GRAY + "Durability: " + (stack.getMaxDamage() - stack.getItemDamage()) + "/" + stack.getMaxDamage());

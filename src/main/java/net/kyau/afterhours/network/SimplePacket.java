@@ -2,6 +2,7 @@ package net.kyau.afterhours.network;
 
 import io.netty.buffer.ByteBuf;
 import net.kyau.afterhours.network.SimplePacket.SimpleMessage;
+import net.kyau.afterhours.references.ModInfo;
 import net.kyau.afterhours.utils.LogHelper;
 import net.kyau.afterhours.utils.SoundUtil;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -15,7 +16,8 @@ public class SimplePacket implements IMessageHandler<SimpleMessage, IMessage> {
   public IMessage onMessage(SimpleMessage message, MessageContext ctx) {
     // just to make sure that the side is correct
     if (ctx.side.isClient()) {
-      LogHelper.info("recieved packet from server! (" + message.type + ": " + message.text + ")");
+      if (ModInfo.DEBUG)
+        LogHelper.info("recieved packet from server! (" + message.type + ": " + message.text + ")");
 
       if (message.type == 1) {
         SoundUtil.playSound(message.text);

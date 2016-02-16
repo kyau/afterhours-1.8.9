@@ -1,2 +1,4 @@
 error.ogg
 * https://www.freesound.org/people/Autistic%20Lucario/sounds/142608/
+singularity.ogg
+* https://www.freesound.org/people/Sergenious/sounds/55853/

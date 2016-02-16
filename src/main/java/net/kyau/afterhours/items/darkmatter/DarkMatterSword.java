@@ -142,7 +142,6 @@ public class DarkMatterSword extends BaseItem {
   @Override
   public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
     ItemStack stack = new ItemStack(itemIn, 1, 0);
-    // stack.addEnchantment(Enchantment.smite, 1);
     stack.addEnchantment(Enchantment.getEnchantmentById(85), 1);
     subItems.add(stack);
   }
