@@ -3,7 +3,6 @@ package net.kyau.afterhours.items.darkmatter;
 import java.util.Set;
 
 import net.kyau.afterhours.init.ModItems;
-import net.kyau.afterhours.items.BaseItem;
 import net.kyau.afterhours.references.Ref;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -25,7 +24,7 @@ public class DarkMatterAxe extends DarkMatterTool {
       Blocks.melon_block,
       Blocks.ladder });
 
-  public DarkMatterAxe(BaseItem.ToolMaterial material) {
+  public DarkMatterAxe(ToolMaterial material) {
     super(3.0F, material, EFFECTIVE_ON);
     this.setUnlocalizedName(Ref.ItemID.DARKMATTER_AXE);
     ModItems.repairList.add(this.getUnlocalizedName());

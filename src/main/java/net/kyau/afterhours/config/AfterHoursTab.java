@@ -5,6 +5,7 @@ import java.util.List;
 import net.kyau.afterhours.init.ModItems;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -27,7 +28,7 @@ public class AfterHoursTab extends CreativeTabs {
   }
 
   @Override
-  public void displayAllReleventItems(List itemsToShowOnTab) {
+  public void displayAllReleventItems(List<ItemStack> itemsToShowOnTab) {
     for (Object itemObject : Item.itemRegistry) {
       Item item = (Item) itemObject;
       if (item != null) {

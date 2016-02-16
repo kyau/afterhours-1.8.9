@@ -69,4 +69,18 @@ public class Ref {
     public static final int BIOMEID = 222;
     public static final String INTERNAL_NAME = "void";
   }
+
+  public static final class DarkMatter {
+
+    public static final int DURABILITY = 2431;
+    public static final int HARVEST_LEVEL = 4;
+    public static final float EFFICIENCY = 50.0F;
+    public static final float DAMAGE = 9.42F;
+    public static final String NAME = "Dark Matter";
+  }
+
+  public static final class Enchant {
+
+    public static final String ENTANGLEMENT = "Entanglement";
+  }
 }

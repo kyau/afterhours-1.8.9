@@ -7,6 +7,7 @@ import net.kyau.afterhours.dimension.DimensionHandler;
 import net.kyau.afterhours.dimension.WorldGenerator;
 import net.kyau.afterhours.event.GuiHandler;
 import net.kyau.afterhours.init.ModBlocks;
+import net.kyau.afterhours.init.ModEnchants;
 import net.kyau.afterhours.init.ModItems;
 import net.kyau.afterhours.init.ModVanilla;
 import net.kyau.afterhours.init.RecipeManager;
@@ -15,6 +16,8 @@ import net.kyau.afterhours.proxy.IProxy;
 import net.kyau.afterhours.references.ModInfo;
 import net.kyau.afterhours.references.Ref;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item.ToolMaterial;
+import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -41,6 +44,8 @@ public class AfterHours {
 
   public static int voidDimID = Ref.Dimension.DIM;
 
+  public static ToolMaterial darkmatter;
+
   public static int guiIndex = 0;
   public static final int GUI_VOIDJOURNAL = guiIndex++;
   public static final int GUI_VRD = guiIndex++;
@@ -56,8 +61,10 @@ public class AfterHours {
     DimensionHandler.init();
     GameRegistry.registerWorldGenerator(new WorldGenerator(), 1);
     PacketHandler.init();
+    darkmatter = EnumHelper.addToolMaterial("DARKMATTER", Ref.DarkMatter.HARVEST_LEVEL, Ref.DarkMatter.DURABILITY, Ref.DarkMatter.EFFICIENCY, Ref.DarkMatter.DAMAGE, 0);
     proxy.registerEventHandlers();
     proxy.registerKeybindings();
+    ModEnchants.registerEnchants();
     ModItems.registerItems();
     ModBlocks.registerBlocks();
     ModVanilla.registerItems();
@@ -66,14 +73,13 @@ public class AfterHours {
 
   @Mod.EventHandler
   public void init(@Nonnull FMLInitializationEvent event) {
-    proxy.initRenderingAndTextures();
     RecipeManager.init();
-
     NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
   }
 
   @Mod.EventHandler
   public void postInit(@Nonnull FMLPostInitializationEvent event) {
     RecipeManager.post();
+    proxy.registerClientEventHandlers();
   }
 }

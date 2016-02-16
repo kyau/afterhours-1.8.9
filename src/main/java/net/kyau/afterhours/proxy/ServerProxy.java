@@ -1,6 +1,5 @@
 package net.kyau.afterhours.proxy;
 
-
 public class ServerProxy extends CommonProxy {
 
   @Override
@@ -26,6 +25,11 @@ public class ServerProxy extends CommonProxy {
 
   @Override
   public void openJournal() {
+    // NOOP
+  }
+
+  @Override
+  public void registerClientEventHandlers() {
     // NOOP
   }
 

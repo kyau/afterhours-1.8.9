@@ -1,13 +1,18 @@
 package net.kyau.afterhours.items.darkmatter;
 
+import java.util.List;
 import java.util.Set;
 
 import net.kyau.afterhours.items.BaseItem;
+import net.kyau.afterhours.references.Ref;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
@@ -21,26 +26,32 @@ public class DarkMatterTool extends BaseItem {
   private Set<Block> effectiveBlocks;
   protected float efficiencyOnProperMaterial = 4.0F;
   private float damageVsEntity;
-  protected BaseItem.ToolMaterial toolMaterial;
+  protected ToolMaterial toolMaterial;
   private String toolClass;
 
-  protected DarkMatterTool(float attackDamage, BaseItem.ToolMaterial material, Set<Block> effectiveBlocks) {
+  protected DarkMatterTool(float attackDamage, ToolMaterial material, Set<Block> effectiveBlocks) {
     this.toolMaterial = material;
     this.effectiveBlocks = effectiveBlocks;
     this.maxStackSize = 1;
-    this.efficiencyOnProperMaterial = material.getEfficiency();
-    this.damageVsEntity = attackDamage + material.getDamageVsEntity() - 4.0F;
+    this.efficiencyOnProperMaterial = Ref.DarkMatter.EFFICIENCY;
+    this.damageVsEntity = attackDamage + Ref.DarkMatter.DAMAGE - 4.0F;
     this.setCreativeTab(CreativeTabs.tabTools);
     if (this instanceof DarkMatterPickaxe) {
-      this.setMaxDamage(material.getMaxUses());
+      this.setMaxDamage(Ref.DarkMatter.DURABILITY);
       toolClass = "pickaxe";
     } else if (this instanceof DarkMatterAxe) {
-      this.setMaxDamage(material.getMaxUses() - 500);
+      this.setMaxDamage(Ref.DarkMatter.DURABILITY - 500);
       toolClass = "axe";
     } else if (this instanceof DarkMatterShovel) {
-      this.setMaxDamage(material.getMaxUses() - 750);
+      this.setMaxDamage(Ref.DarkMatter.DURABILITY - 750);
       toolClass = "shovel";
     }
+  }
+
+  @Override
+  @SideOnly(Side.CLIENT)
+  public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+    super.addInformation(stack, player, tooltip, advanced);
   }
 
   @Override
@@ -65,17 +76,19 @@ public class DarkMatterTool extends BaseItem {
 
   @Override
   @SideOnly(Side.CLIENT)
+  public boolean hasEffect(ItemStack stack) {
+    return false;
+  }
+
+  @Override
+  @SideOnly(Side.CLIENT)
   public boolean isFull3D() {
     return true;
   }
 
-  public BaseItem.ToolMaterial getToolMaterial() {
-    return this.toolMaterial;
-  }
-
   @Override
   public int getItemEnchantability() {
-    return this.toolMaterial.getEnchantability();
+    return 0;
   }
 
   public String getToolMaterialName() {
@@ -88,10 +101,27 @@ public class DarkMatterTool extends BaseItem {
   }
 
   @Override
-  public Multimap<String, AttributeModifier> getItemAttributeModifiers() {
-    Multimap<String, AttributeModifier> multimap = super.getItemAttributeModifiers();
+  public Multimap<String, AttributeModifier> getAttributeModifiers(ItemStack stack) {
+    Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(stack);
     multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(itemModifierUUID, "Tool modifier", (double) this.damageVsEntity, 0));
     return multimap;
   }
 
+  @Override
+  public Set<String> getToolClasses(ItemStack stack) {
+    return toolClass != null ? com.google.common.collect.ImmutableSet.of(toolClass) : super.getToolClasses(stack);
+  }
+
+  @Override
+  public int getHarvestLevel(ItemStack stack, String toolClass) {
+    return this.toolMaterial.getHarvestLevel();
+  }
+
+  @Override
+  public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
+    ItemStack stack = new ItemStack(itemIn, 1, 0);
+    // stack.addEnchantment(Enchantment.smite, 1);
+    stack.addEnchantment(Enchantment.getEnchantmentById(85), 1);
+    subItems.add(stack);
+  }
 }

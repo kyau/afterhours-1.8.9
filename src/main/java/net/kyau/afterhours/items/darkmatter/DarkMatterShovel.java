@@ -3,7 +3,6 @@ package net.kyau.afterhours.items.darkmatter;
 import java.util.Set;
 
 import net.kyau.afterhours.init.ModItems;
-import net.kyau.afterhours.items.BaseItem;
 import net.kyau.afterhours.references.Ref;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -24,7 +23,7 @@ public class DarkMatterShovel extends DarkMatterTool {
       Blocks.snow_layer,
       Blocks.soul_sand });
 
-  public DarkMatterShovel(BaseItem.ToolMaterial material) {
+  public DarkMatterShovel(ToolMaterial material) {
     super(1.0F, material, EFFECTIVE_ON);
     this.setUnlocalizedName(Ref.ItemID.DARKMATTER_SHOVEL);
     ModItems.repairList.add(this.getUnlocalizedName());

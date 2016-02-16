@@ -137,9 +137,8 @@ public class VoidPearl extends BaseItem {
     }
     // Description
     if (Keyboard.isKeyDown(0x2A) || Keyboard.isKeyDown(0x36)) {
-      tooltip.add(EnumChatFormatting.GRAY + "You may only own one instance of");
-      tooltip.add(EnumChatFormatting.GRAY + "a limited item. Attempts to craft or");
-      tooltip.add(EnumChatFormatting.GRAY + "obtain more will feed the void.");
+      tooltip.add(EnumChatFormatting.GRAY + "This device may be used to transport");
+      tooltip.add(EnumChatFormatting.GRAY + "you across dimensions to your home.");
     } else {
       tooltip.add(EnumChatFormatting.GRAY + "Hold " + EnumChatFormatting.WHITE + "SHIFT" + EnumChatFormatting.GRAY + " for more information.");
     }

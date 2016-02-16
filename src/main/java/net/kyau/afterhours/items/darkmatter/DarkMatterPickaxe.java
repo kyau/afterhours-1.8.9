@@ -3,7 +3,6 @@ package net.kyau.afterhours.items.darkmatter;
 import java.util.Set;
 
 import net.kyau.afterhours.init.ModItems;
-import net.kyau.afterhours.items.BaseItem;
 import net.kyau.afterhours.references.Ref;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -41,7 +40,7 @@ public class DarkMatterPickaxe extends DarkMatterTool {
       Blocks.stone,
       Blocks.stone_slab });
 
-  public DarkMatterPickaxe(BaseItem.ToolMaterial material) {
+  public DarkMatterPickaxe(ToolMaterial material) {
     super(2.0F, material, EFFECTIVE_ON);
     this.setUnlocalizedName(Ref.ItemID.DARKMATTER_PICKAXE);
     ModItems.repairList.add(this.getUnlocalizedName());

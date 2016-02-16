@@ -3,6 +3,7 @@ package net.kyau.afterhours.init;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.kyau.afterhours.AfterHours;
 import net.kyau.afterhours.items.Antenna;
 import net.kyau.afterhours.items.BaseItem;
 import net.kyau.afterhours.items.DarkMatter;
@@ -59,10 +60,10 @@ public class ModItems {
     vrd = new VRD().register(Ref.ItemID.VRD);
 
     // dark matter gear
-    darkmatter_sword = new DarkMatterSword(BaseItem.ToolMaterial.DARKMATTER).register(Ref.ItemID.DARKMATTER_SWORD);
-    darkmatter_shovel = new DarkMatterShovel(BaseItem.ToolMaterial.DARKMATTER).register(Ref.ItemID.DARKMATTER_SHOVEL);
-    darkmatter_pickaxe = new DarkMatterPickaxe(BaseItem.ToolMaterial.DARKMATTER).register(Ref.ItemID.DARKMATTER_PICKAXE);
-    darkmatter_axe = new DarkMatterAxe(BaseItem.ToolMaterial.DARKMATTER).register(Ref.ItemID.DARKMATTER_AXE);
+    darkmatter_sword = new DarkMatterSword(AfterHours.darkmatter).register(Ref.ItemID.DARKMATTER_SWORD);
+    darkmatter_shovel = new DarkMatterShovel(AfterHours.darkmatter).register(Ref.ItemID.DARKMATTER_SHOVEL);
+    darkmatter_pickaxe = new DarkMatterPickaxe(AfterHours.darkmatter).register(Ref.ItemID.DARKMATTER_PICKAXE);
+    darkmatter_axe = new DarkMatterAxe(AfterHours.darkmatter).register(Ref.ItemID.DARKMATTER_AXE);
   }
 
   public static void registerRenders() {

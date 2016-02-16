@@ -38,17 +38,19 @@ public class FMLEventHandler {
   }
 
   @SubscribeEvent
-  public void entityAttacked(LivingHurtEvent event) {
+  public void entityAttacked(@Nonnull LivingHurtEvent event) {
     if (event.entityLiving instanceof EntityLiving) {
       EntityLiving attackedEnt = (EntityLiving) event.entityLiving;
       DamageSource attackSource = event.source;
       if (attackSource.getSourceOfDamage() != null) {
-        EntityPlayer player = (EntityPlayer) attackSource.getSourceOfDamage();
-        if (player.getHeldItem() != null) {
-          ItemStack stack = player.getHeldItem();
-          if (ModItems.repairList.contains(stack.getUnlocalizedName())) {
-            if (stack.getItemDamage() == stack.getMaxDamage()) {
-              event.ammount = 0.5F;
+        if (attackSource.getSourceOfDamage() instanceof EntityPlayer) {
+          EntityPlayer player = (EntityPlayer) attackSource.getSourceOfDamage();
+          if (player.getHeldItem() != null) {
+            ItemStack stack = player.getHeldItem();
+            if (ModItems.repairList.contains(stack.getUnlocalizedName())) {
+              if (stack.getItemDamage() == stack.getMaxDamage()) {
+                event.ammount = 0.5F;
+              }
             }
           }
         }
