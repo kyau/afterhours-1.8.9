@@ -1,5 +1,7 @@
 package net.kyau.afterhours.references;
 
+import net.kyau.afterhours.config.ConfigHandler;
+
 public class Ref {
 
   public static final class BlockID {
@@ -32,17 +34,17 @@ public class Ref {
 
   public static final class ItemCooldown {
 
-    public static final int VOIDPEARL = 12000; // 10 minutes
-    public static final int WORMHOLE_MANIPULATOR = 160; // 8 seconds
+    public static int VOIDPEARL = ConfigHandler.cooldownVoidPearl;
+    public static int WORMHOLE_MANIPULATOR = ConfigHandler.cooldownWormholeManipulator;
   }
 
   public static final class ItemStat {
 
     public static final String IMPRINTED = "Imprinted";
     public static final String LIMITED = "Limited";
-    public static final int ENERGY_WORMHOLE_MANIPULATOR = 100;
-    public static final int ENERGYONUSE_WORMHOLE_MANIPULATOR = 10;
-    public static final int WORMHOLE_MANIPULATOR_PERTICK = 2;
+    public static int ENERGY_WORMHOLE_MANIPULATOR = ConfigHandler.wormholeEnergyMax;
+    public static int ENERGYONUSE_WORMHOLE_MANIPULATOR = ConfigHandler.wormholeEnergyOnUse;
+    public static int WORMHOLE_MANIPULATOR_PERTICK = ConfigHandler.wormholeEnergyPerTick;
   }
 
   public static final class NBT {
@@ -75,8 +77,8 @@ public class Ref {
 
   public static final class Dimension {
 
-    public static final int DIM = 5;
-    public static final int BIOMEID = 222;
+    public static int DIM = ConfigHandler.idDimension;
+    public static int BIOMEID = ConfigHandler.idBiome;
     public static final String INTERNAL_NAME = "void";
   }
 
@@ -105,5 +107,10 @@ public class Ref {
     public static final String COOLDOWN = "afterhours.itemstat.cooldown";
     public static final String OWNER = "afterhours.itemstat.owner";
     public static final String ENERGY = "afterhours.itemstat.energy";
+  }
+
+  public static final class Vanilla {
+
+    public static boolean TOOLTIP = ConfigHandler.vanillaTooltip;
   }
 }

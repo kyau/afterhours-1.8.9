@@ -1,6 +1,5 @@
 package net.kyau.afterhours.dimension;
 
-import net.kyau.afterhours.AfterHours;
 import net.kyau.afterhours.references.ModInfo;
 import net.kyau.afterhours.references.Ref;
 import net.minecraft.util.StatCollector;
@@ -21,8 +20,8 @@ public class DimensionHandler {
   }
 
   private static void registerDimension() {
-    DimensionManager.registerProviderType(AfterHours.voidDimID, WorldProviderVoid.class, false);
-    DimensionManager.registerDimension(AfterHours.voidDimID, AfterHours.voidDimID);
+    DimensionManager.registerProviderType(Ref.Dimension.DIM, WorldProviderVoid.class, false);
+    DimensionManager.registerDimension(Ref.Dimension.DIM, Ref.Dimension.DIM);
   }
 
 }

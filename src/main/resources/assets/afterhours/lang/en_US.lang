@@ -34,3 +34,8 @@ afterhours.msg.invalid_dimension=§4Invalid dimension.§r
 afterhours:dimension.name=The Void
 afterhours.biome.name=The Void
 enchantment.entanglement=§5Entanglement
+
+config.afterhours.general=General
+config.afterhours.void_pearl=Void Pearl
+config.afterhours.wormhole=Wormhole Manipulator
+config.afterhours.vanilla=Vanilla

@@ -19,6 +19,8 @@ public class ModInfo {
   // Common/Client Proxy
   public static final String PROXY_CLIENT = "net.kyau." + MOD_ID + ".proxy.ClientProxy";
   public static final String PROXY_SERVER = "net.kyau." + MOD_ID + ".proxy.ServerProxy";
+  // GUI Factory
+  public static final String GUI_FACTORY = "net.kyau." + MOD_ID + ".client.gui.GuiFactory";
   // Resources
   public static final String TEXTURE_GUI_PATH = "textures/gui/";
   // Debug Switch

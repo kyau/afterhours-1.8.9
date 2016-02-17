@@ -6,7 +6,6 @@ import net.kyau.afterhours.references.Ref;
 import net.kyau.afterhours.utils.ChatUtil;
 import net.kyau.afterhours.utils.INBTTaggable;
 import net.kyau.afterhours.utils.ItemHelper;
-import net.kyau.afterhours.utils.LogHelper;
 import net.kyau.afterhours.utils.NBTHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -33,7 +32,6 @@ public class InventoryQRDVoid implements IInventory, INBTTaggable {
     parentItem = stack;
     this.player = player;
     inventory = new ItemStack[this.getSizeInventory()];
-    // readFromNBT(stack.getTagCompound());
   }
 
   @Override
@@ -107,16 +105,10 @@ public class InventoryQRDVoid implements IInventory, INBTTaggable {
           ItemStack voidWell = inventoryQRDMain[currentIndex];
           if (ItemHelper.hasOwner(voidWell)) {
             if (NBTHelper.hasTag(voidWell, Ref.NBT.ENERGY_LEVEL) && NBTHelper.hasTag(voidWell, Ref.NBT.ENERGY_MAX)) {
-              LogHelper.info("Void Well, with Energy!");
               int[] energy = NBTHelper.getEnergyLevels(voidWell);
-              // String string = voidWell.getTagCompound().getString("Energy");
-              // if (string.contains("#")) {
-              // energy = string.split("#");
-              // if (Integer.parseInt(energy[0]) < Integer.parseInt(energy[1])) {
               if (energy[0] < energy[1]) {
                 if (stack != null && stack.stackSize > 62) {
                   int newEnergy = energy[0] + 2;
-                  // voidWell.setTagInfo("Energy", new NBTTagString(newEnergy + "#" + energy[1]));
                   NBTHelper.setEnergyLevels(voidWell, newEnergy, energy[1]);
                   ChatUtil.sendNoSpam(player, EnumChatFormatting.GREEN + StatCollector.translateToLocal(Ref.Translation.ENERGY) + " " + EnumChatFormatting.GRAY + newEnergy + "/" + energy[1]);
                   qrdMainClass.setInventorySlotContents(currentIndex, voidWell);

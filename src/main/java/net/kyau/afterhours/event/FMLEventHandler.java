@@ -2,6 +2,7 @@ package net.kyau.afterhours.event;
 
 import javax.annotation.Nonnull;
 
+import net.kyau.afterhours.config.ConfigHandler;
 import net.kyau.afterhours.init.ModItems;
 import net.kyau.afterhours.references.ModInfo;
 import net.kyau.afterhours.utils.InventoryHandler;
@@ -12,10 +13,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 public class FMLEventHandler {
+
+  @SubscribeEvent
+  public void onConfigurationChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+    if (event.modID.equalsIgnoreCase(ModInfo.MOD_ID)) {
+      // Resync config
+      ConfigHandler.loadConfig();
+    }
+  }
 
   @SubscribeEvent
   public void onItemCrafted(@Nonnull PlayerEvent.ItemCraftedEvent event) {
@@ -38,7 +48,7 @@ public class FMLEventHandler {
   }
 
   @SubscribeEvent
-  public void entityAttacked(@Nonnull LivingHurtEvent event) {
+  public void onEntityAttacked(@Nonnull LivingHurtEvent event) {
     if (event.entityLiving instanceof EntityLiving) {
       EntityLiving attackedEnt = (EntityLiving) event.entityLiving;
       DamageSource attackSource = event.source;

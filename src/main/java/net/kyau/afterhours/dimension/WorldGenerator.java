@@ -2,7 +2,7 @@ package net.kyau.afterhours.dimension;
 
 import java.util.Random;
 
-import net.kyau.afterhours.AfterHours;
+import net.kyau.afterhours.references.Ref;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
@@ -12,7 +12,7 @@ public class WorldGenerator implements IWorldGenerator {
 
   @Override
   public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
-    if (world.provider.getDimensionId() == AfterHours.voidDimID) {
+    if (world.provider.getDimensionId() == Ref.Dimension.DIM) {
       generateVoid(world, random, chunkX * 16, chunkZ * 16);
     }
   }

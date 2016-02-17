@@ -3,6 +3,7 @@ package net.kyau.afterhours;
 import javax.annotation.Nonnull;
 
 import net.kyau.afterhours.config.AfterHoursTab;
+import net.kyau.afterhours.config.ConfigHandler;
 import net.kyau.afterhours.dimension.DimensionHandler;
 import net.kyau.afterhours.dimension.WorldGenerator;
 import net.kyau.afterhours.event.GuiHandler;
@@ -29,6 +30,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 @Mod(modid = ModInfo.MOD_ID,
      name = ModInfo.MOD_NAME,
      version = ModInfo.MOD_VERSION,
+     guiFactory = ModInfo.GUI_FACTORY,
      acceptedMinecraftVersions = "[1.8.9]",
      dependencies = "required-after:Forge@[11.15.1.1722,);")
 public class AfterHours {
@@ -41,8 +43,6 @@ public class AfterHours {
   public static IProxy proxy;
 
   public static CreativeTabs AfterHoursTab = new AfterHoursTab(CreativeTabs.getNextID(), "AfterHours");
-
-  public static int voidDimID = Ref.Dimension.DIM;
 
   public static ToolMaterial darkmatter;
 
@@ -58,6 +58,7 @@ public class AfterHours {
     event.getModMetadata().description = ModInfo.MOD_DESC;
     event.getModMetadata().url = ModInfo.MOD_URL;
     event.getModMetadata().logoFile = ModInfo.MOD_LOGO;
+    ConfigHandler.init(event.getSuggestedConfigurationFile());
     DimensionHandler.init();
     GameRegistry.registerWorldGenerator(new WorldGenerator(), 1);
     PacketHandler.init();
