@@ -18,6 +18,7 @@ import net.kyau.afterhours.references.ModInfo;
 import net.kyau.afterhours.references.Ref;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item.ToolMaterial;
+import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -45,10 +46,12 @@ public class AfterHours {
   public static CreativeTabs AfterHoursTab = new AfterHoursTab(CreativeTabs.getNextID(), "AfterHours");
 
   public static ToolMaterial darkmatter;
+  public static ArmorMaterial darkmatterArmor;
 
   public static int guiIndex = 0;
   public static final int GUI_VOIDJOURNAL = guiIndex++;
-  public static final int GUI_VRD = guiIndex++;
+  public static final int GUI_QRD = guiIndex++;
+  public static final int GUI_QS = guiIndex++;
 
   @Mod.EventHandler
   public void preInit(@Nonnull FMLPreInitializationEvent event) {
@@ -63,6 +66,11 @@ public class AfterHours {
     GameRegistry.registerWorldGenerator(new WorldGenerator(), 1);
     PacketHandler.init();
     darkmatter = EnumHelper.addToolMaterial("DARKMATTER", Ref.DarkMatter.HARVEST_LEVEL, Ref.DarkMatter.DURABILITY, Ref.DarkMatter.EFFICIENCY, Ref.DarkMatter.DAMAGE, 0);
+    darkmatterArmor = EnumHelper.addArmorMaterial("DARKMATTER", ModInfo.MOD_ID + ":" + "darkmatter", 100, new int[] {
+        3,
+        8,
+        6,
+        3 }, 30);
     proxy.registerEventHandlers();
     proxy.registerKeybindings();
     ModEnchants.registerEnchants();

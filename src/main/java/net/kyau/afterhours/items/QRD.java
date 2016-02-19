@@ -52,7 +52,7 @@ public class QRD extends BaseItem {
         if (owner.equals(player.getDisplayNameString())) {
           // TODO Do a scan of inventory and if we find a bag with the same UUID, change it's UUID
           NBTHelper.setBoolean(stack, Ref.NBT.QRD_GUI_OPEN, true);
-          player.openGui(AfterHours.instance, AfterHours.GUI_VRD, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+          player.openGui(AfterHours.instance, AfterHours.GUI_QRD, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
           return super.onItemRightClick(stack, world, player);
         }
       }

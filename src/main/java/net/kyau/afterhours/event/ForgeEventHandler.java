@@ -69,6 +69,31 @@ public class ForgeEventHandler {
         }
       }
     }
+    if (!event.player.capabilities.isCreativeMode) {
+      if (event.player.inventory.armorInventory[2] == null) {
+        event.player.capabilities.allowFlying = false;
+        // event.player.capabilities.setFlySpeed(0.05F);
+      } else {
+        if (event.player.inventory.armorInventory[2].getUnlocalizedName().equals(ModItems.darkmatter_chestplate.getUnlocalizedName())) {
+          event.player.capabilities.allowFlying = true;
+          // event.player.capabilities.setFlySpeed(0.08F);
+          // LogHelper.info(event.player.capabilities.getFlySpeed());
+        }
+        // event.player.capabilities.allowFlying =
+        // (event.player.inventory.armorInventory[2].getUnlocalizedName().equals(ModItems.darkmatter_chestplate.getUnlocalizedName())
+        // || event.player.capabilities.isCreativeMode);
+      }
+      /*
+      if (event.player.inventory.armorInventory[0] == null) {
+        event.player.capabilities.setPlayerWalkSpeed(0.1F);
+      } else {
+        if (event.player.inventory.armorInventory[0].getUnlocalizedName().equals(ModItems.darkmatter_boots.getUnlocalizedName())) {
+          event.player.capabilities.setPlayerWalkSpeed(0.2F);
+
+        }
+      }
+      */
+    }
   }
 
   @SubscribeEvent

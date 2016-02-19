@@ -1,5 +1,6 @@
 package net.kyau.afterhours.dimension;
 
+import net.kyau.afterhours.client.renderer.RenderSkyVoid;
 import net.kyau.afterhours.references.ModInfo;
 import net.kyau.afterhours.references.Ref;
 import net.minecraft.util.BlockPos;
@@ -8,14 +9,25 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.WorldChunkManagerHell;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraftforge.client.IRenderHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class WorldProviderVoid extends WorldProvider {
 
+  @SideOnly(Side.CLIENT)
+  IRenderHandler skyRenderer;
+
+  @SideOnly(Side.CLIENT)
+  public net.minecraftforge.client.IRenderHandler getSkyRenderer() {
+    if (skyRenderer == null)
+      skyRenderer = new RenderSkyVoid();
+    return this.skyRenderer;
+  }
+
   @Override
   public float calculateCelestialAngle(long p_76563_1_, float p_76563_3_) {
-    return 0.5f;
+    return 0.72f;
   }
 
   @Override
@@ -29,9 +41,15 @@ public class WorldProviderVoid extends WorldProvider {
     return new ChunkProviderVoid(worldObj, worldObj.getSeed(), worldObj.getWorldInfo().isMapFeaturesEnabled(), worldObj.getWorldInfo().getGeneratorOptions());
   }
 
+  @Override
   @SideOnly(Side.CLIENT)
   public float getCloudHeight() {
     return -512f;
+  }
+
+  @Override
+  public double getHorizon() {
+    return 0.0D;
   }
 
   @Override
@@ -62,10 +80,6 @@ public class WorldProviderVoid extends WorldProvider {
   @SideOnly(Side.CLIENT)
   public float[] calcSunriseSunsetColors(float celestialAngle, float partialTicks) {
     return null;
-  }
-
-  public boolean renderClouds() {
-    return false;
   }
 
   @Override

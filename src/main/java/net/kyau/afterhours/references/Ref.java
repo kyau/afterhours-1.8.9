@@ -9,6 +9,7 @@ public class Ref {
     public static final String DARKMATTERCLUSTER = "darkmattercluster";
     public static final String VOIDSTONE = "voidstone";
     public static final String INFUSED_VOIDSTONE = "infused_voidstone";
+    public static final String QUANTUM_STABILIZER = "quantum_stabilizer";
   }
 
   public static final class ItemID {
@@ -26,6 +27,7 @@ public class Ref {
     public static final String SINGULARITY = "singularity";
     public static final String STABLECORE = "stablecore";
     public static final String UNSTABLECORE = "unstablecore";
+    public static final String UNSTABLE_DARKMATTER = "unstable_darkmatter";
     public static final String VOIDCRYSTAL = "voidcrystal";
     public static final String VOIDJOURNAL = "voidjournal";
     public static final String VOIDPEARL = "voidpearl";
@@ -62,6 +64,7 @@ public class Ref {
     public static final String UUID_MOST_SIG = "UUIDMostSig";
     public static final String UUID_LEAST_SIG = "UUIDLeastSig";
     public static final String QRD_GUI_OPEN = "qrdGuiOpen";
+    public static final String QS_GUI_OPEN = "qsGuiOpen";
   }
 
   public static final class Containers {
@@ -73,6 +76,7 @@ public class Ref {
     public static final int QRD_MAIN_COLS = 9;
     public static final String VOID_SYNC_TRUE = "Sync";
     public static final String VOID_SYNC_FALSE = "";
+    public static final String QS_MAIN = ModInfo.MOD_ID + ".container:" + BlockID.QUANTUM_STABILIZER + "Main";
   }
 
   public static final class Dimension {

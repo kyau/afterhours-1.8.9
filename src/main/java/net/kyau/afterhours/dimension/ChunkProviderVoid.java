@@ -271,7 +271,7 @@ public class ChunkProviderVoid implements IChunkProvider {
       abyte[k] = (byte) this.biomesForGeneration[k].biomeID;
     }
 
-    chunk.generateSkylightMap();
+    // chunk.generateSkylightMap();
     return chunk;
   }
 

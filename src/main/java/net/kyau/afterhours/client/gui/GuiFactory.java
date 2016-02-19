@@ -2,6 +2,7 @@ package net.kyau.afterhours.client.gui;
 
 import java.util.Set;
 
+import net.kyau.afterhours.config.ModGuiConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.client.IModGuiFactory;

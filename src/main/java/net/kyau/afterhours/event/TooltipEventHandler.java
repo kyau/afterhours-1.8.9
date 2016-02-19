@@ -181,15 +181,16 @@ public class TooltipEventHandler {
         tooltip.add("Protection: " + armor.damageReduceAmount);
       }
       String modString = nameFromStack(stack);
-      if (Loader.isModLoaded("Waila")) {
-        tooltip.removeIf(p -> p.equals("§9§o" + modString));
-        for (int i = tooltip.size() - 1; i >= 0; i--) {
-          if (tooltip.get(i).equals("")) {
-            tooltip.remove(i);
-            break;
-          }
+      // if (Loader.isModLoaded("Waila")) {
+      tooltip.removeIf(p -> p.equals("\u00A79\u00A7o" + modString));
+      tooltip.removeIf(p -> p.equals("\u00A7o\u00A79" + modString));
+      for (int i = tooltip.size() - 1; i >= 0; i--) {
+        if (tooltip.get(i).equals("")) {
+          tooltip.remove(i);
+          break;
         }
       }
+      // }
       String meta = "";
       if (stack.getHasSubtypes()) {
         meta = ":" + stack.getMetadata();

@@ -1,14 +1,14 @@
 package net.kyau.afterhours.init;
 
-import net.kyau.afterhours.items.BaseItem;
 import net.kyau.afterhours.items.Dough;
 import net.kyau.afterhours.items.RawHide;
 import net.kyau.afterhours.references.Ref;
+import net.minecraft.item.Item;
 
 public class ModVanilla {
 
-  public static BaseItem dough;
-  public static BaseItem rawhide;
+  public static Item dough;
+  public static Item rawhide;
 
   public static void registerItems() {
     dough = new Dough().register(Ref.ItemID.DOUGH);

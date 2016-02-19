@@ -24,7 +24,7 @@ public class BaseItem extends Item {
     this.setNoRepair();
   }
 
-  public BaseItem register(String name) {
+  public Item register(String name) {
     GameRegistry.registerItem(this, name);
     ModItems.itemList.add(this);
     return this;

@@ -93,15 +93,11 @@ public class WormholeManipulator extends BaseItem {
             return false;
           }
           try {
-            // Trace for blocks
-            MovingObjectPosition eyeTrace = player.rayTrace(distance, 1.0F);
-            // If no blocks are traced, then eyeTrace is null.
-            if (eyeTrace.hitVec != null) {
+            if (mop.hitVec != null) {
               // If a block is found, call the moveEntity below
-              player.moveEntity(eyeTrace.hitVec.xCoord - player.posX, eyeTrace.hitVec.yCoord - player.posY + 1.1, eyeTrace.hitVec.zCoord - player.posZ);
+              player.moveEntity(mop.hitVec.xCoord - player.posX, mop.hitVec.yCoord - player.posY + 1.1, mop.hitVec.zCoord - player.posZ);
             }
           } catch (NullPointerException npe) {
-            // Your NPE, going to throw you whatever set distance forward in the hope to ignore your NPE
             player.moveEntity(-distance * Math.sin(Math.toRadians(player.rotationYawHead)) * Math.cos(Math.toRadians(player.rotationPitch)), -distance * Math.sin(Math.toRadians(player.rotationPitch)), distance * Math.cos(Math.toRadians(player.rotationYawHead)) * Math.cos(Math.toRadians(player.rotationPitch)));
           }
           player.setPositionAndUpdate(toPos.getX(), toPos.getY(), toPos.getZ());

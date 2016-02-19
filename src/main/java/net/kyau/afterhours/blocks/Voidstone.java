@@ -25,6 +25,7 @@ public class Voidstone extends BaseBlock {
     this.setUnlocalizedName(Ref.BlockID.VOIDSTONE);
   }
 
+  @Override
   @SideOnly(Side.CLIENT)
   public EnumWorldBlockLayer getBlockLayer() {
     return EnumWorldBlockLayer.SOLID;

@@ -28,11 +28,11 @@ public class Singularity extends BaseItem {
   public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
     if (!world.isRemote) {
       EntityPlayerMP playerMP = (EntityPlayerMP) player;
-      if (playerMP.dimension != 5) {
+      if (playerMP.dimension != Ref.Dimension.DIM) {
         MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension(playerMP, 5, new TeleporterVoid(playerMP.mcServer.worldServerForDimension(5)));
+        player.setPositionAndUpdate(0, 128, 0);
+        MinecraftServer.getServer().worldServerForDimension(playerMP.dimension).playSoundEffect(player.posX, player.posY, player.posZ, "afterhours:singularity", 1.0F, 1.0F);
       }
-      player.setPositionAndUpdate(0, 128, 0);
-      MinecraftServer.getServer().worldServerForDimension(playerMP.dimension).playSoundEffect(player.posX, player.posY, player.posZ, "afterhours:singularity", 1.0F, 1.0F);
     }
     return super.onItemRightClick(stack, world, player);
   }
