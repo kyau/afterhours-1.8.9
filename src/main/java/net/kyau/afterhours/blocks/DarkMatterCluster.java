@@ -61,7 +61,7 @@ public class DarkMatterCluster extends BaseBlock {
 
   @Override
   public Item getItemDropped(IBlockState state, Random rand, int fortune) {
-    return ModItems.darkmatter;
+    return ModItems.unstable_darkmatter;
   }
 
   @Override

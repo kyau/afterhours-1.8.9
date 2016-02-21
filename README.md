@@ -1,16 +1,16 @@
 ## AfterHours
 
-:package: [Download the latest release](https://github.com/kyau/afterhours-1.8.9/releases)  
+:package: [Download the latest release](https://github.com/kyau/afterhours-1.8.9/releases)
 :warning: This mod is a work in progress, please report any issues!
 
-[About AfterHours](#about-afterhours)  
-[Credits](#credits)  
-[attribution](#attribution)  
+[About AfterHours](#about-afterhours)
+[Credits](#credits)
+[attribution](#attribution)
 
 
 ### About AfterHours
 
-AfterHours is a MinecraftForge mod based on the original AfterHours support mod that was created for my custom mod-pack, AfterHours aims to be a mod that brings useful utilities to the multiplayer side of Minecraft. The basis for this mod the concept in Minecraft that past bedrock there exists a "Void", hence the name "void fog" (for the gray smoke your see when you are near to bedrock), and you as a player will learn to tap into the Void. Initial premise is that upon the realization that the combination of ender pearls and glowstone dust (the end + the nether) you can unlock the power of the Void. 
+AfterHours is a MinecraftForge mod based on the original AfterHours support mod that was created for my custom mod-pack, AfterHours aims to be a mod that brings useful utilities to the multiplayer side of Minecraft. The basis for this mod the concept in Minecraft that past bedrock there exists a "Void", hence the name "void fog" (for the gray smoke your see when you are near to bedrock), and you as a player will learn to tap into the Void. Initial premise is that upon the realization that the combination of ender pearls and glowstone dust (the end + the nether) you can unlock the power of the Void.
 
 ### Credits
 
@@ -27,4 +27,5 @@ So many people to thank for this mod actually coming to fruition. Without the us
 
 ### Attribution
 
+"Dark Matter Armor" is a recolored version of the Diamond Armor from Pixel Perfection by XSSheep.
 "Minecraft" is a trademark of Mojang Synergies AB, and is not affiliated in any way with this mod.

@@ -11,7 +11,7 @@ import net.kyau.afterhours.init.ModBlocks;
 import net.kyau.afterhours.init.ModEnchants;
 import net.kyau.afterhours.init.ModItems;
 import net.kyau.afterhours.init.ModVanilla;
-import net.kyau.afterhours.init.RecipeManager;
+import net.kyau.afterhours.init.ModRecipes;
 import net.kyau.afterhours.network.PacketHandler;
 import net.kyau.afterhours.proxy.IProxy;
 import net.kyau.afterhours.references.ModInfo;
@@ -65,7 +65,7 @@ public class AfterHours {
     DimensionHandler.init();
     GameRegistry.registerWorldGenerator(new WorldGenerator(), 1);
     PacketHandler.init();
-    darkmatter = EnumHelper.addToolMaterial("DARKMATTER", Ref.DarkMatter.HARVEST_LEVEL, Ref.DarkMatter.DURABILITY, Ref.DarkMatter.EFFICIENCY, Ref.DarkMatter.DAMAGE, 0);
+    darkmatter = EnumHelper.addToolMaterial("DARKMATTER", Ref.DarkMatter.HARVEST_LEVEL, Ref.DarkMatter.DURABILITY, Ref.DarkMatter.EFFICIENCY, Ref.DarkMatter.DAMAGE, 100);
     darkmatterArmor = EnumHelper.addArmorMaterial("DARKMATTER", ModInfo.MOD_ID + ":" + "darkmatter", 100, new int[] {
         3,
         8,
@@ -82,13 +82,13 @@ public class AfterHours {
 
   @Mod.EventHandler
   public void init(@Nonnull FMLInitializationEvent event) {
-    RecipeManager.init();
+    ModRecipes.init();
     NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
   }
 
   @Mod.EventHandler
   public void postInit(@Nonnull FMLPostInitializationEvent event) {
-    RecipeManager.post();
+    ModRecipes.post();
     proxy.registerClientEventHandlers();
   }
 }

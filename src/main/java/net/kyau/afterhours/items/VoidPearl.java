@@ -39,6 +39,11 @@ public class VoidPearl extends BaseItem {
   }
 
   @Override
+  public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+    return false;
+  }
+
+  @Override
   public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
     boolean firstUse = false;
     // Set an Owner, if one doesn't exist already

@@ -53,8 +53,13 @@ public class WormholeManipulator extends BaseItem {
   @Override
   public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
     ItemStack stack = new ItemStack(itemIn, 1, 0);
-    stack.addEnchantment(Enchantment.getEnchantmentById(85), 1);
+    stack.addEnchantment(Enchantment.getEnchantmentById(Ref.Enchant.ENTANGLEMENT_ID), 1);
     subItems.add(stack);
+  }
+
+  @Override
+  public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+    return false;
   }
 
   @Override
@@ -119,18 +124,21 @@ public class WormholeManipulator extends BaseItem {
       } else {
         return false;
       }
-      MinecraftServer.getServer().worldServerForDimension(0).playSoundEffect(player.posX, player.posY, player.posZ, "mob.endermen.portal", 1.0F, 1.0F);
+      // MinecraftServer.getServer().worldServerForDimension(0).playSoundEffect(player.posX, player.posY, player.posZ,
+      // "mob.endermen.portal", 1.0F, 1.0F);
     }
     return false;
   }
 
   @Override
   public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+    boolean firstUse = false;
     // Set an Owner, if one doesn't exist already
     if (!ItemHelper.hasOwnerUUID(stack)) {
       ItemHelper.setOwner(stack, player);
       if (!world.isRemote)
         ChatUtil.sendNoSpam(player, new ChatComponentTranslation(Ref.Translation.IMPRINT_SUCCESS));
+      firstUse = true;
     }
     // Set a UUID, if one doesn't exist already
     if (!NBTHelper.hasUUID(stack)) {
@@ -144,6 +152,9 @@ public class WormholeManipulator extends BaseItem {
     if (!NBTHelper.hasTag(stack, Ref.NBT.ENERGY_LEVEL) || !NBTHelper.hasTag(stack, Ref.NBT.ENERGY_MAX)) {
       NBTHelper.setEnergyLevels(stack, 0, Ref.ItemStat.ENERGY_WORMHOLE_MANIPULATOR);
     }
+
+    if (firstUse)
+      return stack;
 
     long ticksSinceLastUse = player.worldObj.getTotalWorldTime() - NBTHelper.getLong(stack, Ref.NBT.LASTUSE);
     if (!world.isRemote) {

@@ -1,13 +1,11 @@
-package net.kyau.afterhours.items.darkmatter;
+package net.kyau.afterhours.items.tools;
 
 import java.util.Set;
 
 import net.kyau.afterhours.init.ModItems;
 import net.kyau.afterhours.references.Ref;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
 
 import com.google.common.collect.Sets;
 
@@ -30,9 +28,11 @@ public class DarkMatterAxe extends DarkMatterTool {
     ModItems.repairList.add(this.getUnlocalizedName());
   }
 
+  /*
   @Override
   public float getStrVsBlock(ItemStack stack, Block block) {
     return block.getMaterial() != Material.wood && block.getMaterial() != Material.plants && block.getMaterial() != Material.vine ? super.getStrVsBlock(stack, block) : this.efficiencyOnProperMaterial;
   }
+  */
 
 }

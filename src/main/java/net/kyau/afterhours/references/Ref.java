@@ -20,6 +20,10 @@ public class Ref {
     public static final String DARKMATTER_SHOVEL = "darkmatter_shovel";
     public static final String DARKMATTER_PICKAXE = "darkmatter_pickaxe";
     public static final String DARKMATTER_AXE = "darkmatter_axe";
+    public static final String DARKMATTER_BOOTS = "darkmatter_boots";
+    public static final String DARKMATTER_CHESTPLATE = "darkmatter_chestplate";
+    public static final String DARKMATTER_LEGGINGS = "darkmatter_leggings";
+    public static final String DARKMATTER_HELMET = "darkmatter_helmet";
     public static final String DOUGH = "dough";
     public static final String QRD = "qrd";
     public static final String QUANTUMROD = "quantumrod";
@@ -97,7 +101,16 @@ public class Ref {
 
   public static final class Enchant {
 
+    public static final String ABSORPTION = "Absorption";
+    public static final int ABSORPTION_ID = 85;
     public static final String ENTANGLEMENT = "Entanglement";
+    public static final int ENTANGLEMENT_ID = 86;
+    public static final String GRAVITATION = "Gravitation";
+    public static final int GRAVITATION_ID = 87;
+    public static final String QUANTUMBOOST = "Quantum Boost";
+    public static final int QUANTUMBOOST_ID = 88;
+    public static final String QUANTUMDISPLAY = "Quantum Display";
+    public static final int QUANTUMDISPLAY_ID = 89;
   }
 
   public static final class Translation {

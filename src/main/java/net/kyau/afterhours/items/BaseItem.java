@@ -3,8 +3,6 @@ package net.kyau.afterhours.items;
 import net.kyau.afterhours.AfterHours;
 import net.kyau.afterhours.init.ModItems;
 import net.kyau.afterhours.references.ModInfo;
-import net.kyau.afterhours.utils.LogHelper;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -12,7 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.Vec3;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class BaseItem extends Item {
@@ -26,15 +23,8 @@ public class BaseItem extends Item {
 
   public Item register(String name) {
     GameRegistry.registerItem(this, name);
-    ModItems.itemList.add(this);
+    ModItems.itemList.add((Item) this);
     return this;
-  }
-
-  public void registerRender(String name) {
-    ModelLoader.registerItemVariants(this);
-    ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(ModInfo.MOD_ID + ":" + name, "inventory"));
-    if (ModInfo.DEBUG)
-      LogHelper.info("ClientProxy: registerRender(): " + name);
   }
 
   @Override
@@ -51,7 +41,7 @@ public class BaseItem extends Item {
     return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
   }
 
-  public void damageItem(ItemStack stack, int amount, EntityLivingBase entityIn) {
+  public static void damageItem(ItemStack stack, int amount, EntityLivingBase entityIn) {
     if (!(entityIn instanceof EntityPlayer) || !((EntityPlayer) entityIn).capabilities.isCreativeMode) {
       if (stack.isItemStackDamageable()) {
         if (stack.attemptDamageItem(amount, entityIn.getRNG())) {

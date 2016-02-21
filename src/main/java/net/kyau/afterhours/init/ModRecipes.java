@@ -15,7 +15,7 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class RecipeManager {
+public class ModRecipes {
 
   @SuppressWarnings("unchecked")
   private static Collection<Item> itemVanillaRemoveSet = new HashSet<Item>();
@@ -42,31 +42,60 @@ public class RecipeManager {
   }
 
   private static void addRecipes() {
-    GameRegistry.addRecipe(new ItemStack(ModItems.antenna, 1), "g", "s", 'g', Items.glowstone_dust, 's', Items.stick);
+    GameRegistry.addRecipe(new ItemStack(ModItems.antenna, 1), "e", "q", 'e', Items.ender_pearl, 'q', ModItems.quantumrod);
     GameRegistry.addRecipe(new ItemStack(ModVanilla.dough, 1), "www", 'w', Items.wheat);
     GameRegistry.addSmelting(ModVanilla.dough, new ItemStack(Items.bread, 1), 0.35F);
     GameRegistry.addShapelessRecipe(new ItemStack(ModVanilla.rawhide, 1), Items.rabbit_hide, Items.rabbit_hide, Items.rabbit_hide, Items.rabbit_hide);
     GameRegistry.addRecipe(new ItemStack(ModItems.singularity, 1), "iii", "iui", "iii", 'i', new ItemStack(ModBlocks.infused_voidstone, 1, 0), 'u', ModItems.unstablecore);
     GameRegistry.addRecipe(new ItemStack(ModItems.stablecore, 1), "ddd", "dud", "ddd", 'd', ModItems.darkmatter, 'u', ModItems.unstablecore);
-    GameRegistry.addRecipe(new ItemStack(ModItems.unstablecore, 1), "ccc", "cnc", "ccc", 'c', ModItems.voidcrystal, 'n', Items.nether_star);
-    GameRegistry.addRecipe(new ItemStack(ModItems.voidcrystal, 1), "ggg", "lel", "ggg", 'g', Items.glowstone_dust, 'e', Items.ender_pearl, 'l', Items.lava_bucket);
+    GameRegistry.addRecipe(new ItemStack(ModItems.unstablecore, 1), "viv", "ini", "viv", 'v', new ItemStack(ModBlocks.voidstone, 1, 0), 'n', Items.nether_star, 'i', new ItemStack(ModBlocks.infused_voidstone, 1, 0));
+    GameRegistry.addRecipe(new ItemStack(ModItems.voidcrystal, 1), "ggg", "lew", "ggg", 'g', Items.glowstone_dust, 'e', Items.ender_pearl, 'l', Items.lava_bucket, 'w', Items.water_bucket);
     GameRegistry.addShapelessRecipe(new ItemStack(ModItems.voidjournal, 1), Items.book, Items.ender_pearl, Items.glowstone_dust);
     GameRegistry.addRecipe(new ItemStack(ModItems.voidpearl, 1), " s ", "geg", " s ", 's', new ItemStack(Blocks.stone_slab, 1, 0), 'g', Items.glowstone_dust, 'e', ModItems.voidcrystal);
     GameRegistry.addSmelting(Blocks.end_stone, new ItemStack(ModBlocks.voidstone, 1), 1F);
-    GameRegistry.addRecipe(new ItemStack(ModBlocks.infused_voidstone, 1), "ggg", "gvg", "ggg", 'g', Items.glowstone_dust, 'v', new ItemStack(ModBlocks.voidstone, 1, 0));
-    GameRegistry.addRecipe(new ItemStack(ModItems.voidwell, 1), "mdm", "iui", "mdm", 'u', ModItems.stablecore, 'd', Items.diamond, 'i', new ItemStack(ModBlocks.infused_voidstone, 1, 0), 'm', ModItems.darkmatter);
-    GameRegistry.addRecipe(new ItemStack(ModItems.qrd, 1), "sas", "ece", "ses", 's', new ItemStack(Blocks.stone_slab, 1, 0), 'a', ModItems.antenna, 's', Items.stick, 'c', Blocks.ender_chest, 'e', ModItems.voidcrystal);
+    GameRegistry.addRecipe(new ItemStack(ModBlocks.infused_voidstone, 1), "ggg", "vcv", "ggg", 'g', Items.glowstone_dust, 'v', new ItemStack(ModBlocks.voidstone, 1, 0), 'c', ModItems.voidcrystal);
+    GameRegistry.addRecipe(new ItemStack(ModItems.wormhole_manipulator, 1), "mam", "iui", "mim", 'a', ModItems.antenna, 'u', ModItems.stablecore, 'i', new ItemStack(ModBlocks.infused_voidstone, 1, 0), 'm', ModItems.darkmatter);
+    GameRegistry.addRecipe(new ItemStack(ModItems.qrd, 1), "qaq", "ese", "qcq", 's', new ItemStack(Blocks.stone_slab, 1, 0), 'a', ModItems.antenna, 'q', ModItems.quantumrod, 'c', Blocks.ender_chest, 'e', new ItemStack(ModBlocks.infused_voidstone, 1, 0), 's', ModItems.stablecore);
+    GameRegistry.addRecipe(new ItemStack(ModBlocks.quantum_stabilizer, 1), "vvv", "vuv", "viv", 'v', new ItemStack(ModBlocks.voidstone, 1, 0), 'u', ModItems.unstablecore, 'i', new ItemStack(ModBlocks.infused_voidstone, 1, 0));
 
     // dark matter gear
-    GameRegistry.addRecipe(new ItemStack(ModItems.darkmatter_sword), " d ", " d ", " q ", 'd', ModItems.darkmatter, 'q', ModItems.quantumrod);
-    GameRegistry.addRecipe(new ItemStack(ModItems.darkmatter_axe), "dd ", "dq ", " q ", 'd', ModItems.darkmatter, 'q', ModItems.quantumrod);
-    GameRegistry.addRecipe(new ItemStack(ModItems.darkmatter_pickaxe), "ddd", " q ", " q ", 'd', ModItems.darkmatter, 'q', ModItems.quantumrod);
-    GameRegistry.addRecipe(new ItemStack(ModItems.darkmatter_shovel), " d ", " q ", " q ", 'd', ModItems.darkmatter, 'q', ModItems.quantumrod);
-    // dark matter repair recipes
-    CraftingManager.getInstance().getRecipeList().add(new RecipeRepair(new ItemStack(ModItems.darkmatter_sword), new ItemStack(ModItems.darkmatter), (int) Math.round(AfterHours.darkmatter.getMaxUses() / 4.5)));
-    CraftingManager.getInstance().getRecipeList().add(new RecipeRepair(new ItemStack(ModItems.darkmatter_shovel), new ItemStack(ModItems.darkmatter), (int) Math.round(AfterHours.darkmatter.getMaxUses() / 4.5)));
-    CraftingManager.getInstance().getRecipeList().add(new RecipeRepair(new ItemStack(ModItems.darkmatter_pickaxe), new ItemStack(ModItems.darkmatter), (int) Math.round(AfterHours.darkmatter.getMaxUses() / 4.5)));
-    CraftingManager.getInstance().getRecipeList().add(new RecipeRepair(new ItemStack(ModItems.darkmatter_axe), new ItemStack(ModItems.darkmatter), (int) Math.round(AfterHours.darkmatter.getMaxUses() / 4.5)));
+    ItemStack sword = new ItemStack(ModItems.darkmatter_sword);
+    sword.addEnchantment(ModEnchants.entanglement, 1);
+    GameRegistry.addRecipe(sword, " d ", " d ", " q ", 'd', ModItems.darkmatter, 'q', ModItems.quantumrod);
+    CraftingManager.getInstance().getRecipeList().add(new RecipeRepair(sword, new ItemStack(ModItems.darkmatter), (int) Math.round(AfterHours.darkmatter.getMaxUses() / 4.5)));
+    ItemStack axe = new ItemStack(ModItems.darkmatter_axe);
+    GameRegistry.addRecipe(axe, "dd ", "dq ", " q ", 'd', ModItems.darkmatter, 'q', ModItems.quantumrod);
+    axe.addEnchantment(ModEnchants.entanglement, 1);
+    CraftingManager.getInstance().getRecipeList().add(new RecipeRepair(axe, new ItemStack(ModItems.darkmatter), (int) Math.round(AfterHours.darkmatter.getMaxUses() / 4.5)));
+    ItemStack pickaxe = new ItemStack(ModItems.darkmatter_pickaxe);
+    GameRegistry.addRecipe(pickaxe, "ddd", " q ", " q ", 'd', ModItems.darkmatter, 'q', ModItems.quantumrod);
+    pickaxe.addEnchantment(ModEnchants.entanglement, 1);
+    CraftingManager.getInstance().getRecipeList().add(new RecipeRepair(pickaxe, new ItemStack(ModItems.darkmatter), (int) Math.round(AfterHours.darkmatter.getMaxUses() / 4.5)));
+    ItemStack shovel = new ItemStack(ModItems.darkmatter_shovel);
+    shovel.addEnchantment(ModEnchants.entanglement, 1);
+    GameRegistry.addRecipe(shovel, " d ", " q ", " q ", 'd', ModItems.darkmatter, 'q', ModItems.quantumrod);
+    CraftingManager.getInstance().getRecipeList().add(new RecipeRepair(shovel, new ItemStack(ModItems.darkmatter), (int) Math.round(AfterHours.darkmatter.getMaxUses() / 4.5)));
+
+    ItemStack boots = new ItemStack(ModItems.darkmatter_boots);
+    boots.addEnchantment(ModEnchants.absorption, 1);
+    boots.addEnchantment(ModEnchants.entanglement, 1);
+    GameRegistry.addRecipe(boots, "   ", "dqd", "d d", 'd', ModItems.darkmatter, 'q', ModItems.quantumrod);
+    CraftingManager.getInstance().getRecipeList().add(new RecipeRepair(boots, new ItemStack(ModItems.darkmatter), (int) Math.round(AfterHours.darkmatterArmor.getDurability(3) / 4.5)));
+    ItemStack chestplate = new ItemStack(ModItems.darkmatter_chestplate);
+    chestplate.addEnchantment(ModEnchants.entanglement, 1);
+    chestplate.addEnchantment(ModEnchants.gravitation, 1);
+    GameRegistry.addRecipe(chestplate, "d d", "qsq", "ddd", 'd', ModItems.darkmatter, 's', ModItems.stablecore, 'q', ModItems.quantumrod);
+    CraftingManager.getInstance().getRecipeList().add(new RecipeRepair(chestplate, new ItemStack(ModItems.darkmatter), (int) Math.round(AfterHours.darkmatterArmor.getDurability(1) / 4.5)));
+    ItemStack leggings = new ItemStack(ModItems.darkmatter_leggings);
+    leggings.addEnchantment(ModEnchants.entanglement, 1);
+    leggings.addEnchantment(ModEnchants.quantumBoost, 1);
+    GameRegistry.addRecipe(leggings, "ddd", "dqd", "dqd", 'd', ModItems.darkmatter, 'q', ModItems.quantumrod);
+    CraftingManager.getInstance().getRecipeList().add(new RecipeRepair(leggings, new ItemStack(ModItems.darkmatter), (int) Math.round(AfterHours.darkmatterArmor.getDurability(2) / 4.5)));
+    ItemStack helmet = new ItemStack(ModItems.darkmatter_helmet);
+    helmet.addEnchantment(ModEnchants.entanglement, 1);
+    helmet.addEnchantment(ModEnchants.quantumDisplay, 1);
+    GameRegistry.addRecipe(helmet, "   ", "dad", "dqd", 'd', ModItems.darkmatter, 'a', ModItems.antenna, 'q', ModItems.quantumrod);
+    CraftingManager.getInstance().getRecipeList().add(new RecipeRepair(helmet, new ItemStack(ModItems.darkmatter), (int) Math.round(AfterHours.darkmatterArmor.getDurability(0) / 4.5)));
   }
 
   private static void removeVanillaRecipes() {

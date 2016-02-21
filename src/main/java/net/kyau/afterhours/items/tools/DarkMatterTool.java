@@ -1,9 +1,11 @@
-package net.kyau.afterhours.items.darkmatter;
+package net.kyau.afterhours.items.tools;
 
 import java.util.List;
 import java.util.Set;
 
+import net.kyau.afterhours.init.ModItems;
 import net.kyau.afterhours.items.BaseItem;
+import net.kyau.afterhours.references.ModInfo;
 import net.kyau.afterhours.references.Ref;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -14,14 +16,16 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTool;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.google.common.collect.Multimap;
 
-public class DarkMatterTool extends BaseItem {
+public class DarkMatterTool extends ItemTool {
 
   private Set<Block> effectiveBlocks;
   protected float efficiencyOnProperMaterial = 4.0F;
@@ -30,6 +34,7 @@ public class DarkMatterTool extends BaseItem {
   private String toolClass;
 
   protected DarkMatterTool(float attackDamage, ToolMaterial material, Set<Block> effectiveBlocks) {
+    super(attackDamage, material, effectiveBlocks);
     this.toolMaterial = material;
     this.effectiveBlocks = effectiveBlocks;
     this.maxStackSize = 1;
@@ -51,6 +56,26 @@ public class DarkMatterTool extends BaseItem {
     }
   }
 
+  public Item register(String name) {
+    GameRegistry.registerItem(this, name);
+    ModItems.itemList.add((Item) this);
+    return this;
+  }
+
+  @Override
+  public String getUnlocalizedName() {
+    return String.format("%s.%s", ModInfo.MOD_ID, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+  }
+
+  @Override
+  public String getUnlocalizedName(ItemStack itemStack) {
+    return String.format("%s.%s", ModInfo.MOD_ID, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+  }
+
+  protected String getUnwrappedUnlocalizedName(String unlocalizedName) {
+    return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
+  }
+
   @Override
   @SideOnly(Side.CLIENT)
   public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
@@ -64,14 +89,14 @@ public class DarkMatterTool extends BaseItem {
 
   @Override
   public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
-    damageItem(stack, 5, attacker);
+    BaseItem.damageItem(stack, 5, attacker);
     return true;
   }
 
   @Override
   public boolean onBlockDestroyed(ItemStack stack, World worldIn, Block blockIn, BlockPos pos, EntityLivingBase playerIn) {
     if ((double) blockIn.getBlockHardness(worldIn, pos) != 0.0D) {
-      damageItem(stack, 1, playerIn);
+      BaseItem.damageItem(stack, 1, playerIn);
     }
 
     return true;
@@ -89,13 +114,31 @@ public class DarkMatterTool extends BaseItem {
     return true;
   }
 
-  @Override
-  public int getItemEnchantability() {
-    return 0;
+  public Item.ToolMaterial getToolMaterial() {
+    return this.toolMaterial;
   }
 
   public String getToolMaterialName() {
     return this.toolMaterial.toString();
+  }
+
+  @Override
+  public Set<String> getToolClasses(ItemStack stack) {
+    return toolClass != null ? com.google.common.collect.ImmutableSet.of(toolClass) : super.getToolClasses(stack);
+  }
+
+  @Override
+  public float getDigSpeed(ItemStack stack, net.minecraft.block.state.IBlockState state) {
+    for (String type : getToolClasses(stack)) {
+      if (state.getBlock().isToolEffective(type, state))
+        return efficiencyOnProperMaterial;
+    }
+    return super.getDigSpeed(stack, state);
+  }
+
+  @Override
+  public int getItemEnchantability() {
+    return this.toolMaterial.getEnchantability();
   }
 
   @Override
@@ -111,11 +154,6 @@ public class DarkMatterTool extends BaseItem {
   }
 
   @Override
-  public Set<String> getToolClasses(ItemStack stack) {
-    return toolClass != null ? com.google.common.collect.ImmutableSet.of(toolClass) : super.getToolClasses(stack);
-  }
-
-  @Override
   public int getHarvestLevel(ItemStack stack, String toolClass) {
     return this.toolMaterial.getHarvestLevel();
   }
@@ -124,7 +162,7 @@ public class DarkMatterTool extends BaseItem {
   public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
     ItemStack stack = new ItemStack(itemIn, 1, 0);
     // stack.addEnchantment(Enchantment.smite, 1);
-    stack.addEnchantment(Enchantment.getEnchantmentById(85), 1);
+    stack.addEnchantment(Enchantment.getEnchantmentById(Ref.Enchant.ENTANGLEMENT_ID), 1);
     subItems.add(stack);
   }
 }

@@ -29,17 +29,26 @@ public class QRD extends BaseItem {
   }
 
   @Override
+  public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+    return false;
+  }
+
+  @Override
   public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+    boolean firstUse = false;
     // Set an Owner, if one doesn't exist already
     if (!ItemHelper.hasOwnerUUID(stack)) {
       ItemHelper.setOwner(stack, player);
       if (!world.isRemote)
         ChatUtil.sendNoSpam(player, new ChatComponentTranslation(Ref.Translation.IMPRINT_SUCCESS));
+      firstUse = true;
     }
     // Set a UUID, if one doesn't exist already
     if (!NBTHelper.hasUUID(stack)) {
       NBTHelper.setUUID(stack);
     }
+    if (firstUse)
+      return stack;
     final String owner = ItemHelper.getOwnerName(stack);
     if (!world.isRemote) {
       if (player.isSneaking()) {

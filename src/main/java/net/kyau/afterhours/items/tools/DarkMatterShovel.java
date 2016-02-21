@@ -1,4 +1,4 @@
-package net.kyau.afterhours.items.darkmatter;
+package net.kyau.afterhours.items.tools;
 
 import java.util.Set;
 

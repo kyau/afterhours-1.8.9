@@ -3,6 +3,8 @@ package net.kyau.afterhours.event;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Random;
+import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
@@ -12,16 +14,28 @@ import net.kyau.afterhours.references.ModInfo;
 import net.kyau.afterhours.utils.InventoryHandler;
 import net.kyau.afterhours.utils.ItemHelper;
 import net.kyau.afterhours.utils.LogHelper;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerFlyableFallEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -57,6 +71,111 @@ public class ForgeEventHandler {
   }
 
   @SubscribeEvent
+  public void onLivingUpdate(LivingEvent.LivingUpdateEvent event) {
+    if (event.entityLiving instanceof EntityPlayer) {
+      EntityPlayer player = (EntityPlayer) event.entityLiving;
+      World world = player.worldObj;
+      if (!player.capabilities.isCreativeMode) {
+        if (player.inventory.armorInventory[2] == null) {
+          player.capabilities.allowFlying = false;
+          player.capabilities.disableDamage = false;
+          // player.capabilities.setFlySpeed(0.05F);
+        } else {
+          if (player.inventory.armorInventory[2].getUnlocalizedName().equals(ModItems.darkmatter_chestplate.getUnlocalizedName())) {
+            player.capabilities.allowFlying = true;
+            player.capabilities.disableDamage = false;
+          }
+        }
+        if (player.inventory.armorInventory[0] == null) {
+          changeSpeed(player, 1D, "speedMod");
+          // player.capabilities.setPlayerWalkSpeed(0.1F);
+        } else {
+          if (player.inventory.armorInventory[0].getUnlocalizedName().equals(ModItems.darkmatter_boots.getUnlocalizedName())) {
+            changeSpeed(player, 2.2D, "speedMod");
+            // player.capabilities.setPlayerWalkSpeed(0.2F);
+          } else {
+            changeSpeed(player, 1D, "speedMod");
+          }
+        }
+      }
+    }
+  }
+
+  @SubscribeEvent
+  public void onFOVChange(FOVUpdateEvent event) {
+    if (event.entity instanceof EntityPlayer) {
+      EntityPlayer player = (EntityPlayer) event.entity;
+      if (!(player.inventory.armorInventory[0] == null)) {
+        if (player.inventory.armorInventory[0].getUnlocalizedName().equals(ModItems.darkmatter_boots.getUnlocalizedName())) {
+          event.newfov = 1.0F;
+        }
+      }
+    }
+  }
+
+  @SubscribeEvent
+  public void onPlayerFall(LivingFallEvent event) {
+    if (event.entity instanceof EntityPlayer) {
+      EntityPlayer player = (EntityPlayer) event.entityLiving;
+      if (player.inventory.armorInventory[0] != null) {
+        if (player.inventory.armorInventory[0].getUnlocalizedName().equals(ModItems.darkmatter_boots.getUnlocalizedName())) {
+          int damage = (int) (1.5 * event.distance * event.damageMultiplier);
+          String soundName = damage > 4 ? "game.player.hurt.fall.big" : "game.player.hurt.fall.small";
+          player.inventory.armorInventory[0].attemptDamageItem(damage, new Random());
+          event.damageMultiplier = 0;
+          MinecraftServer.getServer().worldServerForDimension(player.dimension).playSoundEffect(player.posX, player.posY, player.posZ, soundName, 1.0F, 1.0F);
+        }
+      }
+    }
+  }
+
+  @SubscribeEvent
+  public void onPlayerFallFlying(PlayerFlyableFallEvent event) {
+    boolean boots = false;
+    if (event.entity instanceof EntityPlayer) {
+      EntityPlayer player = (EntityPlayer) event.entityLiving;
+      int damage = (int) (0.4 * event.distance * event.multipler);
+      if (player.inventory.armorInventory[0] != null) {
+        if (player.inventory.armorInventory[0].getUnlocalizedName().equals(ModItems.darkmatter_boots.getUnlocalizedName())) {
+          if (event.distance > 10) {
+            String soundName = damage > 5 ? "game.player.hurt.fall.big" : "game.player.hurt.fall.small";
+            player.inventory.armorInventory[0].attemptDamageItem(damage, new Random());
+            MinecraftServer.getServer().worldServerForDimension(player.dimension).playSoundEffect(player.posX, player.posY, player.posZ, soundName, 1.0F, 1.0F);
+            boots = true;
+          }
+          event.multipler = 0;
+        }
+      }
+      if (!boots) {
+        if (event.distance > 3) {
+          damage = (int) (event.distance * event.multipler) / 2;
+          player.attackEntityFrom(DamageSource.fall, damage);
+        }
+      }
+    }
+  }
+
+  @SubscribeEvent
+  public void onPlayerJump(LivingJumpEvent event) {
+    if (event.entityLiving instanceof EntityPlayer) {
+      EntityPlayer player = (EntityPlayer) event.entityLiving;
+      World world = player.worldObj;
+      if (!(player.inventory.armorInventory[0] == null)) {
+        if (player.inventory.armorInventory[0].getUnlocalizedName().equals(ModItems.darkmatter_boots.getUnlocalizedName())) {
+          float f = player.rotationYaw * 0.017453292F;
+          if (player.motionX > 0 || player.motionX < 0) {
+            player.motionX -= (double) (MathHelper.sin(f) * 1.2F);
+          }
+          if (player.motionZ > 0 || player.motionZ < 0) {
+            player.motionZ += (double) (MathHelper.cos(f) * 1.2F);
+          }
+          player.motionY = (double) 1.0F;
+        }
+      }
+    }
+  }
+
+  @SubscribeEvent
   public void playerTick(TickEvent.PlayerTickEvent event) {
     if (event.phase == Phase.START) {
       EntityPlayer player = event.player;
@@ -68,31 +187,6 @@ public class ForgeEventHandler {
           InventoryHandler.removeLimitedItem(player, item);
         }
       }
-    }
-    if (!event.player.capabilities.isCreativeMode) {
-      if (event.player.inventory.armorInventory[2] == null) {
-        event.player.capabilities.allowFlying = false;
-        // event.player.capabilities.setFlySpeed(0.05F);
-      } else {
-        if (event.player.inventory.armorInventory[2].getUnlocalizedName().equals(ModItems.darkmatter_chestplate.getUnlocalizedName())) {
-          event.player.capabilities.allowFlying = true;
-          // event.player.capabilities.setFlySpeed(0.08F);
-          // LogHelper.info(event.player.capabilities.getFlySpeed());
-        }
-        // event.player.capabilities.allowFlying =
-        // (event.player.inventory.armorInventory[2].getUnlocalizedName().equals(ModItems.darkmatter_chestplate.getUnlocalizedName())
-        // || event.player.capabilities.isCreativeMode);
-      }
-      /*
-      if (event.player.inventory.armorInventory[0] == null) {
-        event.player.capabilities.setPlayerWalkSpeed(0.1F);
-      } else {
-        if (event.player.inventory.armorInventory[0].getUnlocalizedName().equals(ModItems.darkmatter_boots.getUnlocalizedName())) {
-          event.player.capabilities.setPlayerWalkSpeed(0.2F);
-
-        }
-      }
-      */
     }
   }
 
@@ -187,4 +281,16 @@ public class ForgeEventHandler {
 
     return false;
   }
+
+  public void changeSpeed(EntityLivingBase entity, double modifier, String name) {
+    final UUID speedModifierUUID = UUID.fromString("c5595a67-9410-4fb2-826a-bcaf432c6a6f");
+    AttributeModifier speedModifier = (new AttributeModifier(speedModifierUUID, name, modifier - 1, 2)).setSaved(false);
+    IAttributeInstance iattributeinstance = entity.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
+
+    if (iattributeinstance.getModifier(speedModifierUUID) != null) {
+      iattributeinstance.removeModifier(speedModifier);
+    }
+    iattributeinstance.applyModifier(speedModifier);
+  }
+
 }

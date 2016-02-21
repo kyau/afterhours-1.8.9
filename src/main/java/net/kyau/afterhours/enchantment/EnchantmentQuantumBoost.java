@@ -7,11 +7,11 @@ import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-public class EnchantmentEntanglement extends Enchantment {
+public class EnchantmentQuantumBoost extends Enchantment {
 
-  public EnchantmentEntanglement(int id, int weight) {
-    super(id, new ResourceLocation(Ref.Enchant.ENTANGLEMENT.toLowerCase().replaceAll("\\s", "")), weight, EnumEnchantmentType.ALL);
-    setName(Ref.Enchant.ENTANGLEMENT.toLowerCase().replaceAll("\\s", ""));
+  public EnchantmentQuantumBoost(int id, int weight) {
+    super(id, new ResourceLocation(Ref.Enchant.QUANTUMBOOST.toLowerCase().replaceAll("\\s", "")), weight, EnumEnchantmentType.ALL);
+    setName(Ref.Enchant.QUANTUMBOOST.toLowerCase().replaceAll("\\s", ""));
     // addToBookList(this);
   }
 
@@ -35,7 +35,7 @@ public class EnchantmentEntanglement extends Enchantment {
     return 1;
   }
 
-  public static boolean isEntangled(ItemStack stack) {
-    return EnchantmentHelper.getEnchantmentLevel(Ref.Enchant.ENTANGLEMENT_ID, stack) > 0;
+  public static boolean hasQuantumBoost(ItemStack stack) {
+    return EnchantmentHelper.getEnchantmentLevel(Ref.Enchant.QUANTUMBOOST_ID, stack) > 0;
   }
 }

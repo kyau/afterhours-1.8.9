@@ -1,9 +1,10 @@
-package net.kyau.afterhours.items.darkmatter;
+package net.kyau.afterhours.items.tools;
 
 import java.util.List;
 
 import net.kyau.afterhours.init.ModItems;
 import net.kyau.afterhours.items.BaseItem;
+import net.kyau.afterhours.references.ModInfo;
 import net.kyau.afterhours.references.Ref;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -18,25 +19,48 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.google.common.collect.Multimap;
 
-public class DarkMatterSword extends BaseItem {
+public class DarkMatterSword extends ItemSword {
 
   private float attackDamage;
   private final ToolMaterial material;
 
   public DarkMatterSword(ToolMaterial material) {
+    super(material);
     this.material = material;
     this.maxStackSize = 1;
     this.setMaxDamage(Ref.DarkMatter.DURABILITY - 250);
     this.attackDamage = 4.0F + Ref.DarkMatter.DAMAGE;
     this.setUnlocalizedName(Ref.ItemID.DARKMATTER_SWORD);
     ModItems.repairList.add(this.getUnlocalizedName());
+  }
+
+  public Item register(String name) {
+    GameRegistry.registerItem(this, name);
+    ModItems.itemList.add((Item) this);
+    return this;
+  }
+
+  @Override
+  public String getUnlocalizedName() {
+    return String.format("%s.%s", ModInfo.MOD_ID, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+  }
+
+  @Override
+  public String getUnlocalizedName(ItemStack itemStack) {
+    return String.format("%s.%s", ModInfo.MOD_ID, getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+  }
+
+  protected String getUnwrappedUnlocalizedName(String unlocalizedName) {
+    return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
   }
 
   @Override
@@ -61,7 +85,7 @@ public class DarkMatterSword extends BaseItem {
 
   @Override
   public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
-    damageItem(stack, 1, attacker);
+    BaseItem.damageItem(stack, 1, attacker);
     return true;
   }
 
@@ -73,7 +97,7 @@ public class DarkMatterSword extends BaseItem {
   @Override
   public boolean onBlockDestroyed(ItemStack stack, World worldIn, Block blockIn, BlockPos pos, EntityLivingBase playerIn) {
     if ((double) blockIn.getBlockHardness(worldIn, pos) != 0.0D) {
-      damageItem(stack, 5, playerIn);
+      BaseItem.damageItem(stack, 5, playerIn);
     }
 
     return true;
@@ -129,20 +153,10 @@ public class DarkMatterSword extends BaseItem {
     return multimap;
   }
 
-  /*
-
-    @Override
-    public Multimap<String, AttributeModifier> getItemAttributeModifiers() {
-      Multimap<String, AttributeModifier> multimap = super.getItemAttributeModifiers();
-      multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(itemModifierUUID, "Weapon modifier", (double) this.attackDamage, 0));
-      return multimap;
-    }
-  */
-
   @Override
   public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
     ItemStack stack = new ItemStack(itemIn, 1, 0);
-    stack.addEnchantment(Enchantment.getEnchantmentById(85), 1);
+    stack.addEnchantment(Enchantment.getEnchantmentById(Ref.Enchant.ENTANGLEMENT_ID), 1);
     subItems.add(stack);
   }
 

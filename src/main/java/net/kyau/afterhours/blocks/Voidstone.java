@@ -1,7 +1,9 @@
 package net.kyau.afterhours.blocks;
 
 import net.kyau.afterhours.references.Ref;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -44,6 +46,17 @@ public class Voidstone extends BaseBlock {
   @Override
   public int getRenderType() {
     return 3;
+  }
+
+  @Override
+  public float getBlockHardness(World worldIn, BlockPos pos) {
+    // make spawn cube in the void unbreakable
+    if (worldIn.provider.getDimensionId() == Ref.Dimension.DIM && pos.getY() == 127) {
+      if ((pos.getX() > -3 && pos.getX() < 3) && (pos.getZ() > -3 && pos.getZ() < 3)) {
+        return -1;
+      }
+    }
+    return this.blockHardness;
   }
 
 }

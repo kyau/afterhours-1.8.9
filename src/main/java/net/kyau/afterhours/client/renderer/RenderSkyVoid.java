@@ -214,15 +214,12 @@ public class RenderSkyVoid extends IRenderHandler {
       GlStateManager.color(f15 - 0.4F, f15 - 0.4F, f15 - 0.4F, f15);
 
       if (this.vboEnabled) {
-        // LogHelper.info("Rendering Stars #1");
         this.starVBO.bindBuffer();
         GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
         GL11.glVertexPointer(3, GL11.GL_FLOAT, 12, 0L);
         this.starVBO.drawArrays(7);
         this.starVBO.unbindBuffer();
         GlStateManager.color(0F, 0.4549019607843137F, 0.4666666666666667F, 1.0F);
-        // GlStateManager.color(f15 - 0.6F, f15 - 0.6F, f15 - 0.6F, f15);
-        // LogHelper.info("Rendering Stars #2");
         this.star2VBO.bindBuffer();
         GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
         GL11.glVertexPointer(3, GL11.GL_FLOAT, 12, 0L);
@@ -231,7 +228,7 @@ public class RenderSkyVoid extends IRenderHandler {
         GL11.glDisableClientState(GL11.GL_VERTEX_ARRAY);
       } else {
         GlStateManager.callList(this.starGLCallList);
-        GlStateManager.color(0F, 0.5F, 1.0F, 0.7F);
+        GlStateManager.color(0F, 0.4549019607843137F, 0.4666666666666667F, 1.0F);
         GlStateManager.callList(this.starGLCallList2);
       }
     }
@@ -243,7 +240,7 @@ public class RenderSkyVoid extends IRenderHandler {
     GlStateManager.popMatrix();
     GlStateManager.disableTexture2D();
     GlStateManager.color(0.0F, 0.0F, 0.0F);
-    double d0 = this.mc.thePlayer.getPositionEyes(partialTicks).yCoord - world.getHorizon();
+    double d0 = this.mc.thePlayer.getPositionEyes(partialTicks).yCoord - (-312);
 
     if (d0 < 0.0D) {
       GlStateManager.pushMatrix();

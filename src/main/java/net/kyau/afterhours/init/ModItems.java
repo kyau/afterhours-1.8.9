@@ -5,7 +5,6 @@ import java.util.List;
 
 import net.kyau.afterhours.AfterHours;
 import net.kyau.afterhours.items.Antenna;
-import net.kyau.afterhours.items.BaseItem;
 import net.kyau.afterhours.items.DarkMatter;
 import net.kyau.afterhours.items.QRD;
 import net.kyau.afterhours.items.QuantumRod;
@@ -18,12 +17,13 @@ import net.kyau.afterhours.items.VoidJournal;
 import net.kyau.afterhours.items.VoidPearl;
 import net.kyau.afterhours.items.WormholeManipulator;
 import net.kyau.afterhours.items.armor.DarkMatterArmor;
-import net.kyau.afterhours.items.darkmatter.DarkMatterAxe;
-import net.kyau.afterhours.items.darkmatter.DarkMatterPickaxe;
-import net.kyau.afterhours.items.darkmatter.DarkMatterShovel;
-import net.kyau.afterhours.items.darkmatter.DarkMatterSword;
+import net.kyau.afterhours.items.tools.DarkMatterAxe;
+import net.kyau.afterhours.items.tools.DarkMatterPickaxe;
+import net.kyau.afterhours.items.tools.DarkMatterShovel;
+import net.kyau.afterhours.items.tools.DarkMatterSword;
 import net.kyau.afterhours.references.ModInfo;
 import net.kyau.afterhours.references.Ref;
+import net.kyau.afterhours.utils.LogHelper;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
@@ -33,7 +33,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 @GameRegistry.ObjectHolder(ModInfo.MOD_ID)
 public class ModItems {
 
-  public static List<BaseItem> itemList = new ArrayList<BaseItem>();
+  public static List<Item> itemList = new ArrayList<Item>();
   public static List<String> repairList = new ArrayList<String>();
   public static List<ItemArmor> armorList = new ArrayList<ItemArmor>();
 
@@ -48,7 +48,7 @@ public class ModItems {
   public static Item voidcrystal;
   public static Item voidjournal;
   public static Item voidpearl;
-  public static Item voidwell;
+  public static Item wormhole_manipulator;
 
   // dark matter gear
   public static Item darkmatter_sword;
@@ -74,7 +74,7 @@ public class ModItems {
     unstablecore = new UnstableCore().register(Ref.ItemID.UNSTABLECORE);
     voidcrystal = new VoidCrystal().register(Ref.ItemID.VOIDCRYSTAL);
     voidpearl = new VoidPearl().register(Ref.ItemID.VOIDPEARL);
-    voidwell = new WormholeManipulator().register(Ref.ItemID.WORMHOLE_MANIPULATOR);
+    wormhole_manipulator = new WormholeManipulator().register(Ref.ItemID.WORMHOLE_MANIPULATOR);
 
     // dark matter gear
     darkmatter_sword = new DarkMatterSword(AfterHours.darkmatter).register(Ref.ItemID.DARKMATTER_SWORD);
@@ -82,16 +82,16 @@ public class ModItems {
     darkmatter_pickaxe = new DarkMatterPickaxe(AfterHours.darkmatter).register(Ref.ItemID.DARKMATTER_PICKAXE);
     darkmatter_axe = new DarkMatterAxe(AfterHours.darkmatter).register(Ref.ItemID.DARKMATTER_AXE);
 
-    GameRegistry.registerItem(darkmatter_helmet = new DarkMatterArmor("darkmatter_helmet", AfterHours.darkmatterArmor, 1, 0), "darkmatter_helmet");
-    GameRegistry.registerItem(darkmatter_chestplate = new DarkMatterArmor("darkmatter_chestplate", AfterHours.darkmatterArmor, 1, 1), "darkmatter_chestplate");
-    GameRegistry.registerItem(darkmatter_leggings = new DarkMatterArmor("darkmatter_leggings", AfterHours.darkmatterArmor, 2, 2), "darkmatter_leggings");
-    GameRegistry.registerItem(darkmatter_boots = new DarkMatterArmor("darkmatter_boots", AfterHours.darkmatterArmor, 1, 3), "darkmatter_boots");
+    GameRegistry.registerItem(darkmatter_helmet = new DarkMatterArmor(Ref.ItemID.DARKMATTER_HELMET, AfterHours.darkmatterArmor, 1, 0), Ref.ItemID.DARKMATTER_HELMET);
+    GameRegistry.registerItem(darkmatter_chestplate = new DarkMatterArmor(Ref.ItemID.DARKMATTER_CHESTPLATE, AfterHours.darkmatterArmor, 1, 1), Ref.ItemID.DARKMATTER_CHESTPLATE);
+    GameRegistry.registerItem(darkmatter_leggings = new DarkMatterArmor(Ref.ItemID.DARKMATTER_LEGGINGS, AfterHours.darkmatterArmor, 2, 2), Ref.ItemID.DARKMATTER_LEGGINGS);
+    GameRegistry.registerItem(darkmatter_boots = new DarkMatterArmor(Ref.ItemID.DARKMATTER_BOOTS, AfterHours.darkmatterArmor, 1, 3), Ref.ItemID.DARKMATTER_BOOTS);
   }
 
   public static void registerRenders() {
 
-    for (BaseItem item : itemList) {
-      item.registerRender(item.getUnlocalizedName().substring(11));
+    for (Item item : itemList) {
+      registerRender(item, item.getUnlocalizedName().substring(11));
     }
     ModelLoader.registerItemVariants(darkmatter_helmet);
     ModelLoader.setCustomModelResourceLocation(darkmatter_helmet, 0, new ModelResourceLocation(ModInfo.MOD_ID + ":" + "darkmatter_helmet", "inventory"));
@@ -101,6 +101,13 @@ public class ModItems {
     ModelLoader.setCustomModelResourceLocation(darkmatter_leggings, 0, new ModelResourceLocation(ModInfo.MOD_ID + ":" + "darkmatter_leggings", "inventory"));
     ModelLoader.registerItemVariants(darkmatter_boots);
     ModelLoader.setCustomModelResourceLocation(darkmatter_boots, 0, new ModelResourceLocation(ModInfo.MOD_ID + ":" + "darkmatter_boots", "inventory"));
+  }
+
+  public static void registerRender(Item item, String name) {
+    ModelLoader.registerItemVariants(item);
+    ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(ModInfo.MOD_ID + ":" + name, "inventory"));
+    if (ModInfo.DEBUG)
+      LogHelper.info("ClientProxy: registerRender(): " + name);
   }
 
 }

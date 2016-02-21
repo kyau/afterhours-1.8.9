@@ -25,6 +25,11 @@ public class Singularity extends BaseItem {
   }
 
   @Override
+  public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+    return false;
+  }
+
+  @Override
   public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
     if (!world.isRemote) {
       EntityPlayerMP playerMP = (EntityPlayerMP) player;

@@ -17,7 +17,7 @@ public class GuiButtonChangePage extends GuiButton {
   public void drawButton(Minecraft mc, int mouseX, int mouseY) {
     if (visible) {
       boolean mouseOver = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
-      mc.renderEngine.bindTexture(GuiVoidJournal.texture);
+      mc.renderEngine.bindTexture(GuiVoidJournal.book);
       int u = 0;
       int v = 192;
 

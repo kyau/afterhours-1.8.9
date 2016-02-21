@@ -63,4 +63,15 @@ public class InfusedVoidstone extends BaseBlock {
     double d5 = 0.0D;
     worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0, d1, d2, d3, d4, d5, new int[0]);
   }
+
+  @Override
+  public float getBlockHardness(World worldIn, BlockPos pos) {
+    // make spawn cube in the void unbreakable
+    if (worldIn.provider.getDimensionId() == Ref.Dimension.DIM && pos.getY() == 127) {
+      if ((pos.getX() > -3 && pos.getX() < 3) && (pos.getZ() > -3 && pos.getZ() < 3)) {
+        return -1;
+      }
+    }
+    return this.blockHardness;
+  }
 }

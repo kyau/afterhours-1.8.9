@@ -13,7 +13,6 @@ import javax.annotation.Nonnull;
 
 import net.kyau.afterhours.AfterHours;
 import net.kyau.afterhours.init.ModItems;
-import net.kyau.afterhours.utils.InventoryHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -133,46 +132,50 @@ public class GuiHUD extends Gui {
     }
 
     if ((minecraft.inGameHasFocus || (minecraft.currentScreen != null && (minecraft.currentScreen instanceof GuiChat))) && !minecraft.gameSettings.showDebugInfo && !minecraft.ingameGUI.getChatGUI().getChatOpen()) {
-      int countVRD = InventoryHandler.countItems(player, ModItems.qrd);
-      if (countVRD > 0) {
-        setClientPos();
+      // int countVRD = InventoryHandler.countItems(player, ModItems.qrd);
+      // if (countVRD > 0) {
+      if (player.inventory.armorInventory[3] != null) {
+        if (player.inventory.armorInventory[3].getUnlocalizedName().equals(ModItems.darkmatter_helmet.getUnlocalizedName())) {
+          setClientPos();
 
-        // render character
-        renderCharacterOnScreen("LEFT", 14, scaled, minecraft.thePlayer);
-        // player name
-        RenderUtils.renderText(player.getDisplayNameString(), 48, 15, 0x3ffefe, 1, true);
-        // ingame time + light level
-        RenderUtils.renderText(getMinecraftTime() + " " + getLightLevel(), 48, 25, 0xffffff, 1, true);
-        // biome
-        ArrayList<Object> biomeInfo = getCurrentBiome();
-        String biome = (String) biomeInfo.get(0);
-        if (isSlimeChunk()) {
-          biome = (String) biomeInfo.get(0) + EnumChatFormatting.GREEN + " (S)";
+          // render character
+          renderCharacterOnScreen("LEFT", 14, scaled, minecraft.thePlayer);
+          // player name
+          RenderUtils.renderText(player.getDisplayNameString(), 48, 15, 0x3ffefe, 1, true);
+          // ingame time + light level
+          RenderUtils.renderText(getMinecraftTime() + " " + getLightLevel(), 48, 25, 0xffffff, 1, true);
+          // biome
+          ArrayList<Object> biomeInfo = getCurrentBiome();
+          String biome = (String) biomeInfo.get(0);
+          if (isSlimeChunk()) {
+            biome = (String) biomeInfo.get(0) + EnumChatFormatting.GREEN + " (S)";
+          }
+          RenderUtils.renderText(biome, 48, 35, 0xbebebe, 1, true);
+
+          // temperature
+          String temperature = String.format("%.0f\u00b0", biomeInfo.get(1));
+          RenderUtils.renderText(temperature, getScreenCoordinates()[0] - (fontRenderer.getStringWidth(temperature)) - 7, 8, (int) biomeInfo.get(3), 1, true);
+
+          // inventory
+          int invTotals[] = getInventorySize(inv);
+          RenderUtils.renderText("" + (invTotals[0] - invTotals[1]), getScreenCoordinates()[0] - 16, fixedY, invTotals[2], 1, true);
+          // drawTexture("afterhours", "textures/gui/afterhours_icons.png", getScreenCoordinates()[0] - 34, fixedY - 5,
+          // 0,
+          // 0, 15, 16);
+          RenderUtils.renderItem(Blocks.chest, getScreenCoordinates()[0] - 34, fixedY - 5);
+
+          // fps / ping
+          RenderUtils.renderText(getFPS(), centerLeftX, fixedY, 0xdcdcdc, 1, true);
+          RenderUtils.renderTexture("minecraft", "textures/gui/icons.png", centerLeftX - 12, fixedY - 1, 0, 176 + getPingIndex() * 8, 10, 8, 0);
+
+          // real clock
+          RenderUtils.renderItem(new ItemStack(Items.clock), centerRightX, fixedY - 4);
+          RenderUtils.renderText(getRealTime(), centerRightX + 18, fixedY, 0xdcdcdc, 1, true);
+          // drawTexture("afterhours", "textures/gui/afterhours_icons.png", centerRightX, fixedY - 4, 16, 0, 16, 16);
+
+          // render current armor and held item
+          renderArmour();
         }
-        RenderUtils.renderText(biome, 48, 35, 0xbebebe, 1, true);
-
-        // temperature
-        String temperature = String.format("%.0f\u00b0", biomeInfo.get(1));
-        RenderUtils.renderText(temperature, getScreenCoordinates()[0] - (fontRenderer.getStringWidth(temperature)) - 7, 8, (int) biomeInfo.get(3), 1, true);
-
-        // inventory
-        int invTotals[] = getInventorySize(inv);
-        RenderUtils.renderText("" + (invTotals[0] - invTotals[1]), getScreenCoordinates()[0] - 16, fixedY, invTotals[2], 1, true);
-        // drawTexture("afterhours", "textures/gui/afterhours_icons.png", getScreenCoordinates()[0] - 34, fixedY - 5, 0,
-        // 0, 15, 16);
-        RenderUtils.renderItem(Blocks.chest, getScreenCoordinates()[0] - 34, fixedY - 5);
-
-        // fps / ping
-        RenderUtils.renderText(getFPS(), centerLeftX, fixedY, 0xdcdcdc, 1, true);
-        RenderUtils.renderTexture("minecraft", "textures/gui/icons.png", centerLeftX - 12, fixedY - 1, 0, 176 + getPingIndex() * 8, 10, 8, 0);
-
-        // real clock
-        RenderUtils.renderItem(new ItemStack(Items.clock), centerRightX, fixedY - 4);
-        RenderUtils.renderText(getRealTime(), centerRightX + 18, fixedY, 0xdcdcdc, 1, true);
-        // drawTexture("afterhours", "textures/gui/afterhours_icons.png", centerRightX, fixedY - 4, 16, 0, 16, 16);
-
-        // render current armor and held item
-        renderArmour();
       }
     }
   }

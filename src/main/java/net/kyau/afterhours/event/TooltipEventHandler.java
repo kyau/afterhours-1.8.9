@@ -7,9 +7,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.kyau.afterhours.init.ModItems;
-import net.kyau.afterhours.items.darkmatter.DarkMatterAxe;
-import net.kyau.afterhours.items.darkmatter.DarkMatterPickaxe;
-import net.kyau.afterhours.items.darkmatter.DarkMatterShovel;
+import net.kyau.afterhours.items.tools.DarkMatterAxe;
+import net.kyau.afterhours.items.tools.DarkMatterPickaxe;
+import net.kyau.afterhours.items.tools.DarkMatterShovel;
 import net.kyau.afterhours.references.Ref;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
