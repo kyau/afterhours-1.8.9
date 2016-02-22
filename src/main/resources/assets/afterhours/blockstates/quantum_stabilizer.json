@@ -1,12 +1,27 @@
 {
+    "forge_marker": 1,
+    "defaults": {
+        "model": "afterhours:orientable",
+        "textures": {
+            "front": "#quantumstabilizer.front",
+            "top": "afterhours:blocks/quantum_stabilizer",
+            "bottom": "afterhours:blocks/quantum_stabilizer",
+            "side": "afterhours:blocks/quantum_stabilizer_side"
+        },
+        "transform": "forge:default-block"
+    },
     "variants": {
-        "active=false,facing=north": { "model": "afterhours:quantum_stabilizer-off" },
-        "active=false,facing=south": { "model": "afterhours:quantum_stabilizer-off", "y": 180 },
-        "active=false,facing=west":  { "model": "afterhours:quantum_stabilizer-off", "y": 270 },
-        "active=false,facing=east":  { "model": "afterhours:quantum_stabilizer-off", "y": 90 },
-        "active=true,facing=north": { "model": "afterhours:quantum_stabilizer" },
-        "active=true,facing=south": { "model": "afterhours:quantum_stabilizer", "y": 180 },
-        "active=true,facing=west":  { "model": "afterhours:quantum_stabilizer", "y": 270 },
-        "active=true,facing=east":  { "model": "afterhours:quantum_stabilizer", "y": 90 }
-   }
+        "active": {
+            "false": { "textures": { "quantumstabilizer.front": "afterhours:blocks/quantum_stabilizer_front-off" } },
+            "true": { "textures": { "quantumstabilizer.front": "afterhours:blocks/quantum_stabilizer_front" } }
+        },
+        "facing": {
+            "north": {},
+            "south": { "y": 180 },
+            "west":  { "y": 270 },
+            "east":  { "y": 90 },
+            "up":    {},
+            "down":  {}
+        }
+    }
 }

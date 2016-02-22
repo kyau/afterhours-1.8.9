@@ -16,8 +16,8 @@ public class PacketHandler {
   public static void init() {
     net = NetworkRegistry.INSTANCE.newSimpleChannel(ModInfo.MOD_ID);
     // net.registerMessage(SoundUtil.PacketPlaySound.Handler.class, SoundUtil.PacketPlaySound.class, 0, Side.CLIENT);
-    net.registerMessage(ChatUtil.PacketNoSpamChat.Handler.class, ChatUtil.PacketNoSpamChat.class, 0, Side.CLIENT);
-    net.registerMessage(SimplePacket.class, SimplePacket.SimpleMessage.class, 1, Side.CLIENT);
+    registerMessage(ChatUtil.PacketNoSpamChat.Handler.class, ChatUtil.PacketNoSpamChat.class, Side.CLIENT);
+    registerMessage(SimplePacket.class, SimplePacket.SimpleMessage.class, Side.CLIENT);
   }
 
   public static void sendToAllAround(IMessage message, TileEntity te, int range) {
@@ -35,8 +35,8 @@ public class PacketHandler {
   private static int nextPacketId = 0;
 
   @SuppressWarnings("unchecked")
-  private static void registerMessage(Class packet, Class message) {
-    net.registerMessage(packet, message, nextPacketId, Side.CLIENT);
+  private static void registerMessage(Class packet, Class message, Side side) {
+    net.registerMessage(packet, message, nextPacketId, side);
     // net.registerMessage(packet, message, nextPacketId, Side.SERVER);
     nextPacketId++;
   }

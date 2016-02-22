@@ -28,4 +28,5 @@ So many people to thank for this mod actually coming to fruition. Without the us
 ### Attribution
 
 "Dark Matter Armor" is a recolored version of the Diamond Armor from Pixel Perfection by XSSheep.
+
 "Minecraft" is a trademark of Mojang Synergies AB, and is not affiliated in any way with this mod.

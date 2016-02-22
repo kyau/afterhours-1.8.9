@@ -69,6 +69,9 @@ public class Ref {
     public static final String UUID_LEAST_SIG = "UUIDLeastSig";
     public static final String QRD_GUI_OPEN = "qrdGuiOpen";
     public static final String QS_GUI_OPEN = "qsGuiOpen";
+    public static final String FACING = "teFacing";
+    public static final String STATE = "teState";
+    public static final String CUSTOM_NAME = "CustomName";
   }
 
   public static final class Containers {
@@ -80,7 +83,7 @@ public class Ref {
     public static final int QRD_MAIN_COLS = 9;
     public static final String VOID_SYNC_TRUE = "Sync";
     public static final String VOID_SYNC_FALSE = "";
-    public static final String QS_MAIN = ModInfo.MOD_ID + ".container:" + BlockID.QUANTUM_STABILIZER + "Main";
+    public static final String QUANTUM_STABILIZER = ModInfo.MOD_ID + ".container:" + BlockID.QUANTUM_STABILIZER;
   }
 
   public static final class Dimension {
@@ -129,5 +132,12 @@ public class Ref {
   public static final class Vanilla {
 
     public static boolean TOOLTIP = ConfigHandler.vanillaTooltip;
+  }
+
+  public static final class BlockStat {
+
+    public static final int STABILIZER_TIME = 200;
+    public static final int STABILIZER_DARKMATTER_TIME = 6000;
+    public static final int STABILIZER_QUANTUMROD_TIME = 12000;
   }
 }

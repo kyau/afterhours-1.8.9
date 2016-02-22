@@ -1,12 +1,12 @@
 package net.kyau.afterhours.client.gui;
 
 import net.kyau.afterhours.inventory.ContainerQS;
-import net.kyau.afterhours.inventory.InventoryQSMain;
 import net.kyau.afterhours.references.ModInfo;
 import net.kyau.afterhours.references.Ref;
 import net.kyau.afterhours.utils.NBTHelper;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
@@ -19,14 +19,14 @@ public class GuiQS extends GuiContainer {
   protected int ySize = 233;
   private float ySize_lo;
   private static final ResourceLocation iconLocation = new ResourceLocation(ModInfo.MOD_ID, "textures/gui/quantum_stabilizer.png");
-  private final ItemStack parentItem;
-  private final InventoryQSMain inventoryQSMain;
+  private final InventoryPlayer inventoryPlayer;
+  private final IInventory tileQS;
 
-  public GuiQS(EntityPlayer player, InventoryQSMain inventoryQSMain) {
-    super(new ContainerQS(player, inventoryQSMain));
+  public GuiQS(InventoryPlayer inventoryPlayer, IInventory inventoryQS) {
+    super(new ContainerQS(inventoryPlayer, inventoryQS));
     // this.inventory = containerItem.inventory;
-    this.parentItem = inventoryQSMain.parentItem;
-    this.inventoryQSMain = inventoryQSMain;
+    this.tileQS = inventoryQS;
+    this.inventoryPlayer = inventoryPlayer;
   }
 
   /**
@@ -42,10 +42,10 @@ public class GuiQS extends GuiContainer {
    * Draw the foreground layer for the GuiContainer (everything in front of the items)
    */
   protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-    String qsMainName = this.inventoryQSMain.hasCustomName() ? this.inventoryQSMain.getName() : this.inventoryQSMain.getName();
+    String qsMainName = this.tileQS.hasCustomName() ? this.tileQS.getName() : this.tileQS.getName();
     String inventoryName = StatCollector.translateToLocal(Ref.Containers.INVENTORY);
     super.fontRendererObj.drawString(qsMainName, 8, this.ySize - 262, 0x404040);
-    super.fontRendererObj.drawString(inventoryName, 8, this.ySize - 128, 0x404040);
+    super.fontRendererObj.drawString(inventoryName, 8, this.ySize - 194, 0x404040);
   }
 
   @Override
@@ -58,6 +58,12 @@ public class GuiQS extends GuiContainer {
     // draw player on screen
     // GuiInventory.drawEntityOnScreen(k + 51, l + 75, 30, (float) (k + 51) - this.xSize_lo, (float) (l + 75 - 50) -
     // this.ySize_lo, this.mc.thePlayer);
+
+    // draw progress indicator
+    int marginHorizontal = (width - xSize) / 2;
+    int marginVertical = (height - ySize) / 2;
+    int progressLevel = getProgressLevel(24);
+    drawTexturedModalRect(marginHorizontal + 79, marginVertical + 34, 176, 0, progressLevel + 1, 16);
   }
 
   @Override
@@ -78,5 +84,11 @@ public class GuiQS extends GuiContainer {
   @Override
   protected boolean checkHotbarKeys(int key) {
     return false;
+  }
+
+  private int getProgressLevel(int progressIndicatorPixelWidth) {
+    int ticksGrindingItemSoFar = tileQS.getField(2);
+    int ticksPerItem = tileQS.getField(3);
+    return ticksPerItem != 0 && ticksGrindingItemSoFar != 0 ? ticksGrindingItemSoFar * progressIndicatorPixelWidth / ticksPerItem : 0;
   }
 }

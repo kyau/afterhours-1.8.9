@@ -28,6 +28,7 @@ afterhours.wormhole_manipulator.name=§bWormhole Manipulator§r
 afterhours.container:inventory=Inventory
 afterhours.container:qrdMain=Quantum Resonance Device
 afterhours.container:qrdVoid=Void
+afterhours.container:quantum_stabilizer=Quantum Stabilizer
 afterhours.itemstat.imprinted=§5Imprinted§r
 afterhours.itemstat.cooldown=Cooldown:
 afterhours.itemstat.owner=Owner:
