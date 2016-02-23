@@ -1,12 +1,14 @@
-package net.kyau.afterhours.dimension;
+package net.kyau.afterhours.init;
 
+import net.kyau.afterhours.dimension.BiomeVoid;
+import net.kyau.afterhours.dimension.WorldProviderVoid;
 import net.kyau.afterhours.references.ModInfo;
 import net.kyau.afterhours.references.Ref;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.DimensionManager;
 
-public class DimensionHandler {
+public class ModDimensions {
 
   public static BiomeGenBase voidBiome;
 
@@ -24,4 +26,8 @@ public class DimensionHandler {
     DimensionManager.registerDimension(Ref.Dimension.DIM, Ref.Dimension.DIM);
   }
 
+  public static int getEmptyDimensionId() {
+    int dim = DimensionManager.getNextFreeDimId();
+    return dim;
+  }
 }

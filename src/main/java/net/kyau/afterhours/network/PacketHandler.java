@@ -1,5 +1,6 @@
 package net.kyau.afterhours.network;
 
+import net.kyau.afterhours.network.SimplePacketServer.SimpleServerMessage;
 import net.kyau.afterhours.references.ModInfo;
 import net.kyau.afterhours.utils.ChatUtil;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -17,7 +18,8 @@ public class PacketHandler {
     net = NetworkRegistry.INSTANCE.newSimpleChannel(ModInfo.MOD_ID);
     // net.registerMessage(SoundUtil.PacketPlaySound.Handler.class, SoundUtil.PacketPlaySound.class, 0, Side.CLIENT);
     registerMessage(ChatUtil.PacketNoSpamChat.Handler.class, ChatUtil.PacketNoSpamChat.class, Side.CLIENT);
-    registerMessage(SimplePacket.class, SimplePacket.SimpleMessage.class, Side.CLIENT);
+    registerMessage(SimplePacketClient.class, SimplePacketClient.SimpleClientMessage.class, Side.CLIENT);
+    registerMessage(SimplePacketServer.class, SimpleServerMessage.class, Side.SERVER);
   }
 
   public static void sendToAllAround(IMessage message, TileEntity te, int range) {

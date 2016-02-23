@@ -5,8 +5,11 @@
 :warning: This mod is a work in progress, please report any issues!
 
 [About AfterHours](#about-afterhours)
+
 [Credits](#credits)
+
 [attribution](#attribution)
+
 
 
 ### About AfterHours

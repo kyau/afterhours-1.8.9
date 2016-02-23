@@ -1,6 +1,7 @@
 package net.kyau.afterhours.dimension;
 
 import net.kyau.afterhours.client.renderer.RenderSkyVoid;
+import net.kyau.afterhours.init.ModDimensions;
 import net.kyau.afterhours.references.ModInfo;
 import net.kyau.afterhours.references.Ref;
 import net.minecraft.util.BlockPos;
@@ -32,7 +33,7 @@ public class WorldProviderVoid extends WorldProvider {
 
   @Override
   public void registerWorldChunkManager() {
-    this.worldChunkMgr = new WorldChunkManagerHell(DimensionHandler.voidBiome, 0.8F);
+    this.worldChunkMgr = new WorldChunkManagerHell(ModDimensions.voidBiome, 0.8F);
     this.dimensionId = Ref.Dimension.DIM;
     this.setSpawnPoint(new BlockPos(0, 128, 0));
   }

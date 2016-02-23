@@ -2,6 +2,7 @@ package net.kyau.afterhours.config;
 
 import java.io.File;
 
+import net.kyau.afterhours.init.ModDimensions;
 import net.kyau.afterhours.init.ModEnchants;
 import net.kyau.afterhours.references.ModInfo;
 import net.kyau.afterhours.references.Ref;
@@ -26,6 +27,7 @@ public class ConfigHandler {
   public static int idEnchantGravitation;
   public static int idEnchantQuantumBoost;
   public static int idEnchantQuantumDisplay;
+  public static boolean debugMode;
   // category: armor hud
   public static int hudNumberFormat;
   public static boolean hudShowArmor;
@@ -73,7 +75,7 @@ public class ConfigHandler {
     // Read in properties from config file
     //
     // Category: General
-    idDimension = config.getInt("dimensionID", CATEGORY_GENERAL, 5, 2, 200, "The Dimension ID (DIM) for The Void.");
+    idDimension = config.getInt("dimensionID", CATEGORY_GENERAL, ModDimensions.getEmptyDimensionId(), 2, 200, "The Dimension ID (DIM) for The Void.");
     Ref.Dimension.DIM = idDimension;
     idBiome = config.getInt("biomeID", CATEGORY_GENERAL, 222, 40, 256, "The Biome ID for The Void.");
     Ref.Dimension.BIOMEID = idBiome;
@@ -87,6 +89,8 @@ public class ConfigHandler {
     Ref.Enchant.QUANTUMBOOST_ID = idEnchantQuantumBoost;
     idEnchantQuantumDisplay = config.getInt("enchantQuantumDisplayID", CATEGORY_GENERAL, ModEnchants.getEmptyEnchantId(), 65, 255, "The Enchantment ID for Quantum Display.");
     Ref.Enchant.QUANTUMDISPLAY_ID = idEnchantQuantumDisplay;
+    debugMode = config.getBoolean("debugMode", CATEGORY_GENERAL, false, "Enable developer debug mode. (console spam)");
+    ModInfo.DEBUG = debugMode;
     // Category: Armor HUD
     hudShowArmor = config.getBoolean("showArmor", CATEGORY_HUD, true, "Display armor durability information.");
     Ref.ArmorHud.SHOW_ARMOR = hudShowArmor;

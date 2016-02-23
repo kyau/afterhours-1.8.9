@@ -4,6 +4,8 @@ import java.util.List;
 
 import net.kyau.afterhours.AfterHours;
 import net.kyau.afterhours.dimension.TeleporterVoid;
+import net.kyau.afterhours.network.PacketHandler;
+import net.kyau.afterhours.network.SimplePacketClient;
 import net.kyau.afterhours.references.ModInfo;
 import net.kyau.afterhours.references.Ref;
 import net.kyau.afterhours.utils.ChatUtil;
@@ -16,6 +18,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentTranslation;
@@ -23,6 +26,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -46,6 +50,7 @@ public class VoidPearl extends BaseItem {
   @Override
   public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
     boolean firstUse = false;
+    NBTTagCompound playerNBT = player.getEntityData();
     // Set an Owner, if one doesn't exist already
     if (!ItemHelper.hasOwnerUUID(stack)) {
       ItemHelper.setOwner(stack, player);
@@ -58,14 +63,18 @@ public class VoidPearl extends BaseItem {
       NBTHelper.setUUID(stack);
     }
     // Set a LastUse, if one doesn't exist already
-    if (!NBTHelper.hasTag(stack, Ref.NBT.LASTUSE)) {
-      NBTHelper.setLastUse(stack, player.worldObj.getTotalWorldTime() - (cooldown + 10));
+    if (!playerNBT.hasKey(Ref.NBT.LASTUSE)) {
+      playerNBT.setLong(Ref.NBT.LASTUSE, player.worldObj.getTotalWorldTime() - (cooldown + 10));
     }
+    // if (!NBTHelper.hasTag(stack, Ref.NBT.LASTUSE)) {
+    // NBTHelper.setLastUse(stack, player.worldObj.getTotalWorldTime() - (cooldown + 10));
+    // }
 
     if (firstUse)
       return super.onItemRightClick(stack, world, player);
 
-    long ticksSinceLastUse = player.worldObj.getTotalWorldTime() - NBTHelper.getLong(stack, Ref.NBT.LASTUSE);
+    long ticksSinceLastUse = player.worldObj.getTotalWorldTime() - playerNBT.getLong(Ref.NBT.LASTUSE);
+    // long ticksSinceLastUse = player.worldObj.getTotalWorldTime() - NBTHelper.getLong(stack, Ref.NBT.LASTUSE);
 
     final String owner = ItemHelper.getOwnerName(stack);
     if (!world.isRemote) {
@@ -117,7 +126,11 @@ public class VoidPearl extends BaseItem {
           }
           MinecraftServer.getServer().worldServerForDimension(playerMP.dimension).playSoundEffect(player.posX, player.posY, player.posZ, "mob.endermen.portal", 1.0F, 1.0F);
           // Trigger cooldown
-          NBTHelper.setLastUse(stack, overworld.getTotalWorldTime());
+          Long time = overworld.getTotalWorldTime();
+          playerNBT.setLong(Ref.NBT.LASTUSE, time);
+          IMessage msg = new SimplePacketClient.SimpleClientMessage(2, String.valueOf(time), player.getEntityId());
+          PacketHandler.net.sendTo(msg, (EntityPlayerMP) player);
+          // NBTHelper.setLastUse(stack, overworld.getTotalWorldTime());
           return super.onItemRightClick(stack, world, player);
         }
         /*
@@ -139,9 +152,7 @@ public class VoidPearl extends BaseItem {
   @SideOnly(Side.CLIENT)
   public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
     // Item Stats
-    if (ItemHelper.hasOwner(stack)) {
-      tooltip.add(EnumChatFormatting.DARK_PURPLE + Ref.ItemStat.IMPRINTED + ", " + Ref.ItemStat.LIMITED);
-    } else {
+    if (!ItemHelper.hasOwner(stack)) {
       tooltip.add(StatCollector.translateToLocal(Ref.Translation.PREIMPRINT));
     }
     // Description
@@ -157,7 +168,8 @@ public class VoidPearl extends BaseItem {
       if (owner.equals(player.getDisplayNameString())) {
         tooltip.add(EnumChatFormatting.GREEN + StatCollector.translateToLocal(Ref.Translation.OWNER) + " " + owner);
         if (NBTHelper.getLong(stack, Ref.NBT.LASTUSE) != -1) {
-          long ticksSinceLastUse = player.worldObj.getTotalWorldTime() - NBTHelper.getLong(stack, Ref.NBT.LASTUSE);
+          NBTTagCompound playerNBT = player.getEntityData();
+          long ticksSinceLastUse = player.worldObj.getTotalWorldTime() - playerNBT.getLong(Ref.NBT.LASTUSE);
           long current = (cooldown / 20) - (ticksSinceLastUse / 20);
           String currentCooldown = ItemHelper.formatCooldown(current);
           tooltip.add(StatCollector.translateToLocal(Ref.Translation.COOLDOWN) + " " + currentCooldown);

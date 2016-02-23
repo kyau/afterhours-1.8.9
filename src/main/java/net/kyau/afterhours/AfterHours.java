@@ -4,9 +4,9 @@ import javax.annotation.Nonnull;
 
 import net.kyau.afterhours.config.AfterHoursTab;
 import net.kyau.afterhours.config.ConfigHandler;
-import net.kyau.afterhours.dimension.DimensionHandler;
 import net.kyau.afterhours.dimension.WorldGenerator;
 import net.kyau.afterhours.event.GuiHandler;
+import net.kyau.afterhours.init.ModDimensions;
 import net.kyau.afterhours.init.ModBlocks;
 import net.kyau.afterhours.init.ModEnchants;
 import net.kyau.afterhours.init.ModItems;
@@ -65,7 +65,7 @@ public class AfterHours {
     event.getModMetadata().url = ModInfo.MOD_URL;
     event.getModMetadata().logoFile = ModInfo.MOD_LOGO;
     ConfigHandler.init(event.getSuggestedConfigurationFile());
-    DimensionHandler.init();
+    ModDimensions.init();
     GameRegistry.registerWorldGenerator(new WorldGenerator(), 1);
     PacketHandler.init();
     RecipeSorter.register(ModInfo.MOD_ID + ":repair", RecipeRepair.class, Category.SHAPELESS, "after:minecraft:shapeless");

@@ -11,9 +11,8 @@ import javax.annotation.Nonnull;
 import net.kyau.afterhours.enchantment.EnchantmentEntanglement;
 import net.kyau.afterhours.init.ModBlocks;
 import net.kyau.afterhours.init.ModItems;
-import net.kyau.afterhours.references.ModInfo;
+import net.kyau.afterhours.items.VoidPearl;
 import net.kyau.afterhours.references.Ref;
-import net.kyau.afterhours.utils.InventoryHandler;
 import net.kyau.afterhours.utils.ItemHelper;
 import net.kyau.afterhours.utils.LogHelper;
 import net.kyau.afterhours.utils.NBTHelper;
@@ -28,6 +27,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
@@ -35,11 +35,11 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
-import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerFlyableFallEvent;
@@ -53,29 +53,12 @@ public class ForgeEventHandler {
   public static List<String> tooltipList = new ArrayList<String>();
   public static int tick = 0;
 
-  // TODO: remove limited item code in favor of player nbt
   @SubscribeEvent
-  public void onItemPickup(@Nonnull EntityItemPickupEvent event) {
+  public void onPlayerConstructing(EntityEvent.EntityConstructing event) {
     if (event.entity instanceof EntityPlayer) {
-      ItemStack itemCurrent = event.item.getEntityItem();
-      World world = event.entity.worldObj;
-      if (!world.isRemote) {
-        if (itemCurrent.getUnlocalizedName().equals(ModItems.voidpearl.getUnlocalizedName())) {
-          String playerName = event.entity.getName();
-          String itemOwner;
-          if (itemCurrent.getTagCompound() == null) {
-            itemOwner = "null";
-          } else {
-            itemOwner = ItemHelper.getOwnerName(itemCurrent);
-          }
-          int count = InventoryHandler.countItems(event.entityPlayer, ModItems.voidpearl);
-          if (count > 0) {
-            if (ModInfo.DEBUG)
-              LogHelper.info("> DEBUG: itemPickup: " + itemCurrent.getUnlocalizedName().substring(11) + " (owner=" + itemOwner + ") canceled!");
-            event.setCanceled(true);
-          }
-        }
-      }
+      EntityPlayer player = (EntityPlayer) event.entity;
+      NBTTagCompound playerNBT = player.getEntityData();
+      playerNBT.setLong(Ref.NBT.LASTUSE, player.worldObj.getTotalWorldTime() - (VoidPearl.cooldown + 10));
     }
   }
 
@@ -327,11 +310,6 @@ public class ForgeEventHandler {
           }
         }
       }
-    }
-    ItemStack item = new ItemStack(ModItems.voidpearl);
-    int count = InventoryHandler.countItems(player, ModItems.voidpearl);
-    if (count > 1) {
-      InventoryHandler.removeLimitedItem(player, item);
     }
   }
 

@@ -3,7 +3,7 @@ package net.kyau.afterhours.items;
 import java.util.List;
 
 import net.kyau.afterhours.network.PacketHandler;
-import net.kyau.afterhours.network.SimplePacket;
+import net.kyau.afterhours.network.SimplePacketClient;
 import net.kyau.afterhours.references.ModInfo;
 import net.kyau.afterhours.references.Ref;
 import net.kyau.afterhours.utils.ChatUtil;
@@ -116,7 +116,7 @@ public class WormholeManipulator extends BaseItem {
           ItemHelper.sendChatEnergy(player, stack);
         } else {
           if (player instanceof EntityPlayerMP) {
-            IMessage msg = new SimplePacket.SimpleMessage(1, "afterhours:error");
+            IMessage msg = new SimplePacketClient.SimpleClientMessage(1, "afterhours:error", player.getEntityId());
             PacketHandler.net.sendTo(msg, (EntityPlayerMP) player);
           }
           return false;

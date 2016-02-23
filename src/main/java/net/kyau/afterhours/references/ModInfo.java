@@ -1,5 +1,7 @@
 package net.kyau.afterhours.references;
 
+import net.kyau.afterhours.config.ConfigHandler;
+
 public class ModInfo {
 
   private ModInfo() {
@@ -24,5 +26,5 @@ public class ModInfo {
   // Resources
   public static final String TEXTURE_GUI_PATH = "textures/gui/";
   // Debug Switch
-  public static final boolean DEBUG = true;
+  public static boolean DEBUG = ConfigHandler.debugMode;
 }

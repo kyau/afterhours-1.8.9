@@ -80,9 +80,7 @@ public class QRD extends BaseItem {
   @SideOnly(Side.CLIENT)
   public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
     // Item Stats
-    if (ItemHelper.hasOwner(stack)) {
-      tooltip.add(StatCollector.translateToLocal(Ref.Translation.IMPRINTED));
-    } else {
+    if (!ItemHelper.hasOwner(stack)) {
       tooltip.add(StatCollector.translateToLocal(Ref.Translation.PREIMPRINT));
     }
     // Description
