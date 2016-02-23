@@ -1,6 +1,7 @@
 ## AfterHours
 
 :package: [Download the latest release](https://github.com/kyau/afterhours-1.8.9/releases)
+
 :warning: This mod is a work in progress, please report any issues!
 
 [About AfterHours](#about-afterhours)
@@ -12,7 +13,7 @@
 
 AfterHours aims to be a mod that brings useful utilities to the multiplayer side of Minecraft while also bringing a balanced end-game route. The basis for this mod is the concept that in Minecraft past bedrock there exists a "Void", hence the name "void fog" (for the gray smoke your see when you are near to bedrock). In AfterHours, we bring that place to reality with "The Void" and you as a player will learn to tap into The Void and the energies it contains. This will eventually introduce you to Quantum Energy and Dark Matter, which can be utilized in various devices, machines and armor/tools.
 
-For an proper introduction to the mod go ahead and get started by making yourself a copy of "The Minecrafter's Guide to the Void" in-game with the following recipe.
+For an proper introduction craft yourself a copy of "The Minecrafter's Guide to the Void" in-game with the following recipe.
 
 !["The Minecrafter's Guide to the Void" Crafting Recipe](https://kyau.net/afterhours/img/book_recipe.png)
 
@@ -31,6 +32,6 @@ So many people to thank for this mod actually coming to fruition. Without the us
 
 ### Attribution
 
-"Dark Matter Armor" is a recolored version of the Diamond Armor from Pixel Perfection by XSSheep.
+"Dark Matter Armor" is a recolored version of the Diamond Armor from [Pixel Perfection](http://www.curse.com/texture-packs/minecraft/pixel-perfection) by XSSheep.
 
 "Minecraft" is a trademark of Mojang Synergies AB, and is not affiliated in any way with this mod.
