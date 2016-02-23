@@ -10,8 +10,9 @@ import net.kyau.afterhours.event.GuiHandler;
 import net.kyau.afterhours.init.ModBlocks;
 import net.kyau.afterhours.init.ModEnchants;
 import net.kyau.afterhours.init.ModItems;
-import net.kyau.afterhours.init.ModVanilla;
 import net.kyau.afterhours.init.ModRecipes;
+import net.kyau.afterhours.init.ModVanilla;
+import net.kyau.afterhours.init.RecipeRepair;
 import net.kyau.afterhours.network.PacketHandler;
 import net.kyau.afterhours.proxy.IProxy;
 import net.kyau.afterhours.references.ModInfo;
@@ -27,6 +28,8 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.RecipeSorter;
+import net.minecraftforge.oredict.RecipeSorter.Category;
 
 @Mod(modid = ModInfo.MOD_ID,
      name = ModInfo.MOD_NAME,
@@ -65,6 +68,7 @@ public class AfterHours {
     DimensionHandler.init();
     GameRegistry.registerWorldGenerator(new WorldGenerator(), 1);
     PacketHandler.init();
+    RecipeSorter.register(ModInfo.MOD_ID + ":repair", RecipeRepair.class, Category.SHAPELESS, "after:minecraft:shapeless");
     darkmatter = EnumHelper.addToolMaterial("DARKMATTER", Ref.DarkMatter.HARVEST_LEVEL, Ref.DarkMatter.DURABILITY, Ref.DarkMatter.EFFICIENCY, Ref.DarkMatter.DAMAGE, 100);
     darkmatterArmor = EnumHelper.addArmorMaterial("DARKMATTER", ModInfo.MOD_ID + ":" + "darkmatter", 100, new int[] {
         3,

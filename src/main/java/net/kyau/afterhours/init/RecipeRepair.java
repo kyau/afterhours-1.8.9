@@ -1,7 +1,5 @@
 package net.kyau.afterhours.init;
 
-import net.kyau.afterhours.utils.ItemHelper;
-import net.kyau.afterhours.utils.LogHelper;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -60,8 +58,6 @@ public class RecipeRepair implements IRecipe {
     }
     ItemStack ret = repair.copy();
     if (repair.hasTagCompound()) {
-      LogHelper.info("Has NBT!");
-      LogHelper.info("Owner: " + ItemHelper.getOwnerName(repair));
       ret.setTagCompound(repair.getTagCompound());
     }
 

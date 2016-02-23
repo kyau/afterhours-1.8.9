@@ -24,15 +24,18 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
@@ -50,6 +53,7 @@ public class ForgeEventHandler {
   public static List<String> tooltipList = new ArrayList<String>();
   public static int tick = 0;
 
+  // TODO: remove limited item code in favor of player nbt
   @SubscribeEvent
   public void onItemPickup(@Nonnull EntityItemPickupEvent event) {
     if (event.entity instanceof EntityPlayer) {
@@ -80,6 +84,7 @@ public class ForgeEventHandler {
     if (event.entityLiving instanceof EntityPlayer) {
       EntityPlayer player = (EntityPlayer) event.entityLiving;
       World world = player.worldObj;
+      // handle player flight if dark matter chestplate is equipped
       if (!player.capabilities.isCreativeMode) {
         if (player.inventory.armorInventory[2] == null) {
           player.capabilities.allowFlying = false;
@@ -92,10 +97,15 @@ public class ForgeEventHandler {
               if (player.getDisplayNameString().equals(owner) && energy[0] > 0) {
                 player.capabilities.allowFlying = true;
                 player.capabilities.disableDamage = false;
+              } else {
+                player.capabilities.disableDamage = false;
+                player.capabilities.isFlying = false;
+                player.capabilities.allowFlying = false;
               }
             }
           }
         }
+        // handle speed boost if dark matter leggings are equipped
         if (player.inventory.armorInventory[1] == null) {
           changeSpeed(player, 1D, "speedMod");
         } else {
@@ -115,9 +125,45 @@ public class ForgeEventHandler {
   }
 
   @SubscribeEvent
+  public void onPlayerLogin(EntityJoinWorldEvent event) {
+    if (event.entity instanceof EntityPlayer) {
+      EntityPlayer player = (EntityPlayer) event.entity;
+      World world = player.worldObj;
+      // re-enable flight on login if necessary and provided there is enough energy
+      if (!player.capabilities.isCreativeMode) {
+        if (player.inventory.armorInventory[2] == null) {
+          player.capabilities.allowFlying = false;
+          player.capabilities.disableDamage = false;
+        } else {
+          if (player.inventory.armorInventory[2].getUnlocalizedName().equals(ModItems.darkmatter_chestplate.getUnlocalizedName())) {
+            if (player.inventory.armorInventory[2].hasTagCompound()) {
+              String owner = ItemHelper.getOwnerName(player.inventory.armorInventory[2]);
+              int energy[] = NBTHelper.getEnergyLevels(player.inventory.armorInventory[2]);
+              if (player.getDisplayNameString().equals(owner) && energy[0] > 0) {
+                BlockPos underPlayer = new BlockPos(player.posX, MathHelper.floor_double(player.posY - 0.1D), player.posZ);
+                if (player.worldObj.getBlockState(underPlayer).getBlock() == Blocks.air) {
+                  player.capabilities.allowFlying = true;
+                  player.capabilities.disableDamage = false;
+                  player.capabilities.isFlying = true;
+                  player.sendPlayerAbilities();
+                }
+              } else {
+                player.capabilities.disableDamage = false;
+                player.capabilities.isFlying = false;
+                player.capabilities.allowFlying = false;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @SubscribeEvent
   public void onFOVChange(FOVUpdateEvent event) {
     if (event.entity instanceof EntityPlayer) {
       EntityPlayer player = (EntityPlayer) event.entity;
+      // handle fov re-stabilizing if dark matter helmet is equipped
       if (!(player.inventory.armorInventory[3] == null)) {
         if (player.inventory.armorInventory[3].getUnlocalizedName().equals(ModItems.darkmatter_helmet.getUnlocalizedName())) {
           if (player.inventory.armorInventory[3].hasTagCompound()) {
@@ -135,16 +181,26 @@ public class ForgeEventHandler {
   public void onPlayerFall(LivingFallEvent event) {
     if (event.entity instanceof EntityPlayer) {
       EntityPlayer player = (EntityPlayer) event.entityLiving;
+      // handle fall damage transfer to durability if dark matter boots are equipped
       if (player.inventory.armorInventory[0] != null) {
         if (player.inventory.armorInventory[0].getUnlocalizedName().equals(ModItems.darkmatter_boots.getUnlocalizedName())) {
           if (player.inventory.armorInventory[0].hasTagCompound()) {
             String owner = ItemHelper.getOwnerName(player.inventory.armorInventory[0]);
             if (player.getDisplayNameString().equals(owner)) {
-              int damage = (int) (1.5 * event.distance * event.damageMultiplier);
-              String soundName = damage > 10 ? "game.player.hurt.fall.big" : "game.player.hurt.fall.small";
-              player.inventory.armorInventory[0].attemptDamageItem(damage, new Random());
-              event.damageMultiplier = 0;
-              event.entityLiving.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, soundName, 1.0F, 1.0F);
+              if (event.distance > 10) {
+                int damage = (int) (1.5 * event.distance * event.damageMultiplier);
+                String soundName = damage > 10 ? "game.player.hurt.fall.big" : "game.player.hurt.fall.small";
+                ItemStack stack = player.inventory.armorInventory[0];
+                if (stack.getItemDamage() < stack.getMaxDamage()) {
+                  stack.attemptDamageItem(damage, new Random());
+                  event.damageMultiplier = 0;
+                } else {
+                  LogHelper.info("Player damage boots out of durability!");
+                }
+                event.entityLiving.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, soundName, 1.0F, 1.0F);
+              } else {
+                event.damageMultiplier = 0;
+              }
             }
           }
         }
@@ -157,6 +213,7 @@ public class ForgeEventHandler {
     boolean boots = false;
     if (event.entity instanceof EntityPlayer) {
       EntityPlayer player = (EntityPlayer) event.entityLiving;
+      // handle fall durability damage if player is flying
       int damage = (int) (0.4 * event.distance * event.multipler);
       if (player.inventory.armorInventory[0] != null) {
         if (player.inventory.armorInventory[0].getUnlocalizedName().equals(ModItems.darkmatter_boots.getUnlocalizedName())) {
@@ -165,11 +222,18 @@ public class ForgeEventHandler {
             if (player.getDisplayNameString().equals(owner)) {
               if (event.distance > 10) {
                 String soundName = damage > 5 ? "game.player.hurt.fall.big" : "game.player.hurt.fall.small";
-                player.inventory.armorInventory[0].attemptDamageItem(damage, new Random());
+                ItemStack stack = player.inventory.armorInventory[0];
+                if (stack.getItemDamage() < stack.getMaxDamage()) {
+                  stack.attemptDamageItem(damage, new Random());
+                  event.multipler = 0;
+                } else {
+                  LogHelper.info("Player damage boots out of durability!");
+                }
                 player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, soundName, 1.0F, 1.0F);
                 boots = true;
+              } else {
+                event.multipler = 0;
               }
-              event.multipler = 0;
             }
           }
         }
@@ -188,19 +252,22 @@ public class ForgeEventHandler {
     if (event.entityLiving instanceof EntityPlayer) {
       EntityPlayer player = (EntityPlayer) event.entityLiving;
       World world = player.worldObj;
+      // handle player jump boost if dark matter boots are equipped
       if (!(player.inventory.armorInventory[0] == null)) {
         if (player.inventory.armorInventory[0].getUnlocalizedName().equals(ModItems.darkmatter_boots.getUnlocalizedName())) {
           if (player.inventory.armorInventory[0].hasTagCompound()) {
             String owner = ItemHelper.getOwnerName(player.inventory.armorInventory[0]);
             if (player.getDisplayNameString().equals(owner)) {
-              float f = player.rotationYaw * 0.017453292F;
-              if (player.motionX > 0 || player.motionX < 0) {
-                player.motionX -= (double) (MathHelper.sin(f) * 1.2F);
+              player.motionY = 1.2F;
+              if (player.isPotionActive(Potion.jump)) {
+                player.motionY += (double) ((float) (player.getActivePotionEffect(Potion.jump).getAmplifier() + 1) * 0.1F);
               }
-              if (player.motionZ > 0 || player.motionZ < 0) {
+              if (player.isSprinting()) {
+                float f = player.rotationYaw * 0.017453292F;
+                player.motionX -= (double) (MathHelper.sin(f) * 1.2F);
                 player.motionZ += (double) (MathHelper.cos(f) * 1.2F);
               }
-              player.motionY = (double) 1.0F;
+
             }
           }
         }
@@ -208,6 +275,8 @@ public class ForgeEventHandler {
     }
   }
 
+  // player random tick event, used to tick/regen chestplate energy levels
+  // TODO: remove limited item code in favor of player nbt
   private void playerTickEvent(EntityPlayer player) {
     final ItemStack equippedChestplate = player.inventory.armorInventory[2];
     if (equippedChestplate != null) {
@@ -239,13 +308,16 @@ public class ForgeEventHandler {
             }
             if (player.dimension == Ref.Dimension.DIM) {
               int energy[] = NBTHelper.getEnergyLevels(equippedChestplate);
-              if ((energy[0] + 1) <= energy[1]) {
-                NBTHelper.setEnergyLevels(equippedChestplate, (energy[0] + 1), energy[1]);
+              int newEnergy = energy[0] + Ref.ItemStat.ENERGY_REGEN_VOID;
+              if (newEnergy <= energy[1]) {
+                NBTHelper.setEnergyLevels(equippedChestplate, (energy[0] + Ref.ItemStat.ENERGY_REGEN_VOID), energy[1]);
+              } else {
+                NBTHelper.setEnergyLevels(equippedChestplate, energy[1], energy[1]);
               }
             }
             if (player.capabilities.isFlying) {
               int energy[] = NBTHelper.getEnergyLevels(equippedChestplate);
-              int newEnergy = energy[0] - 3;
+              int newEnergy = energy[0] - Ref.ItemStat.ENERGYONUSE_DARKMATTER_CHESTPLATE;
               if (newEnergy > 0) {
                 NBTHelper.setEnergyLevels(equippedChestplate, newEnergy, energy[1]);
               } else {
@@ -263,6 +335,7 @@ public class ForgeEventHandler {
     }
   }
 
+  // random player tick event call (every 10 ticks)
   @SubscribeEvent
   public void playerTick(TickEvent.PlayerTickEvent event) {
     if (event.phase == Phase.START) {
@@ -282,6 +355,7 @@ public class ForgeEventHandler {
   @SubscribeEvent
   public void playerBreakSpeed(PlayerEvent.BreakSpeed event) {
     EntityPlayer player = event.entityPlayer;
+    // reduce player break speed if undestroyable tool is broken
     if (player.getHeldItem() != null) {
       ItemStack stack = player.getHeldItem();
       if (ModItems.repairList.contains(stack.getUnlocalizedName())) {

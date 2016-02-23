@@ -22,14 +22,18 @@ public class ModGuiConfig extends GuiConfig {
 
   private static List<IConfigElement> getConfigElements() {
     ConfigCategory categoryGeneral = ConfigHandler.getConfig().getCategory(ConfigHandler.CATEGORY_GENERAL);
-    ConfigCategory categoryVoidPearl = ConfigHandler.getConfig().getCategory(ConfigHandler.CATEGORY_VOIDPEARL);
-    ConfigCategory categoryWormholeManipulator = ConfigHandler.getConfig().getCategory(ConfigHandler.CATEGORY_WORMHOLE);
+    ConfigCategory categoryArmorHud = ConfigHandler.getConfig().getCategory(ConfigHandler.CATEGORY_HUD);
+    ConfigCategory categoryCooldown = ConfigHandler.getConfig().getCategory(ConfigHandler.CATEGORY_COOLDOWN);
+    ConfigCategory categoryQuantumEnergy = ConfigHandler.getConfig().getCategory(ConfigHandler.CATEGORY_ENERGY);
+    ConfigCategory categoryQuantumMachinery = ConfigHandler.getConfig().getCategory(ConfigHandler.CATEGORY_MACHINERY);
     ConfigCategory categoryVanilla = ConfigHandler.getConfig().getCategory(ConfigHandler.CATEGORY_VANILLA);
 
     List<IConfigElement> configElements = new ArrayList<>();
     configElements.add(new ConfigElement(categoryGeneral));
-    configElements.add(new ConfigElement(categoryVoidPearl));
-    configElements.add(new ConfigElement(categoryWormholeManipulator));
+    configElements.add(new ConfigElement(categoryArmorHud));
+    configElements.add(new ConfigElement(categoryCooldown));
+    configElements.add(new ConfigElement(categoryQuantumEnergy));
+    configElements.add(new ConfigElement(categoryQuantumMachinery));
     configElements.add(new ConfigElement(categoryVanilla));
 
     return configElements;

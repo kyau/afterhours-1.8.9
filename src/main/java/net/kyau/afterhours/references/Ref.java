@@ -4,6 +4,17 @@ import net.kyau.afterhours.config.ConfigHandler;
 
 public class Ref {
 
+  public static final class ArmorHud {
+
+    public static int NUMBER_FORMAT = ConfigHandler.hudNumberFormat;
+    public static boolean SHOW_ARMOR = ConfigHandler.hudShowArmor;
+    public static boolean SHOW_CHARACTER = ConfigHandler.hudShowCharacter;
+    public static boolean SHOW_CLOCK = ConfigHandler.hudShowClock;
+    public static boolean SHOW_FPS = ConfigHandler.hudShowFps;
+    public static boolean SHOW_QUANTUMENERGY = ConfigHandler.hudShowQuantumEnergy;
+    public static boolean SHOW_TEMP = ConfigHandler.hudShowTemp;
+  }
+
   public static final class BlockID {
 
     public static final String DARKMATTERCLUSTER = "darkmattercluster";
@@ -49,7 +60,9 @@ public class Ref {
 
     public static final String IMPRINTED = "Imprinted";
     public static final String LIMITED = "Limited";
-    public static final int ENERGY_DARKMATTER_CHESTPLATE = 5000;
+    public static int ENERGY_REGEN_VOID = ConfigHandler.energyRegenTheVoid;
+    public static int ENERGYONUSE_DARKMATTER_CHESTPLATE = ConfigHandler.darkmatterChestplateEnergyOnUse;
+    public static int ENERGY_DARKMATTER_CHESTPLATE = ConfigHandler.darkmatterChestplateEnergyMax;
     public static int ENERGY_WORMHOLE_MANIPULATOR = ConfigHandler.wormholeEnergyMax;
     public static int ENERGYONUSE_WORMHOLE_MANIPULATOR = ConfigHandler.wormholeEnergyOnUse;
     public static int WORMHOLE_MANIPULATOR_PERTICK = ConfigHandler.wormholeEnergyPerTick;
@@ -107,15 +120,15 @@ public class Ref {
   public static final class Enchant {
 
     public static final String ABSORPTION = "Absorption";
-    public static final int ABSORPTION_ID = 85;
+    public static int ABSORPTION_ID = ConfigHandler.idEnchantAbsorption; // 85
     public static final String ENTANGLEMENT = "Entanglement";
-    public static final int ENTANGLEMENT_ID = 86;
+    public static int ENTANGLEMENT_ID = ConfigHandler.idEnchantEntanglement; // 86
     public static final String GRAVITATION = "Gravitation";
-    public static final int GRAVITATION_ID = 87;
+    public static int GRAVITATION_ID = ConfigHandler.idEnchantGravitation; // 87
     public static final String QUANTUMBOOST = "Quantum Boost";
-    public static final int QUANTUMBOOST_ID = 88;
+    public static int QUANTUMBOOST_ID = ConfigHandler.idEnchantQuantumBoost; // 88
     public static final String QUANTUMDISPLAY = "Quantum Display";
-    public static final int QUANTUMDISPLAY_ID = 89;
+    public static int QUANTUMDISPLAY_ID = ConfigHandler.idEnchantQuantumDisplay; // 89
   }
 
   public static final class Translation {
@@ -133,14 +146,15 @@ public class Ref {
 
   public static final class Vanilla {
 
+    public static boolean RECIPES = ConfigHandler.vanillaRecipes;
     public static boolean TOOLTIP = ConfigHandler.vanillaTooltip;
   }
 
   public static final class BlockStat {
 
     public static final int STABILIZER_TIME = 200;
-    public static final int STABILIZER_DARKMATTER_TIME = 6000;
-    public static final int STABILIZER_QUANTUMROD_TIME = 12000;
-    public static final int CHARGEPAD_PERTICK = 11;
+    public static int STABILIZER_DARKMATTER_TIME = ConfigHandler.stabilizerDarkMatter;
+    public static int STABILIZER_QUANTUMROD_TIME = ConfigHandler.stabilizerQuantumRod;
+    public static int CHARGEPAD_PERTICK = ConfigHandler.energyChargepadPerTick;
   }
 }

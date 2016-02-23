@@ -11,8 +11,10 @@ public class ModVanilla {
   public static Item rawhide;
 
   public static void registerItems() {
-    dough = new Dough().register(Ref.ItemID.DOUGH);
-    rawhide = new RawHide().register(Ref.ItemID.RAWHIDE);
+    if (Ref.Vanilla.RECIPES) {
+      dough = new Dough().register(Ref.ItemID.DOUGH);
+      rawhide = new RawHide().register(Ref.ItemID.RAWHIDE);
+    }
   }
 
   public static void registerRenders() {

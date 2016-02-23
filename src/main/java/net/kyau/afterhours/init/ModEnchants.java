@@ -1,5 +1,8 @@
 package net.kyau.afterhours.init;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.kyau.afterhours.enchantment.EnchantmentAbsorption;
 import net.kyau.afterhours.enchantment.EnchantmentEntanglement;
 import net.kyau.afterhours.enchantment.EnchantmentGravitation;
@@ -9,6 +12,8 @@ import net.kyau.afterhours.references.Ref;
 import net.minecraft.enchantment.Enchantment;
 
 public class ModEnchants {
+
+  private static List<Integer> idList = new ArrayList<Integer>();
 
   public static Enchantment absorption;
   public static Enchantment entanglement;
@@ -24,10 +29,18 @@ public class ModEnchants {
     quantumDisplay = new EnchantmentQuantumDisplay(Ref.Enchant.QUANTUMDISPLAY_ID, 4);
   }
 
-  private static int getEmptyEnchantId() {
-    for (int i = 0; i < Enchantment.enchantmentsBookList.length; i++) {
-      if (Enchantment.enchantmentsBookList[i] == null) {
-        return i;
+  public static int getEmptyEnchantId() {
+    for (int i = 65; i < 256; i++) {
+      if (Enchantment.getEnchantmentById(i) == null) {
+        boolean found = false;
+        for (Integer used : idList) {
+          if (i == used)
+            found = true;
+        }
+        if (!found) {
+          idList.add(i);
+          return i;
+        }
       }
     }
     return -1;

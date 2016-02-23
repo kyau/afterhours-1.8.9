@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import net.kyau.afterhours.AfterHours;
+import net.kyau.afterhours.references.Ref;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -22,18 +23,20 @@ public class ModRecipes {
   private static Collection<Block> blockVanillaRemoveSet = new HashSet<Block>();
 
   public static void init() {
-    // Item recipes to remove from the game
-    Collections.addAll(itemVanillaRemoveSet, new Item[] {
-        Items.bread,
-        Items.brewing_stand,
-        Items.leather,
-        Items.stone_axe,
-        Items.stone_hoe,
-        Items.stone_pickaxe,
-        Items.stone_shovel,
-        Items.stone_sword });
-    removeVanillaRecipes();
-    addVanillaRecipes();
+    if (Ref.Vanilla.RECIPES) {
+      // Item recipes to remove from the game
+      Collections.addAll(itemVanillaRemoveSet, new Item[] {
+          Items.bread,
+          Items.brewing_stand,
+          Items.leather,
+          Items.stone_axe,
+          Items.stone_hoe,
+          Items.stone_pickaxe,
+          Items.stone_shovel,
+          Items.stone_sword });
+      removeVanillaRecipes();
+      addVanillaRecipes();
+    }
     addRecipes();
   }
 
@@ -43,9 +46,11 @@ public class ModRecipes {
 
   private static void addRecipes() {
     GameRegistry.addRecipe(new ItemStack(ModItems.antenna, 1), "e", "q", 'e', Items.ender_pearl, 'q', ModItems.quantumrod);
-    GameRegistry.addRecipe(new ItemStack(ModVanilla.dough, 1), "www", 'w', Items.wheat);
-    GameRegistry.addSmelting(ModVanilla.dough, new ItemStack(Items.bread, 1), 0.35F);
-    GameRegistry.addShapelessRecipe(new ItemStack(ModVanilla.rawhide, 1), Items.rabbit_hide, Items.rabbit_hide, Items.rabbit_hide, Items.rabbit_hide);
+    if (Ref.Vanilla.RECIPES) {
+      GameRegistry.addRecipe(new ItemStack(ModVanilla.dough, 1), "www", 'w', Items.wheat);
+      GameRegistry.addSmelting(ModVanilla.dough, new ItemStack(Items.bread, 1), 0.35F);
+      GameRegistry.addShapelessRecipe(new ItemStack(ModVanilla.rawhide, 1), Items.rabbit_hide, Items.rabbit_hide, Items.rabbit_hide, Items.rabbit_hide);
+    }
     GameRegistry.addRecipe(new ItemStack(ModItems.singularity, 1), "iii", "iui", "iii", 'i', new ItemStack(ModBlocks.infused_voidstone, 1, 0), 'u', ModItems.unstablecore);
     GameRegistry.addRecipe(new ItemStack(ModItems.stablecore, 1), "ddd", "dud", "ddd", 'd', ModItems.darkmatter, 'u', ModItems.unstablecore);
     GameRegistry.addRecipe(new ItemStack(ModItems.unstablecore, 1), "viv", "ini", "viv", 'v', new ItemStack(ModBlocks.voidstone, 1, 0), 'n', Items.nether_star, 'i', new ItemStack(ModBlocks.infused_voidstone, 1, 0));

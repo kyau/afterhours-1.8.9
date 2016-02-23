@@ -49,6 +49,7 @@ public class FMLEventHandler {
 
   @SubscribeEvent
   public void onEntityAttacked(@Nonnull LivingHurtEvent event) {
+    // Only do 0.5 damage if our undestroyable tool out of durability
     if (event.entityLiving instanceof EntityLiving) {
       EntityLiving attackedEnt = (EntityLiving) event.entityLiving;
       DamageSource attackSource = event.source;

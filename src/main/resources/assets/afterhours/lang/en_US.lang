@@ -48,6 +48,8 @@ enchantment.quantumboost=§5Quantum Boost
 enchantment.quantumdisplay=§5Quantum Display
 
 config.afterhours.general=General
-config.afterhours.void_pearl=Void Pearl
-config.afterhours.wormhole=Wormhole Manipulator
-config.afterhours.vanilla=Vanilla
+config.afterhours.hud=Armor HUD
+config.afterhours.cooldown=Cooldowns
+config.afterhours.energy=Quantum Energy
+config.afterhours.machinery=Quantum Machinery
+config.afterhours.vanilla=Vanilla Tweaks

@@ -140,73 +140,75 @@ public class GuiHUD extends Gui {
             String owner = ItemHelper.getOwnerName(player.inventory.armorInventory[3]);
             if (player.getDisplayNameString().equals(owner)) {
               setClientPos();
-
-              // render character
-              renderCharacterOnScreen("LEFT", 14, scaled, minecraft.thePlayer);
-              // player name
-              RenderUtils.renderText(player.getDisplayNameString(), 48, 15, 0x3ffefe, 1, true);
-              // ingame time + light level
-              RenderUtils.renderText(getMinecraftTime() + " " + getLightLevel(), 48, 25, 0xffffff, 1, true);
-              // biome
               ArrayList<Object> biomeInfo = getCurrentBiome();
-              String biome = (String) biomeInfo.get(0);
-              if (isSlimeChunk()) {
-                biome = (String) biomeInfo.get(0) + EnumChatFormatting.GREEN + " (S)";
+
+              // character details
+              if (Ref.ArmorHud.SHOW_CHARACTER) {
+                // render character
+                renderCharacterOnScreen("LEFT", 14, scaled, minecraft.thePlayer);
+                // player name
+                RenderUtils.renderText(player.getDisplayNameString(), 48, 15, 0x3ffefe, 1, true);
+                // ingame time + light level
+                RenderUtils.renderText(getMinecraftTime() + " " + getLightLevel(), 48, 25, 0xffffff, 1, true);
+                // biome
+                String biome = (String) biomeInfo.get(0);
+                if (isSlimeChunk()) {
+                  biome = (String) biomeInfo.get(0) + EnumChatFormatting.GREEN + " (S)";
+                }
+                RenderUtils.renderText(biome, 48, 35, 0xbebebe, 1, true);
               }
-              RenderUtils.renderText(biome, 48, 35, 0xbebebe, 1, true);
-
               // temperature
-              String temperature = String.format("%.0f\u00b0", biomeInfo.get(1));
-              RenderUtils.renderText(temperature, getScreenCoordinates()[0] - (fontRenderer.getStringWidth(temperature)) - 7, 8, (int) biomeInfo.get(3), 1, true);
-
-              // inventory
-              /*
-              int invTotals[] = getInventorySize(inv);
-              RenderUtils.renderText("" + (invTotals[0] - invTotals[1]), getScreenCoordinates()[0] - 16, fixedY, invTotals[2], 1, true);
-              // drawTexture("afterhours", "textures/gui/afterhours_icons.png", getScreenCoordinates()[0] - 34, fixedY - 5,
-              // 0,
-              // 0, 15, 16);
-              RenderUtils.renderItem(Blocks.chest, getScreenCoordinates()[0] - 34, fixedY - 5);
-              */
+              if (Ref.ArmorHud.SHOW_TEMP) {
+                String temperature = String.format("%.0f\u00b0", biomeInfo.get(1));
+                RenderUtils.renderText(temperature, getScreenCoordinates()[0] - (fontRenderer.getStringWidth(temperature)) - 7, 8, (int) biomeInfo.get(3), 1, true);
+              }
 
               // fps / ping
-              RenderUtils.renderText(getFPS(), centerLeftX, fixedY, 0xdcdcdc, 1, true);
-              RenderUtils.renderTexture("minecraft", "textures/gui/icons.png", centerLeftX - 12, fixedY - 1, 0, 176 + getPingIndex() * 8, 10, 8, 0);
+              if (Ref.ArmorHud.SHOW_FPS) {
+                RenderUtils.renderText(getFPS(), centerLeftX, fixedY, 0xdcdcdc, 1, true);
+                RenderUtils.renderTexture("minecraft", "textures/gui/icons.png", centerLeftX - 12, fixedY - 1, 0, 176 + getPingIndex() * 8, 10, 8, 0);
+              }
 
               // real clock
-              RenderUtils.renderItem(new ItemStack(Items.clock), centerRightX, fixedY - 4);
-              RenderUtils.renderText(getRealTime(), centerRightX + 18, fixedY, 0xdcdcdc, 1, true);
+              if (Ref.ArmorHud.SHOW_CLOCK) {
+                RenderUtils.renderItem(new ItemStack(Items.clock), centerRightX, fixedY - 4);
+                RenderUtils.renderText(getRealTime(), centerRightX + 18, fixedY, 0xdcdcdc, 1, true);
+              }
 
               // render current armor and held item
-              renderArmour();
+              if (Ref.ArmorHud.SHOW_ARMOR)
+                renderArmour();
 
               // render chestplate energy levels
-              final ItemStack equippedChestplate = player.inventory.armorInventory[2];
-              if (equippedChestplate != null) {
-                if (equippedChestplate.getUnlocalizedName().equals(ModItems.darkmatter_chestplate.getUnlocalizedName())) {
-                  if (equippedChestplate.hasTagCompound()) {
-                    if (NBTHelper.hasTag(equippedChestplate, Ref.NBT.ENERGY_LEVEL) && NBTHelper.hasTag(equippedChestplate, Ref.NBT.ENERGY_MAX)) {
-                      int energy[] = NBTHelper.getEnergyLevels(equippedChestplate);
-                      RenderUtils.renderItem(new ItemStack(ModItems.voidcrystal), getScreenCoordinates()[0] - 44, fixedY - 4);
-                      int color = 0x000000;
-                      if (energy[0] < 750) {
-                        color = 0xff0000;
-                      } else if (energy[0] < 1500) {
-                        color = 0xffff00;
-                      } else {
-                        color = 0x00ff00;
+              if (Ref.ArmorHud.SHOW_QUANTUMENERGY) {
+                final ItemStack equippedChestplate = player.inventory.armorInventory[2];
+                if (equippedChestplate != null) {
+                  if (equippedChestplate.getUnlocalizedName().equals(ModItems.darkmatter_chestplate.getUnlocalizedName())) {
+                    if (equippedChestplate.hasTagCompound()) {
+                      if (NBTHelper.hasTag(equippedChestplate, Ref.NBT.ENERGY_LEVEL) && NBTHelper.hasTag(equippedChestplate, Ref.NBT.ENERGY_MAX)) {
+                        int energy[] = NBTHelper.getEnergyLevels(equippedChestplate);
+                        RenderUtils.renderItem(new ItemStack(ModItems.voidcrystal), getScreenCoordinates()[0] - 44, fixedY - 4);
+                        int color = 0x000000;
+                        if (energy[0] < 750) {
+                          color = 0xff0000;
+                        } else if (energy[0] < 1500) {
+                          color = 0xffff00;
+                        } else {
+                          color = 0x00ff00;
+                        }
+                        String energyValue = "";
+                        if (energy[0] == energy[1]) {
+                          energyValue = "MAX";
+                        } else {
+                          energyValue = String.valueOf(energy[0]);
+                        }
+                        RenderUtils.renderText(energyValue, getScreenCoordinates()[0] - 28, fixedY, color, 1, true);
                       }
-                      String energyValue = "";
-                      if (energy[0] == energy[1]) {
-                        energyValue = "MAX";
-                      } else {
-                        energyValue = String.valueOf(energy[0]);
-                      }
-                      RenderUtils.renderText(energyValue, getScreenCoordinates()[0] - 28, fixedY, color, 1, true);
                     }
                   }
                 }
               }
+              // End GUI
             }
           }
         }
@@ -228,27 +230,6 @@ public class GuiHUD extends Gui {
     } else {
       GuiInventory.drawEntityOnScreen((scaled.getScaledWidth() - posX) + charOffsetPosX, scaled.getScaledHeight(), posX - (((posX / 2) * -1) * 2), 50, -player.rotationPitch, player);
     }
-  }
-
-  private static int[] getInventorySize(IInventory inv) {
-    int invTotal = inv.getSizeInventory() - 4;
-    int invCount = 0;
-    for (int slot = 0; slot < invTotal; ++slot) {
-      ItemStack itemStack = inv.getStackInSlot(slot);
-      if (itemStack != null) {
-        if (itemStack.stackSize > 0) {
-          invCount++;
-        }
-      }
-    }
-    int color = 0xdcdcdc;
-    if (player.inventory.getFirstEmptyStack() == -1) {
-      color = 0xaa0000;
-    }
-    return new int[] {
-        invTotal,
-        invCount,
-        color };
   }
 
   private static String getRealTime() {
@@ -462,9 +443,11 @@ public class GuiHUD extends Gui {
       if (stack.getMaxDamage() > 0) {
         int currentDamage = stack.getMaxDamage() - stack.getItemDamage();
         float percent = (float) currentDamage / (float) stack.getMaxDamage();
-        damageText = MessageFormat.format("{0,number,#%}", percent);
-        // DEBUG
-        // System.out.println("float: " + String.valueOf(percent) + ", string: " + damage);
+        if (Ref.ArmorHud.NUMBER_FORMAT == 1) {
+          damageText = MessageFormat.format("{0,number,#%}", percent);
+        } else if (Ref.ArmorHud.NUMBER_FORMAT == 2) {
+          damageText = currentDamage + "/" + stack.getMaxDamage();
+        }
       } else {
         // Item does not have durability, show item count instead
         if (stack.stackSize > 1) {
@@ -478,15 +461,17 @@ public class GuiHUD extends Gui {
         if (stack.getMaxDamage() > 0) {
           int currentDamage = stack.getMaxDamage() - stack.getItemDamage();
           float percent = (float) currentDamage / (float) stack.getMaxDamage();
+          int fontColor = 0;
           if (percent > 0.65) {
-            RenderUtils.renderText(String.valueOf(damageText), x + (damageStringWidth - 6), y + (fontRenderer.FONT_HEIGHT / 2) + 1, Color.GREEN.getRGB(), 1, true);
+            fontColor = Color.GREEN.getRGB();
           } else if (percent > 0.45) {
-            RenderUtils.renderText(String.valueOf(damageText), x + (damageStringWidth - 6), y + (fontRenderer.FONT_HEIGHT / 2) + 1, Color.YELLOW.getRGB(), 1, true);
+            fontColor = Color.YELLOW.getRGB();
           } else if (percent > 0.25) {
-            RenderUtils.renderText(String.valueOf(damageText), x + (damageStringWidth - 6), y + (fontRenderer.FONT_HEIGHT / 2) + 1, Color.ORANGE.getRGB(), 1, true);
+            fontColor = Color.ORANGE.getRGB();
           } else {
-            RenderUtils.renderText(String.valueOf(damageText), x + (damageStringWidth - 6), y + (fontRenderer.FONT_HEIGHT / 2) + 1, Color.RED.getRGB(), 1, true);
+            fontColor = Color.RED.getRGB();
           }
+          RenderUtils.renderText(String.valueOf(damageText), x + (damageStringWidth - 6), y + (fontRenderer.FONT_HEIGHT / 2) + 1, fontColor, 1, true);
         }
       }
     }
