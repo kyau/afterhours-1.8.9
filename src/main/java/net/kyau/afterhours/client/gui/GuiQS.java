@@ -16,7 +16,7 @@ import org.lwjgl.opengl.GL11;
 public class GuiQS extends GuiContainer {
 
   private float xSize_lo;
-  protected int ySize = 233;
+  protected int ySize = 166;
   private float ySize_lo;
   private static final ResourceLocation iconLocation = new ResourceLocation(ModInfo.MOD_ID, "textures/gui/quantum_stabilizer.png");
   private final InventoryPlayer inventoryPlayer;
@@ -44,8 +44,13 @@ public class GuiQS extends GuiContainer {
   protected void drawGuiContainerForegroundLayer(int par1, int par2) {
     String qsMainName = this.tileQS.hasCustomName() ? this.tileQS.getName() : this.tileQS.getName();
     String inventoryName = StatCollector.translateToLocal(Ref.Containers.INVENTORY);
-    super.fontRendererObj.drawString(qsMainName, 8, this.ySize - 262, 0x404040);
-    super.fontRendererObj.drawString(inventoryName, 8, this.ySize - 194, 0x404040);
+    // this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 6, 4210752);
+    super.fontRendererObj.drawString(qsMainName, this.xSize / 2 - this.fontRendererObj.getStringWidth(qsMainName) / 2, this.ySize - 160, 0x404040);
+    super.fontRendererObj.drawString(inventoryName, 8, this.ySize - 94, 0x404040);
+    int ticksGrindingItemSoFar = tileQS.getField(2);
+    int ticksPerItem = tileQS.getField(3);
+    if (ticksPerItem != 0 && ticksGrindingItemSoFar != 0)
+      RenderUtils.renderText("Stabilizing...", 112, this.ySize - 94, 0x808080, 1, false);
   }
 
   @Override

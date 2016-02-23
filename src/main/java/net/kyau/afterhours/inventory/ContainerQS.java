@@ -1,5 +1,6 @@
 package net.kyau.afterhours.inventory;
 
+import net.kyau.afterhours.init.ModBlocks;
 import net.kyau.afterhours.items.DarkMatter;
 import net.kyau.afterhours.items.UnstableDarkMatter;
 import net.kyau.afterhours.items.VoidCrystal;
@@ -33,10 +34,10 @@ public class ContainerQS extends Container {
     tileQS = inventoryQS;
     sizeInventory = tileQS.getSizeInventory();
 
-    addSlotToContainer(new SlotQSInput(tileQS, TileEntityQuantumStabilizer.slotEnum.INPUT_SLOT1.ordinal(), 36, -12));
-    addSlotToContainer(new SlotQSInput(tileQS, TileEntityQuantumStabilizer.slotEnum.INPUT_SLOT2.ordinal(), 54, -12));
-    addSlotToContainer(new SlotQSOutput(inventoryPlayer.player, tileQS, TileEntityQuantumStabilizer.slotEnum.OUTPUT_SLOT.ordinal(), 116, 1));
-    addSlotToContainer(new SlotQSFuel(tileQS, TileEntityQuantumStabilizer.slotEnum.FUEL_SLOT.ordinal(), 45, 13));
+    addSlotToContainer(new SlotQSInput(tileQS, TileEntityQuantumStabilizer.slotEnum.INPUT_SLOT1.ordinal(), 36, 22));
+    addSlotToContainer(new SlotQSInput(tileQS, TileEntityQuantumStabilizer.slotEnum.INPUT_SLOT2.ordinal(), 54, 22));
+    addSlotToContainer(new SlotQSOutput(inventoryPlayer.player, tileQS, TileEntityQuantumStabilizer.slotEnum.OUTPUT_SLOT.ordinal(), 116, 35));
+    addSlotToContainer(new SlotQSFuel(tileQS, TileEntityQuantumStabilizer.slotEnum.FUEL_SLOT.ordinal(), 45, 47));
 
     // add player inventory slots
     // note that the slot numbers are within the player inventory so can
@@ -44,13 +45,13 @@ public class ContainerQS extends Container {
     int i;
     for (i = 0; i < 3; ++i) {
       for (int j = 0; j < 9; ++j) {
-        addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, 50 + i * 18));
+        addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
       }
     }
 
     // add hotbar slots
     for (i = 0; i < 9; ++i) {
-      addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 108));
+      addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 142));
     }
   }
 
@@ -179,7 +180,8 @@ public class ContainerQS extends Container {
     public boolean isItemValid(ItemStack stack) {
       Item item = stack.getItem();
       Item gunpowder = new ItemStack(Items.gunpowder).getItem();
-      if (item instanceof UnstableDarkMatter || item instanceof DarkMatter || item == gunpowder) {
+      Item voidstone = new ItemStack(ModBlocks.voidstone, 1, 0).getItem();
+      if (item instanceof UnstableDarkMatter || item instanceof DarkMatter || item == gunpowder || item == voidstone) {
         return true;
       }
       return false;

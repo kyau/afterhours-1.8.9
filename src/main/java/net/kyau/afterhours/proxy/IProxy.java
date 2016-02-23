@@ -1,5 +1,10 @@
 package net.kyau.afterhours.proxy;
 
+import java.util.Random;
+
+import net.minecraft.util.BlockPos;
+import net.minecraft.world.World;
+
 public interface IProxy {
 
   public abstract ClientProxy getClientProxy();
@@ -15,4 +20,6 @@ public interface IProxy {
   public abstract boolean isSinglePlayer();
 
   public abstract void openJournal();
+
+  public abstract void generateQuantumParticles(World world, BlockPos pos, Random rand);
 }

@@ -9,11 +9,14 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 
 import net.kyau.afterhours.enchantment.EnchantmentEntanglement;
+import net.kyau.afterhours.init.ModBlocks;
 import net.kyau.afterhours.init.ModItems;
 import net.kyau.afterhours.references.ModInfo;
+import net.kyau.afterhours.references.Ref;
 import net.kyau.afterhours.utils.InventoryHandler;
 import net.kyau.afterhours.utils.ItemHelper;
 import net.kyau.afterhours.utils.LogHelper;
+import net.kyau.afterhours.utils.NBTHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -21,9 +24,10 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -44,6 +48,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 public class ForgeEventHandler {
 
   public static List<String> tooltipList = new ArrayList<String>();
+  public static int tick = 0;
 
   @SubscribeEvent
   public void onItemPickup(@Nonnull EntityItemPickupEvent event) {
@@ -79,20 +84,28 @@ public class ForgeEventHandler {
         if (player.inventory.armorInventory[2] == null) {
           player.capabilities.allowFlying = false;
           player.capabilities.disableDamage = false;
-          // player.capabilities.setFlySpeed(0.05F);
         } else {
           if (player.inventory.armorInventory[2].getUnlocalizedName().equals(ModItems.darkmatter_chestplate.getUnlocalizedName())) {
-            player.capabilities.allowFlying = true;
-            player.capabilities.disableDamage = false;
+            if (player.inventory.armorInventory[2].hasTagCompound()) {
+              String owner = ItemHelper.getOwnerName(player.inventory.armorInventory[2]);
+              int energy[] = NBTHelper.getEnergyLevels(player.inventory.armorInventory[2]);
+              if (player.getDisplayNameString().equals(owner) && energy[0] > 0) {
+                player.capabilities.allowFlying = true;
+                player.capabilities.disableDamage = false;
+              }
+            }
           }
         }
-        if (player.inventory.armorInventory[0] == null) {
+        if (player.inventory.armorInventory[1] == null) {
           changeSpeed(player, 1D, "speedMod");
-          // player.capabilities.setPlayerWalkSpeed(0.1F);
         } else {
-          if (player.inventory.armorInventory[0].getUnlocalizedName().equals(ModItems.darkmatter_boots.getUnlocalizedName())) {
-            changeSpeed(player, 2.2D, "speedMod");
-            // player.capabilities.setPlayerWalkSpeed(0.2F);
+          if (player.inventory.armorInventory[1].getUnlocalizedName().equals(ModItems.darkmatter_leggings.getUnlocalizedName())) {
+            if (player.inventory.armorInventory[1].hasTagCompound()) {
+              String owner = ItemHelper.getOwnerName(player.inventory.armorInventory[1]);
+              if (player.getDisplayNameString().equals(owner)) {
+                changeSpeed(player, 2.2D, "speedMod");
+              }
+            }
           } else {
             changeSpeed(player, 1D, "speedMod");
           }
@@ -105,9 +118,14 @@ public class ForgeEventHandler {
   public void onFOVChange(FOVUpdateEvent event) {
     if (event.entity instanceof EntityPlayer) {
       EntityPlayer player = (EntityPlayer) event.entity;
-      if (!(player.inventory.armorInventory[0] == null)) {
-        if (player.inventory.armorInventory[0].getUnlocalizedName().equals(ModItems.darkmatter_boots.getUnlocalizedName())) {
-          event.newfov = 1.0F;
+      if (!(player.inventory.armorInventory[3] == null)) {
+        if (player.inventory.armorInventory[3].getUnlocalizedName().equals(ModItems.darkmatter_helmet.getUnlocalizedName())) {
+          if (player.inventory.armorInventory[3].hasTagCompound()) {
+            String owner = ItemHelper.getOwnerName(player.inventory.armorInventory[1]);
+            if (player.getDisplayNameString().equals(owner)) {
+              event.newfov = 1.0F;
+            }
+          }
         }
       }
     }
@@ -119,11 +137,16 @@ public class ForgeEventHandler {
       EntityPlayer player = (EntityPlayer) event.entityLiving;
       if (player.inventory.armorInventory[0] != null) {
         if (player.inventory.armorInventory[0].getUnlocalizedName().equals(ModItems.darkmatter_boots.getUnlocalizedName())) {
-          int damage = (int) (1.5 * event.distance * event.damageMultiplier);
-          String soundName = damage > 4 ? "game.player.hurt.fall.big" : "game.player.hurt.fall.small";
-          player.inventory.armorInventory[0].attemptDamageItem(damage, new Random());
-          event.damageMultiplier = 0;
-          MinecraftServer.getServer().worldServerForDimension(player.dimension).playSoundEffect(player.posX, player.posY, player.posZ, soundName, 1.0F, 1.0F);
+          if (player.inventory.armorInventory[0].hasTagCompound()) {
+            String owner = ItemHelper.getOwnerName(player.inventory.armorInventory[0]);
+            if (player.getDisplayNameString().equals(owner)) {
+              int damage = (int) (1.5 * event.distance * event.damageMultiplier);
+              String soundName = damage > 10 ? "game.player.hurt.fall.big" : "game.player.hurt.fall.small";
+              player.inventory.armorInventory[0].attemptDamageItem(damage, new Random());
+              event.damageMultiplier = 0;
+              event.entityLiving.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, soundName, 1.0F, 1.0F);
+            }
+          }
         }
       }
     }
@@ -137,13 +160,18 @@ public class ForgeEventHandler {
       int damage = (int) (0.4 * event.distance * event.multipler);
       if (player.inventory.armorInventory[0] != null) {
         if (player.inventory.armorInventory[0].getUnlocalizedName().equals(ModItems.darkmatter_boots.getUnlocalizedName())) {
-          if (event.distance > 10) {
-            String soundName = damage > 5 ? "game.player.hurt.fall.big" : "game.player.hurt.fall.small";
-            player.inventory.armorInventory[0].attemptDamageItem(damage, new Random());
-            MinecraftServer.getServer().worldServerForDimension(player.dimension).playSoundEffect(player.posX, player.posY, player.posZ, soundName, 1.0F, 1.0F);
-            boots = true;
+          if (player.inventory.armorInventory[0].hasTagCompound()) {
+            String owner = ItemHelper.getOwnerName(player.inventory.armorInventory[0]);
+            if (player.getDisplayNameString().equals(owner)) {
+              if (event.distance > 10) {
+                String soundName = damage > 5 ? "game.player.hurt.fall.big" : "game.player.hurt.fall.small";
+                player.inventory.armorInventory[0].attemptDamageItem(damage, new Random());
+                player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, soundName, 1.0F, 1.0F);
+                boots = true;
+              }
+              event.multipler = 0;
+            }
           }
-          event.multipler = 0;
         }
       }
       if (!boots) {
@@ -162,16 +190,76 @@ public class ForgeEventHandler {
       World world = player.worldObj;
       if (!(player.inventory.armorInventory[0] == null)) {
         if (player.inventory.armorInventory[0].getUnlocalizedName().equals(ModItems.darkmatter_boots.getUnlocalizedName())) {
-          float f = player.rotationYaw * 0.017453292F;
-          if (player.motionX > 0 || player.motionX < 0) {
-            player.motionX -= (double) (MathHelper.sin(f) * 1.2F);
+          if (player.inventory.armorInventory[0].hasTagCompound()) {
+            String owner = ItemHelper.getOwnerName(player.inventory.armorInventory[0]);
+            if (player.getDisplayNameString().equals(owner)) {
+              float f = player.rotationYaw * 0.017453292F;
+              if (player.motionX > 0 || player.motionX < 0) {
+                player.motionX -= (double) (MathHelper.sin(f) * 1.2F);
+              }
+              if (player.motionZ > 0 || player.motionZ < 0) {
+                player.motionZ += (double) (MathHelper.cos(f) * 1.2F);
+              }
+              player.motionY = (double) 1.0F;
+            }
           }
-          if (player.motionZ > 0 || player.motionZ < 0) {
-            player.motionZ += (double) (MathHelper.cos(f) * 1.2F);
-          }
-          player.motionY = (double) 1.0F;
         }
       }
+    }
+  }
+
+  private void playerTickEvent(EntityPlayer player) {
+    final ItemStack equippedChestplate = player.inventory.armorInventory[2];
+    if (equippedChestplate != null) {
+      if (equippedChestplate.getUnlocalizedName().equals(ModItems.darkmatter_chestplate.getUnlocalizedName())) {
+        if (equippedChestplate.hasTagCompound()) {
+          if (NBTHelper.hasTag(equippedChestplate, Ref.NBT.ENERGY_LEVEL) && NBTHelper.hasTag(equippedChestplate, Ref.NBT.ENERGY_MAX)) {
+            BlockPos underPlayer = new BlockPos(player.posX, MathHelper.floor_double(player.posY - 0.1D), player.posZ);
+            if (player.worldObj.getBlockState(underPlayer).getBlock() == ModBlocks.quantum_chargepad) {
+              int energy[] = NBTHelper.getEnergyLevels(equippedChestplate);
+              if ((energy[0] + Ref.BlockStat.CHARGEPAD_PERTICK) <= energy[1]) {
+                NBTHelper.setEnergyLevels(equippedChestplate, (energy[0] + Ref.BlockStat.CHARGEPAD_PERTICK), energy[1]);
+              } else {
+                NBTHelper.setEnergyLevels(equippedChestplate, energy[1], energy[1]);
+              }
+              if (player.getHeldItem() != null) {
+                Item heldItem = player.getHeldItem().getItem();
+                ItemStack heldStack = player.getHeldItem();
+                if (heldItem == ModItems.wormhole_manipulator && heldStack.hasTagCompound()) {
+                  if (NBTHelper.hasTag(heldStack, Ref.NBT.ENERGY_LEVEL) && NBTHelper.hasTag(heldStack, Ref.NBT.ENERGY_MAX)) {
+                    int heldEnergy[] = NBTHelper.getEnergyLevels(heldStack);
+                    if ((heldEnergy[0] + (Ref.BlockStat.CHARGEPAD_PERTICK) / 2) <= heldEnergy[1]) {
+                      NBTHelper.setEnergyLevels(heldStack, (heldEnergy[0] + (Ref.BlockStat.CHARGEPAD_PERTICK / 2)), heldEnergy[1]);
+                    } else {
+                      NBTHelper.setEnergyLevels(heldStack, heldEnergy[1], heldEnergy[1]);
+                    }
+                  }
+                }
+              }
+            }
+            if (player.dimension == Ref.Dimension.DIM) {
+              int energy[] = NBTHelper.getEnergyLevels(equippedChestplate);
+              if ((energy[0] + 1) <= energy[1]) {
+                NBTHelper.setEnergyLevels(equippedChestplate, (energy[0] + 1), energy[1]);
+              }
+            }
+            if (player.capabilities.isFlying) {
+              int energy[] = NBTHelper.getEnergyLevels(equippedChestplate);
+              int newEnergy = energy[0] - 3;
+              if (newEnergy > 0) {
+                NBTHelper.setEnergyLevels(equippedChestplate, newEnergy, energy[1]);
+              } else {
+                NBTHelper.setEnergyLevels(equippedChestplate, 0, energy[1]);
+              }
+            }
+          }
+        }
+      }
+    }
+    ItemStack item = new ItemStack(ModItems.voidpearl);
+    int count = InventoryHandler.countItems(player, ModItems.voidpearl);
+    if (count > 1) {
+      InventoryHandler.removeLimitedItem(player, item);
     }
   }
 
@@ -181,10 +269,11 @@ public class ForgeEventHandler {
       EntityPlayer player = event.player;
       World world = player.worldObj;
       if (!world.isRemote) {
-        ItemStack item = new ItemStack(ModItems.voidpearl);
-        int count = InventoryHandler.countItems(player, ModItems.voidpearl);
-        if (count > 1) {
-          InventoryHandler.removeLimitedItem(player, item);
+        if (tick >= 10) {
+          playerTickEvent(player);
+          tick = 0;
+        } else {
+          tick++;
         }
       }
     }

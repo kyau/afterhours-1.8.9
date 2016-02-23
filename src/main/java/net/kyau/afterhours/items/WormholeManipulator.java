@@ -109,11 +109,11 @@ public class WormholeManipulator extends BaseItem {
           while (player.getEntityBoundingBox() != null && world.getCollidingBoundingBoxes(player, player.getEntityBoundingBox()) != null && !world.getCollidingBoundingBoxes(player, player.getEntityBoundingBox()).isEmpty()) {
             player.setPositionAndUpdate(player.posX, player.posY + 1.0D, player.posZ);
           }
-          NBTHelper.setEnergyLevels(stack, energy[0] - 10, Ref.ItemStat.ENERGY_WORMHOLE_MANIPULATOR);
+          NBTHelper.setEnergyLevels(stack, energy[0] - Ref.ItemStat.ENERGYONUSE_WORMHOLE_MANIPULATOR, Ref.ItemStat.ENERGY_WORMHOLE_MANIPULATOR);
           NBTHelper.setLastUse(stack, player.worldObj.getTotalWorldTime());
           EntityPlayerMP playerMP = (EntityPlayerMP) player;
           MinecraftServer.getServer().worldServerForDimension(playerMP.dimension).playSoundEffect(player.posX, player.posY, player.posZ, "afterhours:singularity", 1.0F, 1.0F);
-          sendChatEnergy(player, stack);
+          ItemHelper.sendChatEnergy(player, stack);
         } else {
           if (player instanceof EntityPlayerMP) {
             IMessage msg = new SimplePacket.SimpleMessage(1, "afterhours:error");
@@ -169,7 +169,7 @@ public class WormholeManipulator extends BaseItem {
         NBTHelper.setEnergyLevels(stack, energy[0] + Ref.ItemStat.WORMHOLE_MANIPULATOR_PERTICK, Ref.ItemStat.ENERGY_WORMHOLE_MANIPULATOR);
         // Trigger cooldown
         NBTHelper.setLastUse(stack, player.worldObj.getTotalWorldTime());
-        sendChatEnergy(player, stack);
+        ItemHelper.sendChatEnergy(player, stack);
       }
     }
     return stack;
@@ -179,9 +179,7 @@ public class WormholeManipulator extends BaseItem {
   @SideOnly(Side.CLIENT)
   public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
     // Item Stats
-    if (ItemHelper.hasOwner(stack)) {
-      tooltip.add(StatCollector.translateToLocal(Ref.Translation.IMPRINTED));
-    } else {
+    if (!ItemHelper.hasOwner(stack)) {
       tooltip.add(StatCollector.translateToLocal(Ref.Translation.PREIMPRINT));
     }
     // Description
@@ -240,13 +238,6 @@ public class WormholeManipulator extends BaseItem {
     Vec3 vec31 = entity.getLook(partialTicks);
     Vec3 vec32 = vec3.addVector(vec31.xCoord * blockReachDistance, vec31.yCoord * blockReachDistance, vec31.zCoord * blockReachDistance);
     return entity.worldObj.rayTraceBlocks(vec3, vec32, false, false, true);
-  }
-
-  private void sendChatEnergy(EntityPlayer player, ItemStack stack) {
-    if (NBTHelper.hasTag(stack, Ref.NBT.ENERGY_LEVEL) && NBTHelper.hasTag(stack, Ref.NBT.ENERGY_MAX)) {
-      int[] energy = NBTHelper.getEnergyLevels(stack);
-      ChatUtil.sendNoSpam(player, EnumChatFormatting.GREEN + StatCollector.translateToLocal(Ref.Translation.ENERGY) + " " + EnumChatFormatting.GRAY + energy[0] + "/" + energy[1]);
-    }
   }
 
 }

@@ -48,11 +48,11 @@ public class ConfigHandler {
     Ref.ItemCooldown.VOIDPEARL = cooldownVoidPearl;
     cooldownWormholeManipulator = config.getInt("cooldown", CATEGORY_WORMHOLE, 160, 20, 72000, "Cooldown in ticks (divide by 20 for seconds)");
     Ref.ItemCooldown.WORMHOLE_MANIPULATOR = cooldownWormholeManipulator;
-    wormholeEnergyMax = config.getInt("energyMax", CATEGORY_WORMHOLE, 100, 1, 1000, "Maximum quantum energy stored in device");
+    wormholeEnergyMax = config.getInt("energyMax", CATEGORY_WORMHOLE, 500, 1, 10000, "Maximum quantum energy stored in device");
     Ref.ItemStat.ENERGY_WORMHOLE_MANIPULATOR = wormholeEnergyMax;
-    wormholeEnergyOnUse = config.getInt("energyOnUse", CATEGORY_WORMHOLE, 10, 1, 1000, "Quantum energy consumed on use");
+    wormholeEnergyOnUse = config.getInt("energyOnUse", CATEGORY_WORMHOLE, 20, 1, 10000, "Quantum energy consumed on use");
     Ref.ItemStat.ENERGYONUSE_WORMHOLE_MANIPULATOR = wormholeEnergyOnUse;
-    wormholeEnergyPerTick = config.getInt("energyPerTick", CATEGORY_WORMHOLE, 2, 1, 1000, "Quantum energy regained per tick on recharge");
+    wormholeEnergyPerTick = config.getInt("energyPerTick", CATEGORY_WORMHOLE, 5, 1, 10000, "Quantum energy regained per tick on recharge");
     Ref.ItemStat.WORMHOLE_MANIPULATOR_PERTICK = wormholeEnergyPerTick;
     vanillaTooltip = config.getBoolean("vanillaTooltip", CATEGORY_VANILLA, true, "Modify vanilla tooltips to include more information");
     Ref.Vanilla.TOOLTIP = vanillaTooltip;

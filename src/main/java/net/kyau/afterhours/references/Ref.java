@@ -9,6 +9,7 @@ public class Ref {
     public static final String DARKMATTERCLUSTER = "darkmattercluster";
     public static final String VOIDSTONE = "voidstone";
     public static final String INFUSED_VOIDSTONE = "infused_voidstone";
+    public static final String QUANTUM_CHARGEPAD = "quantum_chargepad";
     public static final String QUANTUM_STABILIZER = "quantum_stabilizer";
   }
 
@@ -48,6 +49,7 @@ public class Ref {
 
     public static final String IMPRINTED = "Imprinted";
     public static final String LIMITED = "Limited";
+    public static final int ENERGY_DARKMATTER_CHESTPLATE = 5000;
     public static int ENERGY_WORMHOLE_MANIPULATOR = ConfigHandler.wormholeEnergyMax;
     public static int ENERGYONUSE_WORMHOLE_MANIPULATOR = ConfigHandler.wormholeEnergyOnUse;
     public static int WORMHOLE_MANIPULATOR_PERTICK = ConfigHandler.wormholeEnergyPerTick;
@@ -139,5 +141,6 @@ public class Ref {
     public static final int STABILIZER_TIME = 200;
     public static final int STABILIZER_DARKMATTER_TIME = 6000;
     public static final int STABILIZER_QUANTUMROD_TIME = 12000;
+    public static final int CHARGEPAD_PERTICK = 11;
   }
 }

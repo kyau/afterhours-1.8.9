@@ -1,12 +1,18 @@
 package net.kyau.afterhours.proxy;
 
+import java.util.Random;
+
 import net.kyau.afterhours.client.gui.GuiHUD;
 import net.kyau.afterhours.client.gui.GuiVoidJournal;
+import net.kyau.afterhours.client.renderer.EntityParticleFXQuantum;
 import net.kyau.afterhours.event.TooltipEventHandler;
 import net.kyau.afterhours.init.ModBlocks;
 import net.kyau.afterhours.init.ModItems;
 import net.kyau.afterhours.init.ModVanilla;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.EntityFX;
+import net.minecraft.util.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
 public class ClientProxy extends CommonProxy {
@@ -50,6 +56,18 @@ public class ClientProxy extends CommonProxy {
   @Override
   public void registerClientEventHandlers() {
     MinecraftForge.EVENT_BUS.register(new TooltipEventHandler());
+  }
+
+  @Override
+  public void generateQuantumParticles(World world, BlockPos pos, Random rand) {
+
+    float motionX = (float) (rand.nextGaussian() * 0.02F);
+    float motionY = (float) (rand.nextGaussian() * 0.02F);
+    float motionZ = (float) (rand.nextGaussian() * 0.02F);
+    // for (int i = 0; i < 2; i++) {
+    EntityFX particleMysterious = new EntityParticleFXQuantum(world, pos.getX() + rand.nextFloat() * 0.7F + 0.2F, pos.getY() + 0.1F, pos.getZ() + rand.nextFloat() * 0.8F + 0.2F, motionX, motionY, motionZ);
+    Minecraft.getMinecraft().effectRenderer.addEffect(particleMysterious);
+    // }
   }
 
 }

@@ -1,6 +1,7 @@
 package net.kyau.afterhours.tileentity;
 
 import net.kyau.afterhours.blocks.QuantumStabilizer;
+import net.kyau.afterhours.init.ModBlocks;
 import net.kyau.afterhours.init.ModItems;
 import net.kyau.afterhours.references.Ref;
 import net.kyau.afterhours.utils.LogHelper;
@@ -9,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -237,6 +239,18 @@ public class TileEntityQuantumStabilizer extends TileEntityBase implements IInve
   public void update() {
     boolean hasBeenStabilizing = stabilizeSomething();
     boolean changedStabilizingState = false;
+    boolean previousState = false;
+
+    if (changedStabilizingState != previousState) {
+      LogHelper.info(changedStabilizingState);
+      previousState = changedStabilizingState;
+    }
+
+    if (ticksStabilizeItemSoFar > 0) {
+      ((QuantumStabilizer) getBlockType()).setState(worldObj, getPos(), worldObj.getBlockState(getPos()), true);
+    } else {
+      ((QuantumStabilizer) getBlockType()).setState(worldObj, getPos(), worldObj.getBlockState(getPos()), false);
+    }
 
     if (stabilizeSomething()) {
       --timeCanStabilize;
@@ -244,7 +258,7 @@ public class TileEntityQuantumStabilizer extends TileEntityBase implements IInve
 
     if (!worldObj.isRemote) {
       // if something is in the input slots
-      if (inventory[slotEnum.INPUT_SLOT1.ordinal()] != null && inventory[slotEnum.INPUT_SLOT2.ordinal()] != null && inventory[slotEnum.FUEL_SLOT.ordinal()] != null) {
+      if (inventory[slotEnum.INPUT_SLOT1.ordinal()] != null || inventory[slotEnum.INPUT_SLOT2.ordinal()] != null || inventory[slotEnum.FUEL_SLOT.ordinal()] != null) {
         // start stabilizing
         if (!stabilizeSomething() && canStabilize()) {
           timeCanStabilize = 150;
@@ -255,10 +269,8 @@ public class TileEntityQuantumStabilizer extends TileEntityBase implements IInve
 
         // continue stabilizing
         if (stabilizeSomething() && canStabilize()) {
-          if (!isStabilizing) {
-            LogHelper.info("started stabilizing!");
+          if (hasBeenStabilizing) {
             isStabilizing = true;
-            ((QuantumStabilizer) getBlockType()).setState(worldObj, getPos(), worldObj.getBlockState(getPos()), isStabilizing);
           }
           ++ticksStabilizeItemSoFar;
           // check if completed stabilizing an item
@@ -277,7 +289,6 @@ public class TileEntityQuantumStabilizer extends TileEntityBase implements IInve
       // or inactive model
       if (hasBeenStabilizing != stabilizeSomething()) {
         changedStabilizingState = true;
-        // update block model for weather its on or not
         // QuantumStabilizer.changeBlockBasedOnStabilizeStatus(stabilizeSomething(), worldObj, pos);
       }
 
@@ -288,10 +299,11 @@ public class TileEntityQuantumStabilizer extends TileEntityBase implements IInve
   }
 
   public int timeToStabilizeItem(ItemStack stack1, ItemStack stack2) {
+    Item voidstone = Item.getItemFromBlock(ModBlocks.voidstone);
     if (stack1 != null && stack2 != null) {
       if ((stack1.getItem() == Items.gunpowder && stack2.getItem() == ModItems.unstable_darkmatter) || (stack1.getItem() == ModItems.unstable_darkmatter && stack2.getItem() == Items.gunpowder)) {
         return Ref.BlockStat.STABILIZER_DARKMATTER_TIME;
-      } else if (stack1.getItem() == ModItems.darkmatter && stack2.getItem() == ModItems.darkmatter) {
+      } else if ((stack1.getItem() == ModItems.darkmatter && stack2.getItem() == voidstone) || (stack1.getItem() == voidstone && stack2.getItem() == ModItems.darkmatter)) {
         return Ref.BlockStat.STABILIZER_QUANTUMROD_TIME;
       }
     }
@@ -308,9 +320,12 @@ public class TileEntityQuantumStabilizer extends TileEntityBase implements IInve
       ItemStack input2 = inventory[slotEnum.INPUT_SLOT2.ordinal()];
       ItemStack fuel = inventory[slotEnum.FUEL_SLOT.ordinal()];
       ItemStack stack = null;
+      Item voidstone = Item.getItemFromBlock(ModBlocks.voidstone);
       if (((input1.getItem() == Items.gunpowder && input2.getItem() == ModItems.unstable_darkmatter) || (input1.getItem() == ModItems.unstable_darkmatter && input2.getItem() == Items.gunpowder)) && fuel.getItem() == ModItems.voidcrystal)
         stack = new ItemStack(ModItems.darkmatter, 1);
-      if (input1.getItem() == ModItems.darkmatter && input2.getItem() == ModItems.darkmatter && fuel.getItem() == ModItems.voidcrystal)
+      // if (input1.getItem() == ModItems.darkmatter && input2.getItem() == ModItems.darkmatter && fuel.getItem() ==
+      // ModItems.voidcrystal)
+      if ((input1.getItem() == ModItems.darkmatter && input2.getItem() == voidstone) || (input1.getItem() == voidstone && input2.getItem() == ModItems.darkmatter) && fuel.getItem() == ModItems.voidcrystal)
         stack = new ItemStack(ModItems.quantumrod, 1);
       if (stack == null)
         return false;
@@ -329,9 +344,12 @@ public class TileEntityQuantumStabilizer extends TileEntityBase implements IInve
       ItemStack input2 = inventory[slotEnum.INPUT_SLOT2.ordinal()];
       ItemStack fuel = inventory[slotEnum.FUEL_SLOT.ordinal()];
       ItemStack stack = null;
+      Item voidstone = Item.getItemFromBlock(ModBlocks.voidstone);
       if (((input1.getItem() == Items.gunpowder && input2.getItem() == ModItems.unstable_darkmatter) || (input1.getItem() == ModItems.unstable_darkmatter && input2.getItem() == Items.gunpowder)) && fuel.getItem() == ModItems.voidcrystal)
         stack = new ItemStack(ModItems.darkmatter, 1);
-      if (input1.getItem() == ModItems.darkmatter && input2.getItem() == ModItems.darkmatter && fuel.getItem() == ModItems.voidcrystal)
+      // if (input1.getItem() == ModItems.darkmatter && input2.getItem() == ModItems.darkmatter && fuel.getItem() ==
+      // ModItems.voidcrystal)
+      if ((input1.getItem() == ModItems.darkmatter && input2.getItem() == voidstone) || (input1.getItem() == voidstone && input2.getItem() == ModItems.darkmatter) && fuel.getItem() == ModItems.voidcrystal)
         stack = new ItemStack(ModItems.quantumrod, 1);
       // check if output slot is empty
       if (inventory[slotEnum.OUTPUT_SLOT.ordinal()] == null) {
@@ -353,9 +371,12 @@ public class TileEntityQuantumStabilizer extends TileEntityBase implements IInve
       if (inventory[slotEnum.FUEL_SLOT.ordinal()].stackSize <= 0) {
         inventory[slotEnum.FUEL_SLOT.ordinal()] = null;
       }
-      LogHelper.info("finished stabilizing!");
+      /*
+      if (ModInfo.DEBUG)
+        LogHelper.info("TileEntityQuantumStabilizer: Finished Stabilizing!");
       isStabilizing = false;
       ((QuantumStabilizer) getBlockType()).setState(worldObj, getPos(), worldObj.getBlockState(getPos()), isStabilizing);
+      */
     }
   }
 

@@ -6,6 +6,8 @@ import net.kyau.afterhours.references.Ref;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 
 /*
  * ItemHelper.java
@@ -139,6 +141,15 @@ public class ItemHelper {
       currentCooldown = String.format("%ds", seconds);
     }
     return currentCooldown;
+  }
+
+  public static void sendChatEnergy(EntityPlayer player, ItemStack stack) {
+    if (stack.hasTagCompound()) {
+      if (NBTHelper.hasTag(stack, Ref.NBT.ENERGY_LEVEL) && NBTHelper.hasTag(stack, Ref.NBT.ENERGY_MAX)) {
+        int[] energy = NBTHelper.getEnergyLevels(stack);
+        ChatUtil.sendNoSpam(player, EnumChatFormatting.GREEN + StatCollector.translateToLocal(Ref.Translation.ENERGY) + " " + EnumChatFormatting.GRAY + energy[0] + "/" + energy[1]);
+      }
+    }
   }
 
 }
