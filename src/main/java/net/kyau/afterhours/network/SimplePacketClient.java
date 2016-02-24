@@ -3,12 +3,8 @@ package net.kyau.afterhours.network;
 import io.netty.buffer.ByteBuf;
 import net.kyau.afterhours.network.SimplePacketClient.SimpleClientMessage;
 import net.kyau.afterhours.references.ModInfo;
-import net.kyau.afterhours.references.Ref;
 import net.kyau.afterhours.utils.LogHelper;
 import net.kyau.afterhours.utils.SoundUtil;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -25,11 +21,6 @@ public class SimplePacketClient implements IMessageHandler<SimpleClientMessage, 
 
       if (message.type == 1) {
         SoundUtil.playSound(message.text);
-      } else if (message.type == 2) {
-        Long time = Long.valueOf(message.text);
-        EntityPlayer player = (EntityPlayer) Minecraft.getMinecraft().theWorld.getEntityByID(message.player);
-        NBTTagCompound playerNBT = player.getEntityData();
-        playerNBT.setLong(Ref.NBT.LASTUSE, time);
       }
     }
     return null;

@@ -4,8 +4,6 @@ import java.util.List;
 
 import net.kyau.afterhours.AfterHours;
 import net.kyau.afterhours.dimension.TeleporterVoid;
-import net.kyau.afterhours.network.PacketHandler;
-import net.kyau.afterhours.network.SimplePacketClient;
 import net.kyau.afterhours.references.ModInfo;
 import net.kyau.afterhours.references.Ref;
 import net.kyau.afterhours.utils.ChatUtil;
@@ -26,7 +24,6 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -77,28 +74,30 @@ public class VoidPearl extends BaseItem {
     // long ticksSinceLastUse = player.worldObj.getTotalWorldTime() - NBTHelper.getLong(stack, Ref.NBT.LASTUSE);
 
     final String owner = ItemHelper.getOwnerName(stack);
-    if (!world.isRemote) {
-      // invalid ownership
-      if (!owner.equals(player.getDisplayNameString())) {
-        ChatUtil.sendNoSpam(player, Ref.Translation.IMPRINT_SCAN_FAILED);
+    // invalid ownership
+    if (!owner.equals(player.getDisplayNameString())) {
+      ChatUtil.sendNoSpam(player, Ref.Translation.IMPRINT_SCAN_FAILED);
+      if (!world.isRemote) {
         player.playSound("afterhours:error", 0.5F, 1.0F);
-        return super.onItemRightClick(stack, world, player);
       }
-      if (ModInfo.DEBUG)
-        LogHelper.info("> DEBUG: ticksSinceLastUse: " + ticksSinceLastUse + "." + cooldown);
-      if (ticksSinceLastUse > cooldown || ticksSinceLastUse < 0) {
-        // Get the Overworld world object
-        DimensionManager dm = new DimensionManager();
-        World overworld = dm.getWorld(0);
-        BlockPos playerHome = player.getBedLocation(0);
-        boolean spawnpoint = false;
+      return super.onItemRightClick(stack, world, player);
+    }
+    if (ModInfo.DEBUG)
+      LogHelper.info("> DEBUG: ticksSinceLastUse: " + ticksSinceLastUse + "." + cooldown);
+    if (ticksSinceLastUse > cooldown || ticksSinceLastUse < 0) {
+      // Get the Overworld world object
+      DimensionManager dm = new DimensionManager();
+      World overworld = dm.getWorld(0);
+      BlockPos playerHome = player.getBedLocation(0);
+      boolean spawnpoint = false;
 
-        // If player has no bed, set the destination to server spawn
-        if (playerHome == null) {
-          spawnpoint = true;
-          playerHome = overworld.getSpawnPoint();
-        }
+      // If player has no bed, set the destination to server spawn
+      if (playerHome == null) {
+        spawnpoint = true;
+        playerHome = overworld.getSpawnPoint();
+      }
 
+      if (!world.isRemote) {
         IBlockState state = overworld.getBlockState(playerHome);
         Block block = (state == null) ? null : overworld.getBlockState(playerHome).getBlock();
         if (block != null && !spawnpoint) {
@@ -125,19 +124,24 @@ public class VoidPearl extends BaseItem {
             player.setPositionAndUpdate(player.posX, player.posY + 1.0D, player.posZ);
           }
           MinecraftServer.getServer().worldServerForDimension(playerMP.dimension).playSoundEffect(player.posX, player.posY, player.posZ, "mob.endermen.portal", 1.0F, 1.0F);
-          // Trigger cooldown
-          Long time = overworld.getTotalWorldTime();
-          playerNBT.setLong(Ref.NBT.LASTUSE, time);
-          IMessage msg = new SimplePacketClient.SimpleClientMessage(2, String.valueOf(time), player.getEntityId());
-          PacketHandler.net.sendTo(msg, (EntityPlayerMP) player);
-          // NBTHelper.setLastUse(stack, overworld.getTotalWorldTime());
-          return super.onItemRightClick(stack, world, player);
         }
-        /*
-         * Server->Client Packet Example if (player instanceof EntityPlayerMP) { IMessage msg = new
-         * SimplePacket.SimpleMessage("voidstone_activate"); PacketHandler.net.sendTo(msg, (EntityPlayerMP)player); }
-         */
       }
+      // Trigger cooldown
+      Long time;
+      if (!world.isRemote) {
+        time = overworld.getTotalWorldTime();
+      } else {
+        time = player.worldObj.getTotalWorldTime();
+      }
+      playerNBT.setLong(Ref.NBT.LASTUSE, time);
+      // IMessage msg = new SimplePacketClient.SimpleClientMessage(2, String.valueOf(time), player.getEntityId());
+      // PacketHandler.net.sendTo(msg, (EntityPlayerMP) player);
+      // NBTHelper.setLastUse(stack, overworld.getTotalWorldTime());
+      return super.onItemRightClick(stack, world, player);
+      /*
+       * Server->Client Packet Example if (player instanceof EntityPlayerMP) { IMessage msg = new
+       * SimplePacket.SimpleMessage("voidstone_activate"); PacketHandler.net.sendTo(msg, (EntityPlayerMP)player); }
+       */
     } else {
       if (player.dimension == 1 && owner.equals(player.getDisplayNameString())) {
         player.playSound("afterhours:error", 0.5F, 1.0F);
