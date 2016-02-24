@@ -17,7 +17,7 @@ public class SimplePacketClient implements IMessageHandler<SimpleClientMessage, 
     // just to make sure that the side is correct
     if (ctx.side.isClient()) {
       if (ModInfo.DEBUG)
-        LogHelper.info("recieved packet from server! (" + message.type + ": " + message.text + ")");
+        LogHelper.info("NetworkPacket: Received (" + message.type + "): '" + message.text + "'");
 
       if (message.type == 1) {
         SoundUtil.playSound(message.text);

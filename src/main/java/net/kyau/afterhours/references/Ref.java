@@ -24,6 +24,62 @@ public class Ref {
     public static final String QUANTUM_STABILIZER = "quantum_stabilizer";
   }
 
+  public static final class BlockStat {
+
+    public static final int STABILIZER_TIME = 200;
+    public static int STABILIZER_DARKMATTER_TIME = ConfigHandler.stabilizerDarkMatter;
+    public static int STABILIZER_QUANTUMROD_TIME = ConfigHandler.stabilizerQuantumRod;
+    public static int CHARGEPAD_PERTICK = ConfigHandler.energyChargepadPerTick;
+  }
+
+  public static final class Containers {
+
+    public static final String INVENTORY = ModInfo.MOD_ID + ".container:inventory";
+    public static final String QRD_MAIN = ModInfo.MOD_ID + ".container:" + ItemID.QRD + "Main";
+    public static final String QRD_VOID = ModInfo.MOD_ID + ".container:" + ItemID.QRD + "Void";
+    public static final int QRD_MAIN_ROWS = 5;
+    public static final int QRD_MAIN_COLS = 9;
+    public static final String VOID_SYNC_TRUE = "Sync";
+    public static final String VOID_SYNC_FALSE = "";
+    public static final String QUANTUM_STABILIZER = ModInfo.MOD_ID + ".container:" + BlockID.QUANTUM_STABILIZER;
+  }
+
+  public static final class DarkMatter {
+
+    public static final int DURABILITY = 2431;
+    public static final int HARVEST_LEVEL = 4;
+    public static final float EFFICIENCY = 50.0F;
+    public static final float DAMAGE = 9.42F;
+    public static final String NAME = "Dark Matter";
+  }
+
+  public static final class Dimension {
+
+    public static int DIM = ConfigHandler.idDimension;
+    public static int BIOMEID = ConfigHandler.idBiome;
+    public static final String INTERNAL_NAME = "void";
+  }
+
+  public static final class Enchant {
+
+    public static final String ABSORPTION = "Absorption";
+    public static int ABSORPTION_ID = ConfigHandler.idEnchantAbsorption; // 85
+    public static final String ENTANGLEMENT = "Entanglement";
+    public static int ENTANGLEMENT_ID = ConfigHandler.idEnchantEntanglement; // 86
+    public static final String GRAVITATION = "Gravitation";
+    public static int GRAVITATION_ID = ConfigHandler.idEnchantGravitation; // 87
+    public static final String QUANTUMBOOST = "Quantum Boost";
+    public static int QUANTUMBOOST_ID = ConfigHandler.idEnchantQuantumBoost; // 88
+    public static final String QUANTUMDISPLAY = "Quantum Display";
+    public static int QUANTUMDISPLAY_ID = ConfigHandler.idEnchantQuantumDisplay; // 89
+  }
+
+  public static final class ItemCooldown {
+
+    public static int VOIDPEARL = ConfigHandler.cooldownVoidPearl;
+    public static int WORMHOLE_MANIPULATOR = ConfigHandler.cooldownWormholeManipulator;
+  }
+
   public static final class ItemID {
 
     public static final String ANTENNA = "antenna";
@@ -50,16 +106,8 @@ public class Ref {
     public static final String WORMHOLE_MANIPULATOR = "wormhole_manipulator";
   }
 
-  public static final class ItemCooldown {
-
-    public static int VOIDPEARL = ConfigHandler.cooldownVoidPearl;
-    public static int WORMHOLE_MANIPULATOR = ConfigHandler.cooldownWormholeManipulator;
-  }
-
   public static final class ItemStat {
 
-    public static final String IMPRINTED = "Imprinted";
-    public static final String LIMITED = "Limited";
     public static int ENERGY_REGEN_VOID = ConfigHandler.energyRegenTheVoid;
     public static int ENERGYONUSE_DARKMATTER_CHESTPLATE = ConfigHandler.darkmatterChestplateEnergyOnUse;
     public static int ENERGY_DARKMATTER_CHESTPLATE = ConfigHandler.darkmatterChestplateEnergyMax;
@@ -89,48 +137,6 @@ public class Ref {
     public static final String CUSTOM_NAME = "CustomName";
   }
 
-  public static final class Containers {
-
-    public static final String INVENTORY = ModInfo.MOD_ID + ".container:inventory";
-    public static final String QRD_MAIN = ModInfo.MOD_ID + ".container:" + ItemID.QRD + "Main";
-    public static final String QRD_VOID = ModInfo.MOD_ID + ".container:" + ItemID.QRD + "Void";
-    public static final int QRD_MAIN_ROWS = 5;
-    public static final int QRD_MAIN_COLS = 9;
-    public static final String VOID_SYNC_TRUE = "Sync";
-    public static final String VOID_SYNC_FALSE = "";
-    public static final String QUANTUM_STABILIZER = ModInfo.MOD_ID + ".container:" + BlockID.QUANTUM_STABILIZER;
-  }
-
-  public static final class Dimension {
-
-    public static int DIM = ConfigHandler.idDimension;
-    public static int BIOMEID = ConfigHandler.idBiome;
-    public static final String INTERNAL_NAME = "void";
-  }
-
-  public static final class DarkMatter {
-
-    public static final int DURABILITY = 2431;
-    public static final int HARVEST_LEVEL = 4;
-    public static final float EFFICIENCY = 50.0F;
-    public static final float DAMAGE = 9.42F;
-    public static final String NAME = "Dark Matter";
-  }
-
-  public static final class Enchant {
-
-    public static final String ABSORPTION = "Absorption";
-    public static int ABSORPTION_ID = ConfigHandler.idEnchantAbsorption; // 85
-    public static final String ENTANGLEMENT = "Entanglement";
-    public static int ENTANGLEMENT_ID = ConfigHandler.idEnchantEntanglement; // 86
-    public static final String GRAVITATION = "Gravitation";
-    public static int GRAVITATION_ID = ConfigHandler.idEnchantGravitation; // 87
-    public static final String QUANTUMBOOST = "Quantum Boost";
-    public static int QUANTUMBOOST_ID = ConfigHandler.idEnchantQuantumBoost; // 88
-    public static final String QUANTUMDISPLAY = "Quantum Display";
-    public static int QUANTUMDISPLAY_ID = ConfigHandler.idEnchantQuantumDisplay; // 89
-  }
-
   public static final class Translation {
 
     public static final String MORE_INFORMATION = "afterhours.msg.more_information";
@@ -150,11 +156,4 @@ public class Ref {
     public static boolean TOOLTIP = ConfigHandler.vanillaTooltip;
   }
 
-  public static final class BlockStat {
-
-    public static final int STABILIZER_TIME = 200;
-    public static int STABILIZER_DARKMATTER_TIME = ConfigHandler.stabilizerDarkMatter;
-    public static int STABILIZER_QUANTUMROD_TIME = ConfigHandler.stabilizerQuantumRod;
-    public static int CHARGEPAD_PERTICK = ConfigHandler.energyChargepadPerTick;
-  }
 }

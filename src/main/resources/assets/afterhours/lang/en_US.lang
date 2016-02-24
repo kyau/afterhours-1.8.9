@@ -53,3 +53,6 @@ config.afterhours.cooldown=Cooldowns
 config.afterhours.energy=Quantum Energy
 config.afterhours.machinery=Quantum Machinery
 config.afterhours.vanilla=Vanilla Tweaks
+
+jei.afterhours.darkMatterRepair.name=Dark Matter Repair
+jei.afterhours.quantumStabilizer=Quantum Stabilizer

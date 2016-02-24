@@ -153,4 +153,9 @@ public class DarkMatterArmor extends ItemArmor {
     return false;
   }
 
+  @Override
+  public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
+    return false;
+  }
+
 }
