@@ -63,6 +63,7 @@ public class ModRecipes {
     GameRegistry.addRecipe(new ItemStack(ModItems.qrd, 1), "qaq", "ese", "qcq", 's', new ItemStack(Blocks.stone_slab, 1, 0), 'a', ModItems.antenna, 'q', ModItems.quantumrod, 'c', Blocks.ender_chest, 'e', new ItemStack(ModBlocks.infused_voidstone, 1, 0), 's', ModItems.stablecore);
     GameRegistry.addRecipe(new ItemStack(ModBlocks.quantum_stabilizer, 1), "vvv", "vuv", "viv", 'v', new ItemStack(ModBlocks.voidstone, 1, 0), 'u', ModItems.unstablecore, 'i', new ItemStack(ModBlocks.infused_voidstone, 1, 0));
     GameRegistry.addRecipe(new ItemStack(ModBlocks.quantum_chargepad, 1), "svs", "vuv", "svs", 's', ModItems.stablecore, 'v', new ItemStack(ModBlocks.voidstone, 1, 0), 'u', ModItems.singularity);
+    GameRegistry.addSmelting(ModBlocks.darkmattercluster, new ItemStack(ModItems.unstable_darkmatter), 1.0F);
 
     // dark matter gear
     ItemStack sword = new ItemStack(ModItems.darkmatter_sword);
