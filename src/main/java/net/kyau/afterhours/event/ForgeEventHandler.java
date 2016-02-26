@@ -8,10 +8,12 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
+import net.kyau.afterhours.config.PlayerProperties;
 import net.kyau.afterhours.enchantment.EnchantmentEntanglement;
 import net.kyau.afterhours.init.ModBlocks;
 import net.kyau.afterhours.init.ModItems;
-import net.kyau.afterhours.items.VoidPearl;
+import net.kyau.afterhours.network.PacketHandler;
+import net.kyau.afterhours.network.SimplePacketClient;
 import net.kyau.afterhours.references.Ref;
 import net.kyau.afterhours.utils.ItemHelper;
 import net.kyau.afterhours.utils.LogHelper;
@@ -22,12 +24,12 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
@@ -36,7 +38,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
@@ -45,8 +46,10 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerFlyableFallEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class ForgeEventHandler {
 
@@ -55,10 +58,9 @@ public class ForgeEventHandler {
 
   @SubscribeEvent
   public void onPlayerConstructing(EntityEvent.EntityConstructing event) {
-    if (event.entity instanceof EntityPlayer) {
-      EntityPlayer player = (EntityPlayer) event.entity;
-      NBTTagCompound playerNBT = player.getEntityData();
-      playerNBT.setLong(Ref.NBT.LASTUSE, player.worldObj.getTotalWorldTime() - (VoidPearl.cooldown + 10));
+    if (event.entity instanceof EntityPlayer && PlayerProperties.get((EntityPlayer) event.entity) == null) {
+      LogHelper.info("Registered Player Properties.");
+      PlayerProperties.register((EntityPlayer) event.entity);
     }
   }
 
@@ -108,9 +110,15 @@ public class ForgeEventHandler {
   }
 
   @SubscribeEvent
-  public void onPlayerLogin(EntityJoinWorldEvent event) {
-    if (event.entity instanceof EntityPlayer) {
-      EntityPlayer player = (EntityPlayer) event.entity;
+  public void onPlayerLogin(PlayerLoggedInEvent event) {
+    if (!event.player.worldObj.isRemote) {
+      PlayerProperties props = PlayerProperties.get(event.player);
+      IMessage msg = new SimplePacketClient.SimpleClientMessage(2, String.valueOf(props.getCooldown()));
+      PacketHandler.net.sendTo(msg, (EntityPlayerMP) event.player);
+    }
+    // EntityJoinWorldEvent
+    if (event.player instanceof EntityPlayer) {
+      EntityPlayer player = (EntityPlayer) event.player;
       World world = player.worldObj;
       // re-enable flight on login if necessary and provided there is enough energy
       if (!player.capabilities.isCreativeMode) {
@@ -367,6 +375,12 @@ public class ForgeEventHandler {
 
   @SubscribeEvent
   public void onPlayerClone(@Nonnull PlayerEvent.Clone event) {
+    if (!event.entityPlayer.worldObj.isRemote) {
+      PlayerProperties ieepNew = PlayerProperties.get(event.entityPlayer);
+      PlayerProperties ieepOld = PlayerProperties.get(event.original);
+      ieepNew.setCooldown(ieepOld.getCooldown());
+    }
+
     if (!event.wasDeath || event.isCanceled()) {
       return;
     }

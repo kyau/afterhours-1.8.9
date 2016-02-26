@@ -116,7 +116,7 @@ public class WormholeManipulator extends BaseItem {
           ItemHelper.sendChatEnergy(player, stack);
         } else {
           if (player instanceof EntityPlayerMP) {
-            IMessage msg = new SimplePacketClient.SimpleClientMessage(1, "afterhours:error", player.getEntityId());
+            IMessage msg = new SimplePacketClient.SimpleClientMessage(1, "afterhours:error");
             PacketHandler.net.sendTo(msg, (EntityPlayerMP) player);
           }
           return false;

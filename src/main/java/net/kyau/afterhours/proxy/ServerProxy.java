@@ -43,4 +43,15 @@ public class ServerProxy extends CommonProxy {
     // NOOP
   }
 
+  @Override
+  public long getVoidPearlLastUse() {
+    // NOOP
+    return 0;
+  }
+
+  @Override
+  public void setVoidPearlLastUse(long cooldown) {
+    // NOOP
+  }
+
 }

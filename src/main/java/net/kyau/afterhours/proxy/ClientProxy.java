@@ -18,6 +18,7 @@ import net.minecraftforge.common.MinecraftForge;
 public class ClientProxy extends CommonProxy {
 
   private static Minecraft minecraft = Minecraft.getMinecraft();
+  private static long lastUseVoidPearl = 0;
 
   @Override
   public ClientProxy getClientProxy() {
@@ -68,6 +69,16 @@ public class ClientProxy extends CommonProxy {
     EntityFX particleMysterious = new EntityParticleFXQuantum(world, pos.getX() + rand.nextFloat() * 0.7F + 0.2F, pos.getY() + 0.1F, pos.getZ() + rand.nextFloat() * 0.8F + 0.2F, motionX, motionY, motionZ);
     Minecraft.getMinecraft().effectRenderer.addEffect(particleMysterious);
     // }
+  }
+
+  @Override
+  public long getVoidPearlLastUse() {
+    return lastUseVoidPearl;
+  }
+
+  @Override
+  public void setVoidPearlLastUse(long cooldown) {
+    this.lastUseVoidPearl = cooldown;
   }
 
 }

@@ -3,6 +3,7 @@ package net.kyau.afterhours.items;
 import java.util.List;
 
 import net.kyau.afterhours.AfterHours;
+import net.kyau.afterhours.config.PlayerProperties;
 import net.kyau.afterhours.dimension.TeleporterVoid;
 import net.kyau.afterhours.references.ModInfo;
 import net.kyau.afterhours.references.Ref;
@@ -70,9 +71,6 @@ public class VoidPearl extends BaseItem {
     if (firstUse)
       return super.onItemRightClick(stack, world, player);
 
-    long ticksSinceLastUse = player.worldObj.getTotalWorldTime() - playerNBT.getLong(Ref.NBT.LASTUSE);
-    // long ticksSinceLastUse = player.worldObj.getTotalWorldTime() - NBTHelper.getLong(stack, Ref.NBT.LASTUSE);
-
     final String owner = ItemHelper.getOwnerName(stack);
     // invalid ownership
     if (!owner.equals(player.getDisplayNameString())) {
@@ -82,19 +80,32 @@ public class VoidPearl extends BaseItem {
       }
       return super.onItemRightClick(stack, world, player);
     }
+
+    // long ticksSinceLastUse = player.worldObj.getTotalWorldTime() - playerNBT.getLong(Ref.NBT.LASTUSE);
+    // long ticksSinceLastUse = player.worldObj.getTotalWorldTime() - NBTHelper.getLong(stack, Ref.NBT.LASTUSE);
+    DimensionManager dm = new DimensionManager();
+    World overworld = dm.getWorld(0);
+    PlayerProperties props = PlayerProperties.get(player);
+    long currentTime = player.worldObj.getTotalWorldTime();
+    // long lastUse = playerNBT.getLong(Ref.NBT.LASTUSE);
+    long lastUse = props.getCooldown();
+    long ticksSinceLastUse = currentTime - lastUse;
+
     if (ModInfo.DEBUG)
       LogHelper.info("> DEBUG: ticksSinceLastUse: " + ticksSinceLastUse + "." + cooldown);
     if (ticksSinceLastUse > cooldown || ticksSinceLastUse < 0) {
       // Get the Overworld world object
-      DimensionManager dm = new DimensionManager();
-      World overworld = dm.getWorld(0);
       BlockPos playerHome = player.getBedLocation(0);
       boolean spawnpoint = false;
 
       // If player has no bed, set the destination to server spawn
       if (playerHome == null) {
         spawnpoint = true;
-        playerHome = overworld.getSpawnPoint();
+        if (!world.isRemote) {
+          playerHome = overworld.getSpawnPoint();
+        } else {
+          playerHome = player.worldObj.getSpawnPoint();
+        }
       }
 
       if (!world.isRemote) {
@@ -113,35 +124,29 @@ public class VoidPearl extends BaseItem {
           return super.onItemRightClick(stack, world, player);
         }
 
+        // Trigger cooldown and send client packet
+        long time = overworld.getTotalWorldTime();
+        props.setCooldown(time);
+        // IMessage msg = new SimplePacketClient.SimpleClientMessage(2, String.valueOf(time));
+        // PacketHandler.net.sendTo(msg, (EntityPlayerMP) player);
+
         // Destination exists, teleport the player
         EntityPlayerMP playerMP = (EntityPlayerMP) player;
+        // Make sure destination is clean
+        while (overworld.getBlockState(playerHome).getBlock().isOpaqueCube())
+          playerHome = playerHome.up(2);
+        // Issue teleport
         if (!(playerMP.dimension == 1)) {
           if (playerMP.dimension != 0) {
             MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension(playerMP, 0, new TeleporterVoid(playerMP.mcServer.worldServerForDimension(0)));
           }
+
           player.setPositionAndUpdate(playerHome.getX(), playerHome.getY(), playerHome.getZ());
-          while (player.getEntityBoundingBox() != null && world.getCollidingBoundingBoxes(player, player.getEntityBoundingBox()) != null && !world.getCollidingBoundingBoxes(player, player.getEntityBoundingBox()).isEmpty()) {
-            player.setPositionAndUpdate(player.posX, player.posY + 1.0D, player.posZ);
-          }
+          player.fallDistance = 0F;
           MinecraftServer.getServer().worldServerForDimension(playerMP.dimension).playSoundEffect(player.posX, player.posY, player.posZ, "mob.endermen.portal", 1.0F, 1.0F);
         }
       }
-      // Trigger cooldown
-      Long time;
-      if (!world.isRemote) {
-        time = overworld.getTotalWorldTime();
-      } else {
-        time = player.worldObj.getTotalWorldTime();
-      }
-      playerNBT.setLong(Ref.NBT.LASTUSE, time);
-      // IMessage msg = new SimplePacketClient.SimpleClientMessage(2, String.valueOf(time), player.getEntityId());
-      // PacketHandler.net.sendTo(msg, (EntityPlayerMP) player);
-      // NBTHelper.setLastUse(stack, overworld.getTotalWorldTime());
       return super.onItemRightClick(stack, world, player);
-      /*
-       * Server->Client Packet Example if (player instanceof EntityPlayerMP) { IMessage msg = new
-       * SimplePacket.SimpleMessage("voidstone_activate"); PacketHandler.net.sendTo(msg, (EntityPlayerMP)player); }
-       */
     } else {
       if (player.dimension == 1 && owner.equals(player.getDisplayNameString())) {
         player.playSound("afterhours:error", 0.5F, 1.0F);
@@ -169,16 +174,18 @@ public class VoidPearl extends BaseItem {
     // Owner information
     if (ItemHelper.hasOwner(stack)) {
       final String owner = ItemHelper.getOwnerName(stack);
+
       if (owner.equals(player.getDisplayNameString())) {
         tooltip.add(EnumChatFormatting.GREEN + StatCollector.translateToLocal(Ref.Translation.OWNER) + " " + owner);
-        if (NBTHelper.getLong(stack, Ref.NBT.LASTUSE) != -1) {
-          NBTTagCompound playerNBT = player.getEntityData();
-          long ticksSinceLastUse = player.worldObj.getTotalWorldTime() - playerNBT.getLong(Ref.NBT.LASTUSE);
-          long current = (cooldown / 20) - (ticksSinceLastUse / 20);
-          String currentCooldown = ItemHelper.formatCooldown(current);
-          tooltip.add(StatCollector.translateToLocal(Ref.Translation.COOLDOWN) + " " + currentCooldown);
-          if (ticksSinceLastUse > cooldown) {
-            tooltip.remove(tooltip.size() - 1);
+        long lastUse = AfterHours.proxy.getVoidPearlLastUse();
+        if (lastUse != -1) {
+          long currentTime = player.worldObj.getTotalWorldTime();
+          long ticksSinceLastUse = currentTime - lastUse;
+          // LogHelper.info("Worldtime: " + currentTime + " / Last Use: " + lastUse);
+          if (ticksSinceLastUse < cooldown) {
+            long current = (cooldown / 20) - (ticksSinceLastUse / 20);
+            String currentCooldown = ItemHelper.formatCooldown(current);
+            tooltip.add(StatCollector.translateToLocal(Ref.Translation.COOLDOWN) + " " + currentCooldown);
           }
         }
       } else {

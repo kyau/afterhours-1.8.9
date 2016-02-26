@@ -22,4 +22,8 @@ public interface IProxy {
   public abstract void openJournal();
 
   public abstract void generateQuantumParticles(World world, BlockPos pos, Random rand);
+
+  public abstract long getVoidPearlLastUse();
+
+  public abstract void setVoidPearlLastUse(long lastUse);
 }
