@@ -99,6 +99,8 @@ public class ForgeEventHandler {
               String owner = ItemHelper.getOwnerName(player.inventory.armorInventory[1]);
               if (player.getDisplayNameString().equals(owner)) {
                 changeSpeed(player, 2.2D, "speedMod");
+              } else {
+                changeSpeed(player, 1D, "speedMod");
               }
             }
           } else {

@@ -30,10 +30,12 @@ public class SimplePacketClient implements IMessageHandler<SimpleClientMessage, 
         SoundUtil.playSound(message.text);
       } else if (message.type == 2 && message.text != null) {
         EntityPlayerSP player = FMLClientHandler.instance().getClient().thePlayer;
-        if (player.getHeldItem() != null) {
-          if (player.getHeldItem().getItem() instanceof VoidPearl) {
-            long time = Long.valueOf(message.text);
-            AfterHours.proxy.setVoidPearlLastUse(time);
+        if (player != null) {
+          if (player.getHeldItem() != null) {
+            if (player.getHeldItem().getItem() instanceof VoidPearl) {
+              long time = Long.valueOf(message.text);
+              AfterHours.proxy.setVoidPearlLastUse(time);
+            }
           }
         }
       }
