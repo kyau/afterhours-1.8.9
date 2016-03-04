@@ -21,7 +21,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class QuantumStabilizerRecipeCategory implements IRecipeCategory {
 
-  public static final String UID = "anotherdusts.crusher";
+  public static final String UID = "afterhours.quantumStabilizer";
 
   private static final int fuelSlot = 0;
   private static final int inputSlot1 = 1;
