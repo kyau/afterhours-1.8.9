@@ -1,0 +1,10 @@
+{
+    "parent": "block/orientable",
+    "textures": {
+        "top": "afterhours:blocks/quantum_stabilizer",
+        "bottom": "afterhours:blocks/quantum_stabilizer",
+        "front": "afterhours:blocks/quantum_reciprocator_front",
+        "side": "afterhours:blocks/quantum_stabilizer_side",
+        "particle": "blocks/lapis_block"
+    }
+}

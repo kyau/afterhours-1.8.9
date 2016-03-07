@@ -35,7 +35,7 @@ public class EntityLivingEvent {
         }
         // Drop rate (0.25d is 25% chance, 1D is a 100% chance)
         double rand = Math.random();
-        if (rand < 0.40d) {
+        if (rand < 0.60d) {
           if (event.entityLiving.isBurning()) {
             event.drops.add(new EntityItem(event.entityLiving.worldObj, event.entityLiving.posX, event.entityLiving.posY, event.entityLiving.posZ, new ItemStack(Items.leather)));
           } else {

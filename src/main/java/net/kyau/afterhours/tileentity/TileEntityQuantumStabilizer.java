@@ -118,7 +118,7 @@ public class TileEntityQuantumStabilizer extends TileEntityBase implements IInve
       }
     }
 
-    timeCanStabilize = compound.getShort("GrindTime");
+    timeCanStabilize = compound.getShort("StabilizeTime");
     ticksStabilizeItemSoFar = compound.getShort("CookTime");
     ticksPerItem = compound.getShort("CookTimeTotal");
 

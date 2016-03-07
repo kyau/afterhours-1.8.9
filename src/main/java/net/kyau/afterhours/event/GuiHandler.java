@@ -1,8 +1,10 @@
 package net.kyau.afterhours.event;
 
 import net.kyau.afterhours.AfterHours;
+import net.kyau.afterhours.client.gui.GuiQR;
 import net.kyau.afterhours.client.gui.GuiQRD;
 import net.kyau.afterhours.client.gui.GuiQS;
+import net.kyau.afterhours.inventory.ContainerQR;
 import net.kyau.afterhours.inventory.ContainerQRD;
 import net.kyau.afterhours.inventory.ContainerQS;
 import net.kyau.afterhours.inventory.qrd.InventoryQRDMain;
@@ -18,6 +20,9 @@ public class GuiHandler implements IGuiHandler {
   @Override
   public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
     BlockPos pos = new BlockPos(x, y, z);
+    if (ID == AfterHours.GUI_QR) {
+      return new ContainerQR(player.inventory, (IInventory) world.getTileEntity(pos));
+    }
     if (ID == AfterHours.GUI_QS) {
       return new ContainerQS(player.inventory, (IInventory) world.getTileEntity(pos));
     }
@@ -37,6 +42,9 @@ public class GuiHandler implements IGuiHandler {
       // We have to cast the new container as our custom class
       // and pass in currently held item for the inventory
       return new GuiQRD(player, new InventoryQRDMain(player.getHeldItem()), new InventoryQRDVoid(player.getHeldItem(), player));
+    }
+    if (ID == AfterHours.GUI_QR) {
+      return new GuiQR(player.inventory, (IInventory) world.getTileEntity(pos));
     }
     return null;
   }

@@ -1,0 +1,27 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "model": "afterhours:orientable",
+        "textures": {
+            "front": "#quantumreciprocator.front",
+            "top": "afterhours:blocks/quantum_stabilizer",
+            "bottom": "afterhours:blocks/quantum_stabilizer",
+            "side": "afterhours:blocks/quantum_stabilizer_side"
+        },
+        "transform": "forge:default-block"
+    },
+    "variants": {
+        "active": {
+            "false": { "textures": { "quantumreciprocator.front": "afterhours:blocks/quantum_reciprocator_front-off" } },
+            "true": { "textures": { "quantumreciprocator.front": "afterhours:blocks/quantum_reciprocator_front" } }
+        },
+        "facing": {
+            "north": {},
+            "south": { "y": 180 },
+            "west":  { "y": 270 },
+            "east":  { "y": 90 },
+            "up":    {},
+            "down":  {}
+        }
+    }
+}

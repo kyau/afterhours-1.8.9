@@ -158,8 +158,9 @@ public class TooltipEventHandler {
           tooltip.add(EnumChatFormatting.GRAY + "Damage: " + EnumChatFormatting.DARK_RED + damage);
 
           tooltip.add(EnumChatFormatting.GRAY + "Durability: " + (stack.getMaxDamage() - stack.getItemDamage()) + "/" + stack.getMaxDamage());
-          if (!(speed == 0.0F))
-            tooltip.add(EnumChatFormatting.GRAY + "Speed: " + EnumChatFormatting.DARK_GREEN + (double) Math.round(((double) speed / 4.0F) * 100d) / 100d);
+          // if (!(speed == 0.0F))
+          // tooltip.add(EnumChatFormatting.GRAY + "Speed: " + EnumChatFormatting.DARK_GREEN + (double)
+          // Math.round(((double) speed / 4.0F) * 100d) / 100d);
         } else {
           tooltip.add(StatCollector.translateToLocal(Ref.Translation.MORE_INFORMATION));
         }

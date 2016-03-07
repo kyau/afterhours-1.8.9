@@ -1,8 +1,5 @@
 package net.kyau.afterhours.compat.jei;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.annotation.Nonnull;
 
 import mezz.jei.api.IGuiHelper;
@@ -17,27 +14,24 @@ import mezz.jei.util.Translator;
 import net.kyau.afterhours.references.ModInfo;
 import net.kyau.afterhours.references.Ref;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-public class QuantumStabilizerRecipeCategory implements IRecipeCategory {
+public class QuantumReciprocatorRecipeCategory implements IRecipeCategory {
 
-  public static final String UID = ModInfo.MOD_ID + "." + Ref.BlockID.QUANTUM_STABILIZER;
+  public static final String UID = ModInfo.MOD_ID + "." + Ref.BlockID.QUANTUM_RECIPROCATOR;
 
-  private static final int fuelSlot = 0;
-  private static final int inputSlot1 = 1;
-  private static final int inputSlot2 = 2;
-  private static final int outputSlot = 3;
+  private static final int inputSlot = 0;
+  private static final int outputSlot = 1;
 
   private final String localizedName;
   private final IDrawableStatic background;
   // private final IDrawableAnimated flame;
   private final IDrawableAnimated arrow;
 
-  public QuantumStabilizerRecipeCategory(IGuiHelper guiHelper) {
-    localizedName = Translator.translateToLocal("jei.afterhours.quantumStabilizer");
+  public QuantumReciprocatorRecipeCategory(IGuiHelper guiHelper) {
+    localizedName = Translator.translateToLocal("jei.afterhours.quantumReciprocator");
 
-    ResourceLocation location = new ResourceLocation(ModInfo.MOD_ID, "textures/gui/quantum_stabilizer.png");
+    ResourceLocation location = new ResourceLocation(ModInfo.MOD_ID, "textures/gui/quantum_reciprocator.png");
     background = guiHelper.createDrawable(location, 35, 21, 102, 43);
 
     // IDrawableStatic flameDrawable = guiHelper.createDrawable(location, 176, 0, 14, 14);
@@ -73,29 +67,20 @@ public class QuantumStabilizerRecipeCategory implements IRecipeCategory {
   @Override
   public void drawAnimations(Minecraft minecraft) {
     // flame.draw(minecraft, 2, 20);
-    arrow.draw(minecraft, 44, 13);
+    arrow.draw(minecraft, 40, 13);
   }
 
   @Override
   public void setRecipe(@Nonnull IRecipeLayout recipeLayout, @Nonnull IRecipeWrapper recipeWrapper) {
     IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
 
-    guiItemStacks.init(inputSlot1, true, 0, 0);
-    guiItemStacks.init(inputSlot2, true, 18, 0);
-    guiItemStacks.init(fuelSlot, true, 9, 25);
+    guiItemStacks.init(inputSlot, true, 9, 13);
     guiItemStacks.init(outputSlot, false, 80, 13);
-    List og_inputs = recipeWrapper.getInputs();
-    List<ItemStack> inputs = (List<ItemStack>) og_inputs.get(0);
-    List<ItemStack> fuel = new ArrayList<ItemStack>();
-    List<ItemStack> input1 = new ArrayList<ItemStack>();
-    List<ItemStack> input2 = new ArrayList<ItemStack>();
-    fuel.add((ItemStack) inputs.toArray()[0]);
-    input1.add((ItemStack) inputs.toArray()[1]);
-    input2.add((ItemStack) inputs.toArray()[2]);
-    guiItemStacks.set(inputSlot1, input1);
-    guiItemStacks.set(inputSlot2, input2);
-    guiItemStacks.set(fuelSlot, fuel);
+    // List og_inputs = recipeWrapper.getInputs();
+    // List<ItemStack> inputs = (List<ItemStack>) og_inputs.get(0);
+    // List<ItemStack> input = new ArrayList<ItemStack>();
+    // input.add((ItemStack) inputs);
+    guiItemStacks.set(inputSlot, recipeWrapper.getInputs());
     guiItemStacks.setFromRecipe(outputSlot, recipeWrapper.getOutputs());
   }
-
 }

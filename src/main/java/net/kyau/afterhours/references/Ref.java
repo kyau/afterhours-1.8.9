@@ -22,11 +22,15 @@ public class Ref {
     public static final String INFUSED_VOIDSTONE = "infused_voidstone";
     public static final String QUANTUM_CHARGEPAD = "quantum_chargepad";
     public static final String QUANTUM_STABILIZER = "quantum_stabilizer";
+    public static final String QUANTUM_RECIPROCATOR = "quantum_reciprocator";
   }
 
   public static final class BlockStat {
 
     public static final int STABILIZER_TIME = 200;
+    public static final int RECIPROCATOR_STONE_TIME = 400;
+    public static final int RECIPROCATOR_PLANT_TIME = 500;
+    public static final int RECIPROCATOR_FUEL_TIME = 350;
     public static int STABILIZER_DARKMATTER_TIME = ConfigHandler.stabilizerDarkMatter;
     public static int STABILIZER_QUANTUMROD_TIME = ConfigHandler.stabilizerQuantumRod;
     public static int CHARGEPAD_PERTICK = ConfigHandler.energyChargepadPerTick;
@@ -42,6 +46,7 @@ public class Ref {
     public static final String VOID_SYNC_TRUE = "Sync";
     public static final String VOID_SYNC_FALSE = "";
     public static final String QUANTUM_STABILIZER = ModInfo.MOD_ID + ".container:" + BlockID.QUANTUM_STABILIZER;
+    public static final String QUANTUM_RECIPROCATOR = ModInfo.MOD_ID + ".container:" + BlockID.QUANTUM_RECIPROCATOR;
   }
 
   public static final class DarkMatter {
@@ -130,6 +135,7 @@ public class Ref {
     public static final String OWNER_UUID_LEAST_SIG = "ownerUUIDLeastSig";
     public static final String UUID_MOST_SIG = "UUIDMostSig";
     public static final String UUID_LEAST_SIG = "UUIDLeastSig";
+    public static final String QR_GUI_OPEN = "qrGuiOpen";
     public static final String QRD_GUI_OPEN = "qrdGuiOpen";
     public static final String QS_GUI_OPEN = "qsGuiOpen";
     public static final String FACING = "teFacing";

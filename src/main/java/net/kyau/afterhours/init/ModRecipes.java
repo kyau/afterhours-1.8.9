@@ -62,6 +62,7 @@ public class ModRecipes {
     GameRegistry.addRecipe(new ItemStack(ModItems.wormhole_manipulator, 1), "mam", "iui", "mim", 'a', ModItems.antenna, 'u', ModItems.stablecore, 'i', new ItemStack(ModBlocks.infused_voidstone, 1, 0), 'm', ModItems.darkmatter);
     GameRegistry.addRecipe(new ItemStack(ModItems.qrd, 1), "qaq", "ese", "qcq", 's', new ItemStack(Blocks.stone_slab, 1, 0), 'a', ModItems.antenna, 'q', ModItems.quantumrod, 'c', Blocks.ender_chest, 'e', new ItemStack(ModBlocks.infused_voidstone, 1, 0), 's', ModItems.stablecore);
     GameRegistry.addRecipe(new ItemStack(ModBlocks.quantum_stabilizer, 1), "vvv", "vuv", "viv", 'v', new ItemStack(ModBlocks.voidstone, 1, 0), 'u', ModItems.unstablecore, 'i', new ItemStack(ModBlocks.infused_voidstone, 1, 0));
+    GameRegistry.addRecipe(new ItemStack(ModBlocks.quantum_reciprocator, 1), "vvv", "viv", "vgv", 'v', new ItemStack(ModBlocks.voidstone, 1, 0), 'i', new ItemStack(ModBlocks.infused_voidstone, 1, 0), 'g', Blocks.glass);
     GameRegistry.addRecipe(new ItemStack(ModBlocks.quantum_chargepad, 1), "svs", "vuv", "svs", 's', ModItems.stablecore, 'v', new ItemStack(ModBlocks.voidstone, 1, 0), 'u', ModItems.singularity);
     GameRegistry.addSmelting(ModBlocks.darkmattercluster, new ItemStack(ModItems.unstable_darkmatter), 1.0F);
 
@@ -145,18 +146,18 @@ public class ModRecipes {
     // flint from gravel
     GameRegistry.addShapelessRecipe(new ItemStack(Items.flint, 1), Blocks.gravel, Blocks.gravel, Blocks.gravel, Blocks.gravel);
     // allow crafting/smelting of armor back into 50% of the components to make them
-    GameRegistry.addSmelting(Items.iron_helmet, new ItemStack(Items.iron_ingot, 2), 1f);
-    GameRegistry.addSmelting(Items.iron_chestplate, new ItemStack(Items.iron_ingot, 4), 1f);
-    GameRegistry.addSmelting(Items.iron_leggings, new ItemStack(Items.iron_ingot, 3), 1f);
-    GameRegistry.addSmelting(Items.iron_boots, new ItemStack(Items.iron_ingot, 2), 1f);
-    GameRegistry.addSmelting(Items.golden_helmet, new ItemStack(Items.gold_ingot, 2), 1f);
-    GameRegistry.addSmelting(Items.golden_chestplate, new ItemStack(Items.gold_ingot, 4), 1f);
-    GameRegistry.addSmelting(Items.golden_leggings, new ItemStack(Items.gold_ingot, 3), 1f);
-    GameRegistry.addSmelting(Items.golden_boots, new ItemStack(Items.gold_ingot, 2), 1f);
-    GameRegistry.addSmelting(Items.diamond_helmet, new ItemStack(Items.diamond, 2), 1f);
-    GameRegistry.addSmelting(Items.diamond_chestplate, new ItemStack(Items.diamond, 4), 1f);
-    GameRegistry.addSmelting(Items.diamond_leggings, new ItemStack(Items.diamond, 3), 1f);
-    GameRegistry.addSmelting(Items.diamond_boots, new ItemStack(Items.diamond, 2), 1f);
+    GameRegistry.addSmelting(new ItemStack(Items.iron_helmet, 1, 0), new ItemStack(Items.iron_ingot, 2), 1f);
+    GameRegistry.addSmelting(new ItemStack(Items.iron_chestplate, 1, 0), new ItemStack(Items.iron_ingot, 4), 1f);
+    GameRegistry.addSmelting(new ItemStack(Items.iron_leggings, 1, 0), new ItemStack(Items.iron_ingot, 3), 1f);
+    GameRegistry.addSmelting(new ItemStack(Items.iron_boots, 1, 0), new ItemStack(Items.iron_ingot, 2), 1f);
+    GameRegistry.addSmelting(new ItemStack(Items.golden_helmet, 1, 0), new ItemStack(Items.gold_ingot, 2), 1f);
+    GameRegistry.addSmelting(new ItemStack(Items.golden_chestplate, 1, 0), new ItemStack(Items.gold_ingot, 4), 1f);
+    GameRegistry.addSmelting(new ItemStack(Items.golden_leggings, 1, 0), new ItemStack(Items.gold_ingot, 3), 1f);
+    GameRegistry.addSmelting(new ItemStack(Items.golden_boots, 1, 0), new ItemStack(Items.gold_ingot, 2), 1f);
+    GameRegistry.addSmelting(new ItemStack(Items.diamond_helmet, 1, 0), new ItemStack(Items.diamond, 2), 1f);
+    GameRegistry.addSmelting(new ItemStack(Items.diamond_chestplate, 1, 0), new ItemStack(Items.diamond, 4), 1f);
+    GameRegistry.addSmelting(new ItemStack(Items.diamond_leggings, 1, 0), new ItemStack(Items.diamond, 3), 1f);
+    GameRegistry.addSmelting(new ItemStack(Items.diamond_boots, 1, 0), new ItemStack(Items.diamond, 2), 1f);
     // wood slabs
     for (int i = 0; i < 6; i++) {
       GameRegistry.addShapelessRecipe(new ItemStack(Blocks.planks, 1, i), new ItemStack(Blocks.wooden_slab, 1, i), new ItemStack(Blocks.wooden_slab, 1, i));

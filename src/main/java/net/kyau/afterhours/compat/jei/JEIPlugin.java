@@ -12,6 +12,11 @@ public class JEIPlugin extends BlankModPlugin {
   public void register(IModRegistry registry) {
     IJeiHelpers jeiHelpers = registry.getJeiHelpers();
     IGuiHelper guiHelper = jeiHelpers.getGuiHelper();
+    // quantum reciprocator
+    registry.addRecipeCategories(new QuantumReciprocatorRecipeCategory(guiHelper));
+    registry.addRecipeHandlers(new QuantumReciprocatorRecipeHandler());
+    registry.addRecipes(QuantumReciprocatorRecipeMaker.getRecipes(jeiHelpers));
+    // quantum stabilizer
     registry.addRecipeCategories(new QuantumStabilizerRecipeCategory(guiHelper));
     registry.addRecipeHandlers(new QuantumStabilizerRecipeHandler());
     registry.addRecipes(QuantumStabilizerRecipeMaker.getRecipes(jeiHelpers));

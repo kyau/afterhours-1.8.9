@@ -1,6 +1,6 @@
 package net.kyau.afterhours.client.gui;
 
-import net.kyau.afterhours.inventory.ContainerQS;
+import net.kyau.afterhours.inventory.ContainerQR;
 import net.kyau.afterhours.references.ModInfo;
 import net.kyau.afterhours.references.Ref;
 import net.kyau.afterhours.utils.NBTHelper;
@@ -13,19 +13,18 @@ import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
-public class GuiQS extends GuiContainer {
+public class GuiQR extends GuiContainer {
 
   private float xSize_lo;
   protected int ySize = 166;
   private float ySize_lo;
-  private static final ResourceLocation iconLocation = new ResourceLocation(ModInfo.MOD_ID, "textures/gui/quantum_stabilizer.png");
+  private static final ResourceLocation iconLocation = new ResourceLocation(ModInfo.MOD_ID, "textures/gui/quantum_reciprocator.png");
   private final InventoryPlayer inventoryPlayer;
-  private final IInventory tileQS;
+  private final IInventory tileQR;
 
-  public GuiQS(InventoryPlayer inventoryPlayer, IInventory inventoryQS) {
-    super(new ContainerQS(inventoryPlayer, inventoryQS));
-    // this.inventory = containerItem.inventory;
-    this.tileQS = inventoryQS;
+  public GuiQR(InventoryPlayer inventoryPlayer, IInventory inventoryQR) {
+    super(new ContainerQR(inventoryPlayer, inventoryQR));
+    this.tileQR = inventoryQR;
     this.inventoryPlayer = inventoryPlayer;
   }
 
@@ -42,15 +41,15 @@ public class GuiQS extends GuiContainer {
    * Draw the foreground layer for the GuiContainer (everything in front of the items)
    */
   protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-    String qsMainName = this.tileQS.hasCustomName() ? this.tileQS.getName() : this.tileQS.getName();
+    String qrMainName = this.tileQR.hasCustomName() ? this.tileQR.getName() : this.tileQR.getName();
     String inventoryName = StatCollector.translateToLocal(Ref.Containers.INVENTORY);
     // this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 6, 4210752);
-    super.fontRendererObj.drawString(qsMainName, this.xSize / 2 - this.fontRendererObj.getStringWidth(qsMainName) / 2, this.ySize - 160, 0x404040);
+    super.fontRendererObj.drawString(qrMainName, this.xSize / 2 - this.fontRendererObj.getStringWidth(qrMainName) / 2, this.ySize - 160, 0x404040);
     super.fontRendererObj.drawString(inventoryName, 8, this.ySize - 94, 0x404040);
-    int ticksStabilizingItemSoFar = tileQS.getField(2);
-    int ticksPerItem = tileQS.getField(3);
-    if (ticksPerItem != 0 && ticksStabilizingItemSoFar != 0)
-      RenderUtils.renderText("Stabilizing...", 112, this.ySize - 94, 0x808080, 1, false);
+    int ticksReciprocatingItemSoFar = tileQR.getField(2);
+    int ticksPerItem = tileQR.getField(3);
+    // if (ticksPerItem != 0 && ticksReciprocatingItemSoFar != 0)
+    // RenderUtils.renderText("Reciprocating...", 112, this.ySize - 94, 0x808080, 1, false);
   }
 
   @Override
@@ -68,7 +67,7 @@ public class GuiQS extends GuiContainer {
     int marginHorizontal = (width - xSize) / 2;
     int marginVertical = (height - ySize) / 2;
     int progressLevel = getProgressLevel(24);
-    drawTexturedModalRect(marginHorizontal + 79, marginVertical + 34, 176, 0, progressLevel + 1, 16);
+    drawTexturedModalRect(marginHorizontal + 74, marginVertical + 34, 176, 0, progressLevel + 1, 16);
   }
 
   @Override
@@ -78,8 +77,8 @@ public class GuiQS extends GuiContainer {
     if (mc.thePlayer != null) {
       for (ItemStack itemStack : mc.thePlayer.inventory.mainInventory) {
         if (itemStack != null) {
-          if (NBTHelper.hasTag(itemStack, Ref.NBT.QS_GUI_OPEN)) {
-            NBTHelper.removeTag(itemStack, Ref.NBT.QS_GUI_OPEN);
+          if (NBTHelper.hasTag(itemStack, Ref.NBT.QR_GUI_OPEN)) {
+            NBTHelper.removeTag(itemStack, Ref.NBT.QR_GUI_OPEN);
           }
         }
       }
@@ -92,8 +91,8 @@ public class GuiQS extends GuiContainer {
   }
 
   private int getProgressLevel(int progressIndicatorPixelWidth) {
-    int ticksStabilizeItemSoFar = tileQS.getField(2);
-    int ticksPerItem = tileQS.getField(3);
-    return ticksPerItem != 0 && ticksStabilizeItemSoFar != 0 ? ticksStabilizeItemSoFar * progressIndicatorPixelWidth / ticksPerItem : 0;
+    int ticksReciprocateItemSoFar = tileQR.getField(2);
+    int ticksPerItem = tileQR.getField(3);
+    return ticksPerItem != 0 && ticksReciprocateItemSoFar != 0 ? ticksReciprocateItemSoFar * progressIndicatorPixelWidth / ticksPerItem : 0;
   }
 }
