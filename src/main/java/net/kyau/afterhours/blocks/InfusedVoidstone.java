@@ -4,9 +4,11 @@ import java.util.Random;
 
 import net.kyau.afterhours.references.Ref;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -20,7 +22,7 @@ public class InfusedVoidstone extends BaseBlock {
     // stone:1.5F; obsidian:50.0F
     this.setHardness(25.0F);
     // stone:10.0F; obsidian:2000.0F; bedrock:6000000.0F
-    this.setResistance(10000.0F);
+    this.setResistance(6000000.0F);
     // default: 16 (completely opaque); maximum: 0 (100% translucent)
     this.setLightOpacity(0);
     // default: 0.0F (nothing); maximum: 1.0F (like full sunlight)
@@ -74,4 +76,10 @@ public class InfusedVoidstone extends BaseBlock {
     }
     return this.blockHardness;
   }
+
+  @Override
+  public boolean canEntityDestroy(IBlockAccess world, BlockPos pos, Entity entity) {
+    return false;
+  }
+
 }
