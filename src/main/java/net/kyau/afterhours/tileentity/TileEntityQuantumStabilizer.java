@@ -247,9 +247,13 @@ public class TileEntityQuantumStabilizer extends TileEntityBase implements IInve
     }
 
     if (ticksStabilizeItemSoFar > 0) {
-      ((QuantumStabilizer) getBlockType()).setState(worldObj, getPos(), worldObj.getBlockState(getPos()), true);
+      if (worldObj.getTileEntity(getPos()) != null) {
+        ((QuantumStabilizer) getBlockType()).setState(worldObj, getPos(), worldObj.getBlockState(getPos()), true);
+      }
     } else {
-      ((QuantumStabilizer) getBlockType()).setState(worldObj, getPos(), worldObj.getBlockState(getPos()), false);
+      if (worldObj.getTileEntity(getPos()) != null) {
+        ((QuantumStabilizer) getBlockType()).setState(worldObj, getPos(), worldObj.getBlockState(getPos()), false);
+      }
     }
 
     if (stabilizeSomething()) {

@@ -240,9 +240,13 @@ public class TileEntityQuantumReciprocator extends TileEntityBase implements IIn
     }
 
     if (ticksReciprocateItemSoFar > 0) {
-      ((QuantumReciprocator) getBlockType()).setState(worldObj, getPos(), worldObj.getBlockState(getPos()), true);
+      if (worldObj.getTileEntity(getPos()) != null) {
+        ((QuantumReciprocator) getBlockType()).setState(worldObj, getPos(), worldObj.getBlockState(getPos()), true);
+      }
     } else {
-      ((QuantumReciprocator) getBlockType()).setState(worldObj, getPos(), worldObj.getBlockState(getPos()), false);
+      if (worldObj.getTileEntity(getPos()) != null) {
+        ((QuantumReciprocator) getBlockType()).setState(worldObj, getPos(), worldObj.getBlockState(getPos()), false);
+      }
     }
 
     if (reciprocateSomething()) {

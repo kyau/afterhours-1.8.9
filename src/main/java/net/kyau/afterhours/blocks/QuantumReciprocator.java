@@ -24,7 +24,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.util.IStringSerializable;
-import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -194,15 +193,17 @@ public class QuantumReciprocator extends BlockContainer {
   public void setState(World world, BlockPos pos, IBlockState state, boolean on) {
     IBlockState newState;
     newState = state.withProperty(ACTIVE, on);
+    /*
     if (!newState.getValue(ACTIVE)) {
       this.lightValue = 0;
     } else {
       this.lightValue = 8;
     }
+    */
     world.setBlockState(pos, newState, 3);
-    if (world.isRemote) {
-      world.markBlockForUpdate(pos);
-    }
-    world.checkLightFor(EnumSkyBlock.BLOCK, pos);
+    // if (world.isRemote) {
+    // world.markBlockForUpdate(pos);
+    // }
+    // world.checkLightFor(EnumSkyBlock.BLOCK, pos);
   }
 }
