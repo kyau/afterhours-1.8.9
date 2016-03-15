@@ -4,6 +4,7 @@ import net.kyau.afterhours.references.Ref;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -64,6 +65,14 @@ public class Voidstone extends BaseBlock {
   @Override
   public boolean canEntityDestroy(IBlockAccess world, BlockPos pos, Entity entity) {
     return false;
+  }
+
+  @Override
+  public void onBlockExploded(World world, BlockPos pos, Explosion explosion) {
+  }
+
+  @Override
+  public void onBlockDestroyedByExplosion(World worldIn, BlockPos pos, Explosion explosionIn) {
   }
 
 }
