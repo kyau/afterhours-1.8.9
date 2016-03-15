@@ -16,7 +16,7 @@
 
 AfterHours aims to be a mod that brings useful utilities to the multiplayer side of Minecraft while also bringing a balanced end-game route. The basis for this mod is the concept that in Minecraft past bedrock there exists a "Void", hence the name "void fog" (for the gray smoke your see when you are near to bedrock). In AfterHours, we bring that place to reality with "The Void" and you as a player will learn to tap into The Void and the energies it contains. This will eventually introduce you to Quantum Energy and Dark Matter, which can be utilized in various devices, machines and armor/tools.
 
-For an proper introduction craft yourself a copy of "The Minecrafter's Guide to the Void" in-game with the following recipe.
+For a proper introduction craft yourself a copy of "The Minecrafter's Guide to the Void" in-game with the following recipe.
 
 !["The Minecrafter's Guide to the Void" Crafting Recipe](https://kyau.net/afterhours/img/book_recipe.png)
 
@@ -32,6 +32,7 @@ So many people to thank for this mod actually coming to fruition. Without the us
 * [coolAlias's Tutorial-Demo 1.8 Mod](https://github.com/coolAlias/Tutorial-Demo)
 * [diesieben07's Modjam-4 Mod](https://github.com/diesieben07/Modjam-4)
 * [BloodMagic's ChatUtil class](https://github.com/WayofTime/BloodMagic)
+* [AnotherDustsMod JEI support](https://github.com/setycz/AnotherDustsMod)
 
 ### Attribution
 
