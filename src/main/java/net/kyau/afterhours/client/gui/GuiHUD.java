@@ -121,7 +121,7 @@ public class GuiHUD extends Gui {
 
     // assign
     this.inv = minecraft.thePlayer.inventory;
-    if (player.getGameProfile() != null)
+    if (player != null)
       this.uuid = player.getGameProfile().getId();
     this.scaled = new ScaledResolution(minecraft);
     this.fixedY = getScreenCoordinates()[1] - hudYOffset;
