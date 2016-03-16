@@ -121,7 +121,8 @@ public class GuiHUD extends Gui {
 
     // assign
     this.inv = minecraft.thePlayer.inventory;
-    this.uuid = player.getGameProfile().getId();
+    if (player.getGameProfile().getId() != null)
+      this.uuid = player.getGameProfile().getId();
     this.scaled = new ScaledResolution(minecraft);
     this.fixedY = getScreenCoordinates()[1] - hudYOffset;
     this.centerLeftX = (getScreenCoordinates()[0] / 2) - 112;
@@ -338,20 +339,22 @@ public class GuiHUD extends Gui {
     if (AfterHours.proxy.isSinglePlayer()) {
       return 5;
     }
-    NetworkPlayerInfo playerInfo = minecraft.getMinecraft().getNetHandler().getPlayerInfo(uuid);
     int pingIndex = 0;
-    if (playerInfo.getResponseTime() < 0) {
-      pingIndex = 5;
-    } else if (playerInfo.getResponseTime() < 150) {
-      pingIndex = 0;
-    } else if (playerInfo.getResponseTime() < 300) {
-      pingIndex = 1;
-    } else if (playerInfo.getResponseTime() < 600) {
-      pingIndex = 2;
-    } else if (playerInfo.getResponseTime() < 1000) {
-      pingIndex = 3;
-    } else {
-      pingIndex = 4;
+    if (uuid != null) {
+      NetworkPlayerInfo playerInfo = minecraft.getMinecraft().getNetHandler().getPlayerInfo(uuid);
+      if (playerInfo.getResponseTime() < 0) {
+        pingIndex = 5;
+      } else if (playerInfo.getResponseTime() < 150) {
+        pingIndex = 0;
+      } else if (playerInfo.getResponseTime() < 300) {
+        pingIndex = 1;
+      } else if (playerInfo.getResponseTime() < 600) {
+        pingIndex = 2;
+      } else if (playerInfo.getResponseTime() < 1000) {
+        pingIndex = 3;
+      } else {
+        pingIndex = 4;
+      }
     }
     return pingIndex;
   }
